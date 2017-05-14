@@ -7,6 +7,7 @@ package GUI;
 
 import Clases.*;
 import Controladores.*;
+import Controladores.exceptions.NonexistentEntityException;
 import java.awt.Image;
 import java.io.File;
 import java.util.logging.Level;
@@ -54,25 +55,25 @@ public class Gui_producto extends javax.swing.JFrame {
         jButtonSeleccionarFoto = new javax.swing.JButton();
         jLabelId = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBoxCategoria = new javax.swing.JComboBox<>();
+        jComboBoxCategoria = new javax.swing.JComboBox<String>();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaDescripcion = new javax.swing.JTextArea();
         jLabelFoto = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBoxEstado = new javax.swing.JComboBox<>();
+        jComboBoxEstado = new javax.swing.JComboBox<String>();
         jPanel3 = new javax.swing.JPanel();
         jButtonBuscar = new javax.swing.JButton();
         jButtonagregar = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
         jButtonSalir = new javax.swing.JButton();
-        jButtonEliminar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonNuevo = new javax.swing.JButton();
+        jButtonEliminar1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Item del menú", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 13), new java.awt.Color(51, 0, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Item del menú", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(51, 0, 255)));
 
         jLabel1.setText("Id:");
 
@@ -101,7 +102,7 @@ public class Gui_producto extends javax.swing.JFrame {
 
         jLabel3.setText("Categoria");
 
-        jComboBoxCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Miniwaffles", "Bebidas", "Entradas", "Sopas", "Crepes de Sal", "Crepes de Dulce", "Panne Cook", "Ensaladas", "Waffles", "Helados" }));
+        jComboBoxCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Almuerzo-Cena", "Brunch-Desayunos", "Bebidas", "Helados" }));
 
         jLabel4.setText("Descripcion:");
 
@@ -113,7 +114,7 @@ public class Gui_producto extends javax.swing.JFrame {
 
         jLabel5.setText("Estado");
 
-        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Activo", "Inactivo" }));
+        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Activo", "Inactivo" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -227,14 +228,6 @@ public class Gui_producto extends javax.swing.JFrame {
             }
         });
 
-        jButtonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (User delete).jpg"))); // NOI18N
-        jButtonEliminar.setText("eliminar");
-        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEliminarActionPerformed(evt);
-            }
-        });
-
         jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Wzdelete.jpg"))); // NOI18N
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -251,28 +244,29 @@ public class Gui_producto extends javax.swing.JFrame {
             }
         });
 
+        jButtonEliminar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (User delete).jpg"))); // NOI18N
+        jButtonEliminar1.setText("eliminar");
+        jButtonEliminar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEliminar1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(409, 409, 409)
-                .addComponent(jButtonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEliminar1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 22, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,18 +274,18 @@ public class Gui_producto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jButtonNuevo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonEliminar)
-                    .addComponent(jButtonagregar))
+                .addComponent(jButtonagregar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonBuscar)
                 .addGap(10, 10, 10)
                 .addComponent(jButtonModificar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonEliminar1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSalir)
-                .addGap(56, 56, 56))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -301,7 +295,7 @@ public class Gui_producto extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -313,7 +307,7 @@ public class Gui_producto extends javax.swing.JFrame {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(47, 47, 47)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -329,7 +323,7 @@ public class Gui_producto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 13, Short.MAX_VALUE))
+                .addGap(0, 7, Short.MAX_VALUE))
         );
 
         pack();
@@ -380,31 +374,32 @@ public class Gui_producto extends javax.swing.JFrame {
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         // TODO add your handling code here:
-/*
+
         String id=JOptionPane.showInputDialog("INGRESE EL IDENTIFICADOR DEL PRODUCTO A BUSCAR, si desea puede editar, modificar o eliminar el registro");
         
 
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         //se crea el controlador del empleado y del ususario asociaro
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         try{
-            Producto producto = daoProducto.findProducto(id);
+            Producto producto = daoProducto.findProducto(Integer.parseInt(id));
            
             //llenar campos con los datos del empleado
             
             jTextFieldNombre.setText(producto.getNombre());
-            this.jLabelId.setText(producto.getId());
+            this.jLabelId.setText(producto.getId().toString());
             String precio=Integer.toString((int) producto.getPrecio());
             this.jTextFieldPrecio.setText(precio); 
             this.jTextAreaDescripcion.setText(producto.getDescripcion());
+            this.jButtonEliminar1.setEnabled(false);
 
 
             //campos que son comboBox
             for (int i=0; i<jComboBoxCategoria.getItemCount()-1;i++){
-                if (producto.getCategoria().equalsIgnoreCase(jComboBoxCategoria.getItemAt(i)) ) {
+                if (producto.getIdCategoria().getNombreCategoria().equalsIgnoreCase(jComboBoxCategoria.getItemAt(i)) ) {
                  
                     jComboBoxCategoria.setSelectedIndex(i);
                 }
@@ -419,7 +414,7 @@ public class Gui_producto extends javax.swing.JFrame {
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
             this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar.setEnabled(true);
+            this.jButtonEliminar1.setEnabled(true);
             this.jButtonNuevo.setEnabled(false);
             
             habilitar();
@@ -427,31 +422,46 @@ public class Gui_producto extends javax.swing.JFrame {
         }catch(NullPointerException e){
             JOptionPane.showMessageDialog(null, "El producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
-        }*/
+        }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
         // Obtencion de datos de la interfaz
-       /* 
+        
         String id=jLabelId.getText(),nom=jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
         String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
+        int idCategoria = 0;
+        if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
+            idCategoria = 1;
+        }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
+            idCategoria = 2;
+        }else if (categoria.equalsIgnoreCase("Bebidas")){
+            idCategoria = 3;
+        }else{
+            idCategoria = 4;
+        }
+        
         String estado=this.jComboBoxEstado.getSelectedItem().toString();
         String descripcion=this.jTextAreaDescripcion.getText();
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
-        //se crea el controlador del producto y del ususario asociaro
+        //Se crea el controlador de la categoria del producto
+        CategoriaProductoJpaController daoCategoriaProducto = new CategoriaProductoJpaController(emf);
+        CategoriaProducto categoriaProducto = daoCategoriaProducto.findCategoriaProducto(idCategoria);
+        
+        //se crea el controlador del producto 
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         //se crea un objeto producto y se le asignan sus atributos
         Producto producto = new Producto();
-        producto.setId(id);
+        producto.setId(idCategoria);
         producto.setNombre(nombre);
         producto.setPrecio(precio);
-        producto.setCategoria(categoria);
+        producto.setIdCategoria(categoriaProducto);
         producto.setDescripcion(descripcion);
         if (estado=="Activo"){
             producto.setEstado(true);
@@ -464,6 +474,7 @@ public class Gui_producto extends javax.swing.JFrame {
             if (verificarCamposVacios() == false) {
                 daoProducto.create(producto);
                 deshabilitar();
+                limpiar();
                 JOptionPane.showMessageDialog(null, "El producto se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -476,32 +487,47 @@ public class Gui_producto extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
- */
+ 
 
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        // TODO add your handling code here:
-        /*
+        // Obtencion de datos de la interfaz
+        
         String id=jLabelId.getText(),nom=jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
         String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
+        int idCategoria = 0;
+        if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
+            idCategoria = 1;
+        }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
+            idCategoria = 2;
+        }else if (categoria.equalsIgnoreCase("Bebidas")){
+            idCategoria = 3;
+        }else{
+            idCategoria = 4;
+        }
+        
         String estado=this.jComboBoxEstado.getSelectedItem().toString();
         String descripcion=this.jTextAreaDescripcion.getText();
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
-        //se crea el controlador del producto y del ususario asociaro
+        //Se crea el controlador de la categoria del producto
+        CategoriaProductoJpaController daoCategoriaProducto = new CategoriaProductoJpaController(emf);
+        CategoriaProducto categoriaProducto = daoCategoriaProducto.findCategoriaProducto(idCategoria);
+        
+        //se crea el controlador del producto 
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         //se crea un objeto producto y se le asignan sus atributos
         Producto producto = new Producto();
-        producto.setId(id);
+        producto.setId(Integer.parseInt(id));
         producto.setNombre(nombre);
         producto.setPrecio(precio);
-        producto.setCategoria(categoria);
+        producto.setIdCategoria(categoriaProducto);
         producto.setDescripcion(descripcion);
         if (estado=="Activo"){
             producto.setEstado(true);
@@ -527,7 +553,7 @@ public class Gui_producto extends javax.swing.JFrame {
         botones();
         deshabilitar();
  
-*/
+
 
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
@@ -542,11 +568,6 @@ public class Gui_producto extends javax.swing.JFrame {
        }catch(Exception e){}
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
-    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jButtonEliminarActionPerformed
-
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
         botones();
@@ -556,7 +577,7 @@ public class Gui_producto extends javax.swing.JFrame {
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
         // TODO add your handling code here:
          //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         //se crea el controlador del producto y del ususario asociaro
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
@@ -564,17 +585,36 @@ public class Gui_producto extends javax.swing.JFrame {
         habilitar();
         this.jButtonBuscar.setEnabled(false);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
+        this.jButtonEliminar1.setEnabled(false);
         String id =Integer.toString(daoProducto.getProductoCount()+1);
         this.jLabelId.setText(id);
     }//GEN-LAST:event_jButtonNuevoActionPerformed
+
+    private void jButtonEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminar1ActionPerformed
+        String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del producto que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
+
+        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+
+        //se crea el controlador del empleado y del ususario asociaro
+        ProductoJpaController daoProducto = new ProductoJpaController(emf);
+        
+        try {
+            daoProducto.destroy(Integer.parseInt(id));
+            JOptionPane.showMessageDialog(null, "El producto se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NonexistentEntityException ex) {
+            JOptionPane.showMessageDialog(null, "El producto que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        
+    }//GEN-LAST:event_jButtonEliminar1ActionPerformed
 
      public void botones(){
         this.jButtonagregar.setEnabled(false);
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
+        this.jButtonEliminar1.setEnabled(true);
      }
      public void limpiar(){
          this.jLabelId.setText("");
@@ -655,7 +695,7 @@ public class Gui_producto extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonEliminar;
+    private javax.swing.JButton jButtonEliminar1;
     private javax.swing.JButton jButtonModificar;
     private javax.swing.JButton jButtonNuevo;
     private javax.swing.JButton jButtonSalir;
