@@ -6,6 +6,7 @@
 package Clases;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -77,12 +78,14 @@ public class Pedido implements Serializable {
 
     public Pedido(Integer numPedido) {
         this.numPedido = numPedido;
+        this.productoCollection = new ArrayList<Producto>();
     }
 
     public Pedido(Integer numPedido, Date horaInicioPedido, Date horaFinalPedido) {
         this.numPedido = numPedido;
         this.horaInicioPedido = horaInicioPedido;
         this.horaFinalPedido = horaFinalPedido;
+        
     }
 
     public Integer getNumPedido() {

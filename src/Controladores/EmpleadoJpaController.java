@@ -110,10 +110,11 @@ public class EmpleadoJpaController implements Serializable {
                 empleado.setCargo(cargoNew);
             }
             Collection<Pedido> attachedPedidoCollectionNew = new ArrayList<Pedido>();
-            for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
+            //comentario
+            /*for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
                 pedidoCollectionNewPedidoToAttach = em.getReference(pedidoCollectionNewPedidoToAttach.getClass(), pedidoCollectionNewPedidoToAttach.getNumPedido());
                 attachedPedidoCollectionNew.add(pedidoCollectionNewPedidoToAttach);
-            }
+            }*/
             pedidoCollectionNew = attachedPedidoCollectionNew;
             empleado.setPedidoCollection(pedidoCollectionNew);
             empleado = em.merge(empleado);

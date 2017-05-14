@@ -6,11 +6,15 @@
 package GUI;
 
 import Clases.Empleado;
+import Clases.EstadoPedido;
+import Clases.Mesa;
 import Clases.Pedido;
 import Clases.Producto;
 //import Clases.ProductoPedido;
 //import Clases.ProductoPedidoPK;
 import Controladores.EmpleadoJpaController;
+import Controladores.EstadoPedidoJpaController;
+import Controladores.MesaJpaController;
 import Controladores.PedidoJpaController;
 import Controladores.ProductoJpaController;
 //import Controladores.ProductoPedidoJpaController;
@@ -443,7 +447,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         
         
         
-        EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         PedidoJpaController daoPedido = new PedidoJpaController(emf1);
         
@@ -455,7 +459,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         this.jComboBox2.setModel(this.obtenerProductos());
         
         
-       // this.jComboBox2.setModel(this.obtenerProductos(this.jComboBox1.getSelectedItem().toString()));
+        //this.jComboBox2.setModel(this.obtenerProductos(this.jComboBox.getSelectedItem().toString()));
         
         /*this.jComboBox1.addItemListener(new ItemListener() {
             @Override
@@ -473,7 +477,7 @@ public class Gui_pedido extends javax.swing.JFrame {
     public DefaultComboBoxModel obtenerProductos(){
         
         DefaultComboBoxModel listmModel = new DefaultComboBoxModel();
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
@@ -682,12 +686,15 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         //variables para el pedido
-        /*
+        
         int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
         String idMesero = this.jTextFieldMesero.getText();
         int numMesa = Integer.parseInt(this.jTextFieldMesa.getText());
+        MesaJpaController daoMesa = new MesaJpaController(emf);
+        Mesa mesa = daoMesa.findMesa(numMesa);
         Date horaFinal = new Date();
         Date horaInicio = null;
         
@@ -704,23 +711,41 @@ public class Gui_pedido extends javax.swing.JFrame {
         pedido.setNumPedido(numPedido);
         pedido.setHoraFinalPedido(horaFinal);
         pedido.setHoraInicioPedido(horaInicio);
-        pedido.setNumMesa(numMesa);
+        pedido.setNumMesa(mesa);
+        pedido.setProductoCollection(new ArrayList<Producto>());
              
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        //id del mesero
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
         Empleado empleado = daoEmpleado.findEmpleado(idMesero);
         pedido.setIdEmpleado(empleado);
         
         
+        //estado del producto
+        EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
+        EstadoPedido estadoPedido=daoEstadoPedido.findEstadoPedido(1);
+        //
+        pedido.setIdEstadoPedido(estadoPedido);
         
-        
+        ProductoJpaController daoProducto = new ProductoJpaController(emf);
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
+        Pedido pedido1 = new Pedido(numPedido);
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            
+            String nombreProducto = modelo.getValueAt(i, 0).toString();
+            String cantidadProducto = modelo.getValueAt(i, 1).toString();
+            
+            //Producto producto = daoProducto.findProductoNombre(nombreProducto);
+            List<Producto> producto = daoProducto.findProductoNombre(nombreProducto);
+            
+            Producto producto1;
+            
+            producto1 = producto.get(0);
+            System.err.println(producto1.getId());
+            
+            pedido.getProductoCollection().add(producto1);
+
+        }
         
-        
-        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
-        
-        ProductoPedido productoPedido = new ProductoPedido();
-        ProductoPedidoPK productoPedidopk = new ProductoPedidoPK();
         
         try {
             if (verificarCamposVacios() == false) {
@@ -738,52 +763,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            
-            String nombreProducto = modelo.getValueAt(i, 0).toString();
-            String cantidadProducto = modelo.getValueAt(i, 1).toString();
-            
-            System.out.println(nombreProducto + cantidadProducto);
-                    
-            ProductoJpaController daoProducto = new ProductoJpaController(emf);
-            List<Producto> producto = daoProducto.findProductoNombre(nombreProducto);
-            
-            Producto producto1;
-            
-            producto1 = producto.get(0);
-            
-            
-            productoPedido.setProducto(producto1);
-            productoPedido.setCantProductos(Integer.parseInt(cantidadProducto));
-            productoPedido.setPedido(pedido);
-            
-            
-            
-            try {
-                daoProductoPedido.create(productoPedido);
-            } catch (NonexistentEntityException ex) {
-                System.out.println("1");
-            } catch (PreexistingEntityException ex) {
-                System.out.println("2");
-            } catch (Exception ex) {
-                System.out.println("3");
-            }
-            
-            
-            
-            
-        }
-        */
-        
-        
-        
-        
-       
-        
-        
-        
-       
+   
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     public boolean verificarCamposVacios(){

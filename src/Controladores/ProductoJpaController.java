@@ -86,10 +86,11 @@ public class ProductoJpaController implements Serializable {
                 producto.setIdCategoria(idCategoriaNew);
             }
             Collection<Pedido> attachedPedidoCollectionNew = new ArrayList<Pedido>();
-            for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
+            //comentario
+            /*for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
                 pedidoCollectionNewPedidoToAttach = em.getReference(pedidoCollectionNewPedidoToAttach.getClass(), pedidoCollectionNewPedidoToAttach.getNumPedido());
                 attachedPedidoCollectionNew.add(pedidoCollectionNewPedidoToAttach);
-            }
+            }*/
             pedidoCollectionNew = attachedPedidoCollectionNew;
             producto.setPedidoCollection(pedidoCollectionNew);
             producto = em.merge(producto);
@@ -193,6 +194,51 @@ public class ProductoJpaController implements Serializable {
             em.close();
         }
     }
+    
+    /*public Producto findProductoNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        Producto producto = null;
+        try {
+            
+            Query q = em.createNamedQuery("Producto.findByNombre");
+            q.setParameter("nombre", nombre);
+            
+            producto = (Producto) q.getSingleResult();
+           
+            
+        } catch (Exception e){
+            
+        }
+          
+        finally {
+            em.close();
+        }
+        
+        return producto;
+        }*/
+    
+     public List<Producto> findProductoNombre(String nombre) {
+        EntityManager em = getEntityManager();
+        List <Producto> productos;
+        try {
+            
+            Query q = em.createNamedQuery("Producto.findByNombre");
+            q.setParameter("nombre", nombre);
+            
+            productos = q.getResultList();
+           
+            
+        } catch (Exception e){
+            productos = new ArrayList<Producto>();
+        }
+          
+        finally {
+            em.close();
+        }
+        
+        return productos;
+        }
+    
 
     public int getProductoCount() {
         EntityManager em = getEntityManager();
