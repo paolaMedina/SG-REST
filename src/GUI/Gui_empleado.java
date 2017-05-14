@@ -476,14 +476,14 @@ public class Gui_empleado extends javax.swing.JFrame {
             jTextFieldContraseña.setText(empleado.getPassword());
 
 
-            //campos que son combo box
+            /*//campos que son combo box
             if (empleado.getCargo().equalsIgnoreCase("Gerente")) {
                 jComboBoxCargo.setSelectedIndex(1);
             }else if (empleado.getCargo().equalsIgnoreCase("Contador")) {
                 jComboBoxCargo.setSelectedIndex(2);
             }else{
                 jComboBoxCargo.setSelectedIndex(3);
-            }
+            }*/
 
             if (empleado.getEstado() == true) {
                 jComboBoxEstado.setSelectedIndex(1);
@@ -511,6 +511,14 @@ public class Gui_empleado extends javax.swing.JFrame {
         // Obtencion de datos de la interfaz
         String id=jTextFieldIdentificacion.getText(),nom=jTextFieldNombre.getText(),ape=jTextFieldApellidos.getText();
         String cargo=this.jComboBoxCargo.getSelectedItem().toString();
+        int cargoId =0;
+        if (cargo.equalsIgnoreCase("Gerente")) {
+            cargoId = 1;
+        }else if (cargo.equalsIgnoreCase("Mesero")) {
+            cargoId = 2;
+        }else{
+            cargoId = 3;
+        }
         String dni=jComboBoxEstado.getSelectedItem().toString();
         boolean estado = true;
         if (dni.equalsIgnoreCase("activo")) {
@@ -523,7 +531,11 @@ public class Gui_empleado extends javax.swing.JFrame {
         String contraseña = jTextFieldContraseña.getText();
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+        //Se crea el controlador del cargo_empleado
+        CargoEmpleadoJpaController daoCargoEmpleado = new CargoEmpleadoJpaController(emf);
+        CargoEmpleado cargoEmpleado = daoCargoEmpleado.findCargoEmpleado(cargoId);
         
         //se crea el controlador del empleado y del ususario asociaro
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
@@ -534,19 +546,19 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setPassword(contraseña);
         empleado.setNombre(nom);
         empleado.setApelllido(ape);
-        empleado.setCargo(cargo);
+        empleado.setCargo(cargoEmpleado);
         empleado.setEstado(estado);
         empleado.setHorario("");
         empleado.setDireccion(dir);
         empleado.setTelefonoFijo(tel);
         empleado.setTelefonoCelular(cel);
         empleado.setEmail(emil);
-        empleado.setPassword(contraseña);
         
         try {
             if (verificarCamposVacios() == false) {
                 daoEmpleado.create(empleado);
                 deshabilitar();
+                limpiar();
                 JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -592,7 +604,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setPassword(contraseña);
         empleado.setNombre(nom);
         empleado.setApelllido(ape);
-        empleado.setCargo(cargo);
+        //empleado.setCargo(cargo);
         empleado.setEstado(estado);
         empleado.setHorario("");
         empleado.setDireccion(dir);
