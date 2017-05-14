@@ -23,7 +23,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Daniel
+ * @author Daniel Galarza
+ * @author Felipe Tellez
+ * @author Paola Medina
+ * 
  */
 @Entity
 @Table(name = "cargo_empleado")

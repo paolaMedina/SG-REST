@@ -32,7 +32,7 @@ public class Gui_producto extends javax.swing.JFrame {
     public Gui_producto(Gui_VentanaPrincipal principal) {
         initComponents();
         deshabilitar();
-        this.jButtonModificar.setEnabled(false);
+        botones();
     }
 
     /**
@@ -614,7 +614,9 @@ public class Gui_producto extends javax.swing.JFrame {
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar1.setEnabled(true);
+        this.jButtonEliminar1.setEnabled(false);
+        this.jButtonSeleccionarFoto.setEnabled(false);
+        
      }
      public void limpiar(){
          this.jLabelId.setText("");

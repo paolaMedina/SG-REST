@@ -19,7 +19,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Daniel
+ * @author Daniel Galarza
+ * @author Felipe Tellez
+ * @author Paola Medina
  */
 @Entity
 @Table(name = "producto_factura")
