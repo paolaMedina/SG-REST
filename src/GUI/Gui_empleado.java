@@ -31,8 +31,7 @@ public class Gui_empleado extends javax.swing.JFrame {
      */
     public Gui_empleado(Gui_VentanaPrincipal principal) {
         initComponents();
-        jButtonModificar.setEnabled(false);
-        jButtonagregar.setEnabled(false);
+        botones();
         deshabilitar();
     }
     
@@ -494,7 +493,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
             this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar.setEnabled(false);
+            this.jButtonEliminar.setEnabled(true);
             this.jButtonNuevo.setEnabled(false);
             
             habilitar();
@@ -557,7 +556,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         try {
             if (verificarCamposVacios() == false) {
                 daoEmpleado.create(empleado);
-                deshabilitar();
+                botones();
                 limpiar();
                 JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -680,6 +679,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonModificar.setEnabled(false);
         this.jButtonEliminar.setEnabled(false);
         this.jButtonNuevo.setEnabled(false);
+        this.jButtonSeleccionarFoto.setEnabled(true);
 
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
@@ -691,12 +691,14 @@ public class Gui_empleado extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldContraseñaActionPerformed
 
-     public void botones(){
+       public void botones(){
         this.jButtonagregar.setEnabled(false);
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
         this.jButtonEliminar.setEnabled(false);
+        this.jButtonSeleccionarFoto.setEnabled(false);
+        
      }
      
      public void habilitarBotones(){
@@ -735,7 +737,7 @@ public class Gui_empleado extends javax.swing.JFrame {
          this.jTextFieldNombre.requestFocus();
   }
      public void deshabilitar(){
-         
+         this.jTextFieldIdentificacion.setEnabled(false);
          this.jTextFieldNombre.setEnabled(false);
          this.jTextFieldApellidos.setEnabled(false); 
          this.jComboBoxCargo.setEnabled(false);

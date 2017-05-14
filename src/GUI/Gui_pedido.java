@@ -8,12 +8,12 @@ package GUI;
 import Clases.Empleado;
 import Clases.Pedido;
 import Clases.Producto;
-import Clases.ProductoPedido;
-import Clases.ProductoPedidoPK;
+//import Clases.ProductoPedido;
+//import Clases.ProductoPedidoPK;
 import Controladores.EmpleadoJpaController;
 import Controladores.PedidoJpaController;
 import Controladores.ProductoJpaController;
-import Controladores.ProductoPedidoJpaController;
+//import Controladores.ProductoPedidoJpaController;
 import Controladores.exceptions.*;
 import java.awt.Image;
 import java.awt.event.ItemEvent;
@@ -520,6 +520,7 @@ public class Gui_pedido extends javax.swing.JFrame {
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         //variables para el pedido
+        /*
         int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
         String idMesero = this.jTextFieldMesero.getText();
         int numMesa = Integer.parseInt(this.jTextFieldMesa.getText());
@@ -605,11 +606,13 @@ public class Gui_pedido extends javax.swing.JFrame {
                 System.out.println("3");
             }
             
-        }  
+        }  */
             
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+       
+        /*
         String id = JOptionPane.showInputDialog(null, "Ingrese el del pedido que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
 
         int idParse = Integer.parseInt(id);
@@ -675,12 +678,13 @@ public class Gui_pedido extends javax.swing.JFrame {
         }catch(NullPointerException e){
             JOptionPane.showMessageDialog(null, "El empleado no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
-        }
+        }*/
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
         
         //variables para el pedido
+        /*
         int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
         String idMesero = this.jTextFieldMesero.getText();
         int numMesa = Integer.parseInt(this.jTextFieldMesa.getText());
@@ -770,7 +774,7 @@ public class Gui_pedido extends javax.swing.JFrame {
             
             
         }
-        
+        */
         
         
         

@@ -380,7 +380,7 @@ public class Gui_producto extends javax.swing.JFrame {
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         // TODO add your handling code here:
-
+/*
         String id=JOptionPane.showInputDialog("INGRESE EL IDENTIFICADOR DEL PRODUCTO A BUSCAR, si desea puede editar, modificar o eliminar el registro");
         
 
@@ -427,12 +427,12 @@ public class Gui_producto extends javax.swing.JFrame {
         }catch(NullPointerException e){
             JOptionPane.showMessageDialog(null, "El producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
-        }
+        }*/
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
         // Obtencion de datos de la interfaz
-        
+       /* 
         String id=jLabelId.getText(),nom=jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
@@ -476,13 +476,13 @@ public class Gui_producto extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
- 
+ */
 
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         // TODO add your handling code here:
-        
+        /*
         String id=jLabelId.getText(),nom=jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
@@ -527,7 +527,7 @@ public class Gui_producto extends javax.swing.JFrame {
         botones();
         deshabilitar();
  
-
+*/
 
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
