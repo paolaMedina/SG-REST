@@ -14,11 +14,10 @@
     <class>Clases.Empleado</class>
     <class>Clases.CargoEmpleado</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://stampy.db.elephantsql.com:5432/ydmrdvlu"/>
-      <property name="javax.persistence.jdbc.password" value="l5c69UQdVtO5WbRmqrF5YXj6ifwvt2Dd"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/SG-REST"/>
+      <property name="javax.persistence.jdbc.password" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.user" value="ydmrdvlu"/>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
     </properties>
   </persistence-unit>
 </persistence>
