@@ -457,7 +457,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del empleado que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
 
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         //se crea el controlador del empleado y del ususario asociaro
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
@@ -476,14 +476,14 @@ public class Gui_empleado extends javax.swing.JFrame {
             jTextFieldContraseña.setText(empleado.getPassword());
 
 
-            /*//campos que son combo box
-            if (empleado.getCargo().equalsIgnoreCase("Gerente")) {
+            //campos que son combo box
+            if (empleado.getCargo().getCargo().equalsIgnoreCase("Gerente")) {
                 jComboBoxCargo.setSelectedIndex(1);
-            }else if (empleado.getCargo().equalsIgnoreCase("Contador")) {
+            }else if (empleado.getCargo().getCargo().equalsIgnoreCase("Contador")) {
                 jComboBoxCargo.setSelectedIndex(2);
             }else{
                 jComboBoxCargo.setSelectedIndex(3);
-            }*/
+            }
 
             if (empleado.getEstado() == true) {
                 jComboBoxEstado.setSelectedIndex(1);
