@@ -616,34 +616,32 @@ public class Gui_pedido extends javax.swing.JFrame {
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
        
-        /*
+        
         String id = JOptionPane.showInputDialog(null, "Ingrese el del pedido que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
 
         int idParse = Integer.parseInt(id);
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
-        
-        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
         
         try{
             Pedido pedido = daoPedido.findPedido(idParse);
             
            
-            List<ProductoPedido> productoPedido = daoProductoPedido.findProductoPedidoNumPedido(idParse);
+            ArrayList<Producto> productoPedido = (ArrayList)pedido.getProductoCollection();
             this.modelo = (DefaultTableModel) jTableProductos.getModel();
             
             for (int i = 0; i < productoPedido.size(); i++) {
                 
-                Producto pro = productoPedido.get(i).getProducto();
+                Producto pro = productoPedido.get(i);
                 Vector<String> vector = new Vector<String>();
                 
                 String producto = pro.getNombre();
                 vector.add(producto);
-                String cantidad = Integer.toString(productoPedido.get(i).getCantProductos());
-                vector.add(cantidad);
+               /* String cantidad = Integer.toString(productoPedido.get(i).);
+                vector.add(cantidad);*/
                 
                 this.modelo.addRow(vector);
             }
@@ -662,7 +660,7 @@ public class Gui_pedido extends javax.swing.JFrame {
             String horaFin = horaFormato.format(pedido.getHoraFinalPedido());
             this.jLabelHoraFin.setText(horaFin);
             
-            this.jTextFieldMesa.setText(Integer.toString(pedido.getNumMesa()));
+            this.jTextFieldMesa.setText(Integer.toString(pedido.getNumMesa().getNumMesa()));
             
             this.jTextFieldMesero.setText(pedido.getIdEmpleado().getIdentificacion());
 
@@ -680,9 +678,9 @@ public class Gui_pedido extends javax.swing.JFrame {
             
             
         }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(null, "El empleado no existe", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "El pedido no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
-        }*/
+        }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
