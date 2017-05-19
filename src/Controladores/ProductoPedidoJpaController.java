@@ -39,9 +39,9 @@ public class ProductoPedidoJpaController implements Serializable {
         if (productoPedido.getProductoPedidoPK() == null) {
             productoPedido.setProductoPedidoPK(new ProductoPedidoPK());
         }
+        productoPedido.getProductoPedidoPK().setPedidoNumPedido(productoPedido.getPedido().getNumPedido());
         productoPedido.getProductoPedidoPK().setProductoId(productoPedido.getProducto().getProductoPK().getId());
         productoPedido.getProductoPedidoPK().setProductoNombre(productoPedido.getProducto().getProductoPK().getNombre());
-        productoPedido.getProductoPedidoPK().setPedidoNumPedido(productoPedido.getPedido().getNumPedido());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -79,9 +79,9 @@ public class ProductoPedidoJpaController implements Serializable {
     }
 
     public void edit(ProductoPedido productoPedido) throws NonexistentEntityException, Exception {
+        productoPedido.getProductoPedidoPK().setPedidoNumPedido(productoPedido.getPedido().getNumPedido());
         productoPedido.getProductoPedidoPK().setProductoId(productoPedido.getProducto().getProductoPK().getId());
         productoPedido.getProductoPedidoPK().setProductoNombre(productoPedido.getProducto().getProductoPK().getNombre());
-        productoPedido.getProductoPedidoPK().setPedidoNumPedido(productoPedido.getPedido().getNumPedido());
         EntityManager em = null;
         try {
             em = getEntityManager();

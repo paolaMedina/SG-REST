@@ -11,11 +11,13 @@ package GUI;
  */
 public class Gui_VentanaPrincipal extends javax.swing.JFrame {
 
+    public Gui_login gui_login;
     /**
      * Creates new form Gui_VentanaPrincipal
      */
     public Gui_VentanaPrincipal(Gui_login login) {
         initComponents();
+        this.gui_login = login;
     
     }
 
@@ -120,9 +122,9 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
         try{
          Gui_empleado empleado =new Gui_empleado(this);
     
-         empleado.show();
-         empleado.setLocation(50, 5);
+         empleado.setVisible(true);
          this.dispose();
+         
        }catch(Exception e){}
       
     }//GEN-LAST:event_jButtonEmpleadosActionPerformed

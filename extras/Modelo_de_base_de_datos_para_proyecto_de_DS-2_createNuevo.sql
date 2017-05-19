@@ -24,7 +24,6 @@ CREATE TABLE Empleado (
     apelllido varchar(30)  NOT NULL,
     cargo int  NOT NULL,
     estado boolean  NOT NULL,
-    horario varchar(100)  NOT NULL,
     direccion varchar(30)  NULL,
     telefono_fijo varchar(7)  NULL,
     telefono_celular varchar(10)  NOT NULL,

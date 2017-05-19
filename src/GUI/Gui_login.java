@@ -5,6 +5,13 @@
  */
 package GUI;
 
+import Clases.CargoEmpleado;
+import Clases.Empleado;
+import Controladores.EmpleadoJpaController;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -12,6 +19,8 @@ package GUI;
  */
 public class Gui_login extends javax.swing.JFrame {
 
+    public String usuario="";
+    public String cargoUsuario="";
     /**
      * Creates new form gui_login
      */
@@ -19,6 +28,56 @@ public class Gui_login extends javax.swing.JFrame {
         initComponents();
     }
 
+    
+    /**************************************************/
+    //Metodo que se encarga de hacer el logueo de un usuario
+    //  -> loguear -> void
+    private String loguear(){
+        String validacion = null;
+        
+        String usuario=jTextFieldIdentificacion.getText();
+        String password = jPassword.getText();
+        
+        
+        if( usuario.trim().isEmpty() || password.trim().isEmpty() ) {
+        
+            validacion= "Ingrese los datos completos";
+        
+        }
+  
+        else{
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");                       
+            EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+            
+            Empleado empleado = daoEmpleado.findEmpleado(usuario);
+            
+            if (empleado.getPassword().equalsIgnoreCase(password)) {
+                CargoEmpleado cargoEmpleado = empleado.getCargo();
+                String cargo = cargoEmpleado.getCargo();
+                
+                switch (cargo){
+                    case "Gerente":
+                        Gui_VentanaPrincipal principalGenrente = new Gui_VentanaPrincipal(this);
+                        principalGenrente.setVisible(true);
+                        validacion= "El gerente ingreso exitosamente";
+                        
+                    case "Cajero":
+                        Gui_VentanaPrincipal principalCajero = new Gui_VentanaPrincipal(this);
+                        principalCajero.setVisible(true);
+                        validacion= "El cajero ingreso exitosamente";
+                        
+                    case "Mesero":
+                        Gui_VentanaPrincipal principalMesero = new Gui_VentanaPrincipal(this);
+                        principalMesero.setVisible(true);
+                        validacion= "El mesero ingreso exitosamente";
+                }
+                        
+            }
+        }
+        
+        return validacion;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,7 +171,7 @@ public class Gui_login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIdentificacionActionPerformed
 
     private void jButtonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIngresarActionPerformed
-        // TODO add your handling code here:
+        /*// TODO add your handling code here:
          jTextFieldIdentificacion.setText(" ");
          jPassword.setText("");
          try{
@@ -121,7 +180,16 @@ public class Gui_login extends javax.swing.JFrame {
          gui_principal.show();
          gui_principal.setLocation(50, 5);
          this.dispose();
-       }catch(Exception e){}
+       }catch(Exception e){}*/
+        try{
+            String validacion = this.loguear();
+            
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, "Error al ingresar", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
+            
+
+        
       
     }//GEN-LAST:event_jButtonIngresarActionPerformed
 
