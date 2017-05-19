@@ -6,7 +6,6 @@
 package Clases;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -17,8 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -56,11 +53,6 @@ public class Pedido implements Serializable {
     @Column(name = "hora_final_pedido")
     @Temporal(TemporalType.TIMESTAMP)
     private Date horaFinalPedido;
-    @JoinTable(name = "producto_pedido", joinColumns = {
-        @JoinColumn(name = "pedido_num_pedido", referencedColumnName = "num_pedido")}, inverseJoinColumns = {
-        @JoinColumn(name = "producto_id", referencedColumnName = "id")})
-    @ManyToMany
-    private Collection<Producto> productoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "numPedido")
     private Collection<Factura> facturaCollection;
     @JoinColumn(name = "num_mesa", referencedColumnName = "num_mesa")
@@ -72,20 +64,20 @@ public class Pedido implements Serializable {
     @JoinColumn(name = "id_empleado", referencedColumnName = "identificacion")
     @ManyToOne(optional = false)
     private Empleado idEmpleado;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido")
+    private Collection<ProductoPedido> productoPedidoCollection;
 
     public Pedido() {
     }
 
     public Pedido(Integer numPedido) {
         this.numPedido = numPedido;
-        this.productoCollection = new ArrayList<Producto>();
     }
 
     public Pedido(Integer numPedido, Date horaInicioPedido, Date horaFinalPedido) {
         this.numPedido = numPedido;
         this.horaInicioPedido = horaInicioPedido;
         this.horaFinalPedido = horaFinalPedido;
-        
     }
 
     public Integer getNumPedido() {
@@ -110,15 +102,6 @@ public class Pedido implements Serializable {
 
     public void setHoraFinalPedido(Date horaFinalPedido) {
         this.horaFinalPedido = horaFinalPedido;
-    }
-
-    @XmlTransient
-    public Collection<Producto> getProductoCollection() {
-        return productoCollection;
-    }
-
-    public void setProductoCollection(Collection<Producto> productoCollection) {
-        this.productoCollection = productoCollection;
     }
 
     @XmlTransient
@@ -152,6 +135,15 @@ public class Pedido implements Serializable {
 
     public void setIdEmpleado(Empleado idEmpleado) {
         this.idEmpleado = idEmpleado;
+    }
+
+    @XmlTransient
+    public Collection<ProductoPedido> getProductoPedidoCollection() {
+        return productoPedidoCollection;
+    }
+
+    public void setProductoPedidoCollection(Collection<ProductoPedido> productoPedidoCollection) {
+        this.productoPedidoCollection = productoPedidoCollection;
     }
 
     @Override

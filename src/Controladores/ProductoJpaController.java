@@ -11,9 +11,12 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Clases.CategoriaProducto;
-import Clases.Pedido;
 import Clases.Producto;
+import Clases.ProductoPK;
+import Clases.ProductoPedido;
+import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
+import Controladores.exceptions.PreexistingEntityException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,9 +38,12 @@ public class ProductoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Producto producto) {
-        if (producto.getPedidoCollection() == null) {
-            producto.setPedidoCollection(new ArrayList<Pedido>());
+    public void create(Producto producto) throws PreexistingEntityException, Exception {
+        if (producto.getProductoPK() == null) {
+            producto.setProductoPK(new ProductoPK());
+        }
+        if (producto.getProductoPedidoCollection() == null) {
+            producto.setProductoPedidoCollection(new ArrayList<ProductoPedido>());
         }
         EntityManager em = null;
         try {
@@ -48,22 +54,32 @@ public class ProductoJpaController implements Serializable {
                 idCategoria = em.getReference(idCategoria.getClass(), idCategoria.getIdCategoria());
                 producto.setIdCategoria(idCategoria);
             }
-            Collection<Pedido> attachedPedidoCollection = new ArrayList<Pedido>();
-            for (Pedido pedidoCollectionPedidoToAttach : producto.getPedidoCollection()) {
-                pedidoCollectionPedidoToAttach = em.getReference(pedidoCollectionPedidoToAttach.getClass(), pedidoCollectionPedidoToAttach.getNumPedido());
-                attachedPedidoCollection.add(pedidoCollectionPedidoToAttach);
+            Collection<ProductoPedido> attachedProductoPedidoCollection = new ArrayList<ProductoPedido>();
+            for (ProductoPedido productoPedidoCollectionProductoPedidoToAttach : producto.getProductoPedidoCollection()) {
+                productoPedidoCollectionProductoPedidoToAttach = em.getReference(productoPedidoCollectionProductoPedidoToAttach.getClass(), productoPedidoCollectionProductoPedidoToAttach.getProductoPedidoPK());
+                attachedProductoPedidoCollection.add(productoPedidoCollectionProductoPedidoToAttach);
             }
-            producto.setPedidoCollection(attachedPedidoCollection);
+            producto.setProductoPedidoCollection(attachedProductoPedidoCollection);
             em.persist(producto);
             if (idCategoria != null) {
                 idCategoria.getProductoCollection().add(producto);
                 idCategoria = em.merge(idCategoria);
             }
-            for (Pedido pedidoCollectionPedido : producto.getPedidoCollection()) {
-                pedidoCollectionPedido.getProductoCollection().add(producto);
-                pedidoCollectionPedido = em.merge(pedidoCollectionPedido);
+            for (ProductoPedido productoPedidoCollectionProductoPedido : producto.getProductoPedidoCollection()) {
+                Producto oldProductoOfProductoPedidoCollectionProductoPedido = productoPedidoCollectionProductoPedido.getProducto();
+                productoPedidoCollectionProductoPedido.setProducto(producto);
+                productoPedidoCollectionProductoPedido = em.merge(productoPedidoCollectionProductoPedido);
+                if (oldProductoOfProductoPedidoCollectionProductoPedido != null) {
+                    oldProductoOfProductoPedidoCollectionProductoPedido.getProductoPedidoCollection().remove(productoPedidoCollectionProductoPedido);
+                    oldProductoOfProductoPedidoCollectionProductoPedido = em.merge(oldProductoOfProductoPedidoCollectionProductoPedido);
+                }
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findProducto(producto.getProductoPK()) != null) {
+                throw new PreexistingEntityException("Producto " + producto + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -71,28 +87,39 @@ public class ProductoJpaController implements Serializable {
         }
     }
 
-    public void edit(Producto producto) throws NonexistentEntityException, Exception {
+    public void edit(Producto producto) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Producto persistentProducto = em.find(Producto.class, producto.getId());
+            Producto persistentProducto = em.find(Producto.class, producto.getProductoPK());
             CategoriaProducto idCategoriaOld = persistentProducto.getIdCategoria();
             CategoriaProducto idCategoriaNew = producto.getIdCategoria();
-            Collection<Pedido> pedidoCollectionOld = persistentProducto.getPedidoCollection();
-            Collection<Pedido> pedidoCollectionNew = producto.getPedidoCollection();
+            Collection<ProductoPedido> productoPedidoCollectionOld = persistentProducto.getProductoPedidoCollection();
+            Collection<ProductoPedido> productoPedidoCollectionNew = producto.getProductoPedidoCollection();
+            List<String> illegalOrphanMessages = null;
+            for (ProductoPedido productoPedidoCollectionOldProductoPedido : productoPedidoCollectionOld) {
+                if (!productoPedidoCollectionNew.contains(productoPedidoCollectionOldProductoPedido)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain ProductoPedido " + productoPedidoCollectionOldProductoPedido + " since its producto field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (idCategoriaNew != null) {
                 idCategoriaNew = em.getReference(idCategoriaNew.getClass(), idCategoriaNew.getIdCategoria());
                 producto.setIdCategoria(idCategoriaNew);
             }
-            Collection<Pedido> attachedPedidoCollectionNew = new ArrayList<Pedido>();
-            //comentario
-            /*for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
-                pedidoCollectionNewPedidoToAttach = em.getReference(pedidoCollectionNewPedidoToAttach.getClass(), pedidoCollectionNewPedidoToAttach.getNumPedido());
-                attachedPedidoCollectionNew.add(pedidoCollectionNewPedidoToAttach);
-            }*/
-            pedidoCollectionNew = attachedPedidoCollectionNew;
-            producto.setPedidoCollection(pedidoCollectionNew);
+            Collection<ProductoPedido> attachedProductoPedidoCollectionNew = new ArrayList<ProductoPedido>();
+            for (ProductoPedido productoPedidoCollectionNewProductoPedidoToAttach : productoPedidoCollectionNew) {
+                productoPedidoCollectionNewProductoPedidoToAttach = em.getReference(productoPedidoCollectionNewProductoPedidoToAttach.getClass(), productoPedidoCollectionNewProductoPedidoToAttach.getProductoPedidoPK());
+                attachedProductoPedidoCollectionNew.add(productoPedidoCollectionNewProductoPedidoToAttach);
+            }
+            productoPedidoCollectionNew = attachedProductoPedidoCollectionNew;
+            producto.setProductoPedidoCollection(productoPedidoCollectionNew);
             producto = em.merge(producto);
             if (idCategoriaOld != null && !idCategoriaOld.equals(idCategoriaNew)) {
                 idCategoriaOld.getProductoCollection().remove(producto);
@@ -102,23 +129,22 @@ public class ProductoJpaController implements Serializable {
                 idCategoriaNew.getProductoCollection().add(producto);
                 idCategoriaNew = em.merge(idCategoriaNew);
             }
-            for (Pedido pedidoCollectionOldPedido : pedidoCollectionOld) {
-                if (!pedidoCollectionNew.contains(pedidoCollectionOldPedido)) {
-                    pedidoCollectionOldPedido.getProductoCollection().remove(producto);
-                    pedidoCollectionOldPedido = em.merge(pedidoCollectionOldPedido);
-                }
-            }
-            for (Pedido pedidoCollectionNewPedido : pedidoCollectionNew) {
-                if (!pedidoCollectionOld.contains(pedidoCollectionNewPedido)) {
-                    pedidoCollectionNewPedido.getProductoCollection().add(producto);
-                    pedidoCollectionNewPedido = em.merge(pedidoCollectionNewPedido);
+            for (ProductoPedido productoPedidoCollectionNewProductoPedido : productoPedidoCollectionNew) {
+                if (!productoPedidoCollectionOld.contains(productoPedidoCollectionNewProductoPedido)) {
+                    Producto oldProductoOfProductoPedidoCollectionNewProductoPedido = productoPedidoCollectionNewProductoPedido.getProducto();
+                    productoPedidoCollectionNewProductoPedido.setProducto(producto);
+                    productoPedidoCollectionNewProductoPedido = em.merge(productoPedidoCollectionNewProductoPedido);
+                    if (oldProductoOfProductoPedidoCollectionNewProductoPedido != null && !oldProductoOfProductoPedidoCollectionNewProductoPedido.equals(producto)) {
+                        oldProductoOfProductoPedidoCollectionNewProductoPedido.getProductoPedidoCollection().remove(productoPedidoCollectionNewProductoPedido);
+                        oldProductoOfProductoPedidoCollectionNewProductoPedido = em.merge(oldProductoOfProductoPedidoCollectionNewProductoPedido);
+                    }
                 }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = producto.getId();
+                ProductoPK id = producto.getProductoPK();
                 if (findProducto(id) == null) {
                     throw new NonexistentEntityException("The producto with id " + id + " no longer exists.");
                 }
@@ -131,7 +157,7 @@ public class ProductoJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(ProductoPK id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -139,19 +165,25 @@ public class ProductoJpaController implements Serializable {
             Producto producto;
             try {
                 producto = em.getReference(Producto.class, id);
-                producto.getId();
+                producto.getProductoPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            Collection<ProductoPedido> productoPedidoCollectionOrphanCheck = producto.getProductoPedidoCollection();
+            for (ProductoPedido productoPedidoCollectionOrphanCheckProductoPedido : productoPedidoCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Producto (" + producto + ") cannot be destroyed since the ProductoPedido " + productoPedidoCollectionOrphanCheckProductoPedido + " in its productoPedidoCollection field has a non-nullable producto field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             CategoriaProducto idCategoria = producto.getIdCategoria();
             if (idCategoria != null) {
                 idCategoria.getProductoCollection().remove(producto);
                 idCategoria = em.merge(idCategoria);
-            }
-            Collection<Pedido> pedidoCollection = producto.getPedidoCollection();
-            for (Pedido pedidoCollectionPedido : pedidoCollection) {
-                pedidoCollectionPedido.getProductoCollection().remove(producto);
-                pedidoCollectionPedido = em.merge(pedidoCollectionPedido);
             }
             em.remove(producto);
             em.getTransaction().commit();
@@ -186,7 +218,7 @@ public class ProductoJpaController implements Serializable {
         }
     }
 
-    public Producto findProducto(Integer id) {
+    public Producto findProducto(ProductoPK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Producto.class, id);
@@ -194,51 +226,6 @@ public class ProductoJpaController implements Serializable {
             em.close();
         }
     }
-    
-    /*public Producto findProductoNombre(String nombre) {
-        EntityManager em = getEntityManager();
-        Producto producto = null;
-        try {
-            
-            Query q = em.createNamedQuery("Producto.findByNombre");
-            q.setParameter("nombre", nombre);
-            
-            producto = (Producto) q.getSingleResult();
-           
-            
-        } catch (Exception e){
-            
-        }
-          
-        finally {
-            em.close();
-        }
-        
-        return producto;
-        }*/
-    
-     public List<Producto> findProductoNombre(String nombre) {
-        EntityManager em = getEntityManager();
-        List <Producto> productos;
-        try {
-            
-            Query q = em.createNamedQuery("Producto.findByNombre");
-            q.setParameter("nombre", nombre);
-            
-            productos = q.getResultList();
-           
-            
-        } catch (Exception e){
-            productos = new ArrayList<Producto>();
-        }
-          
-        finally {
-            em.close();
-        }
-        
-        return productos;
-        }
-    
 
     public int getProductoCount() {
         EntityManager em = getEntityManager();

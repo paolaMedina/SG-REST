@@ -23,9 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
-* @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 @Entity
 @Table(name = "categoria_producto")

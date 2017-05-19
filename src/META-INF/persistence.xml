@@ -13,6 +13,9 @@
     <class>Clases.CategoriaProducto</class>
     <class>Clases.Empleado</class>
     <class>Clases.CargoEmpleado</class>
+    <class>Clases.Horarios</class>
+    <class>Clases.ProductoPedido</class>
+    <class>Clases.HorarioEmpleado</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/SG-REST"/>
       <property name="javax.persistence.jdbc.password" value="postgres"/>

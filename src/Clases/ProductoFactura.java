@@ -19,9 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 @Entity
 @Table(name = "producto_factura")
@@ -30,12 +28,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ProductoFactura.findAll", query = "SELECT p FROM ProductoFactura p"),
     @NamedQuery(name = "ProductoFactura.findByIdFactura", query = "SELECT p FROM ProductoFactura p WHERE p.productoFacturaPK.idFactura = :idFactura"),
     @NamedQuery(name = "ProductoFactura.findByIdProducto", query = "SELECT p FROM ProductoFactura p WHERE p.productoFacturaPK.idProducto = :idProducto"),
+    @NamedQuery(name = "ProductoFactura.findByNombreProducto", query = "SELECT p FROM ProductoFactura p WHERE p.nombreProducto = :nombreProducto"),
     @NamedQuery(name = "ProductoFactura.findByPrecio", query = "SELECT p FROM ProductoFactura p WHERE p.precio = :precio"),
     @NamedQuery(name = "ProductoFactura.findByCantidad", query = "SELECT p FROM ProductoFactura p WHERE p.cantidad = :cantidad")})
 public class ProductoFactura implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ProductoFacturaPK productoFacturaPK;
+    @Basic(optional = false)
+    @Column(name = "nombre_producto")
+    private String nombreProducto;
     @Basic(optional = false)
     @Column(name = "precio")
     private long precio;
@@ -53,8 +55,9 @@ public class ProductoFactura implements Serializable {
         this.productoFacturaPK = productoFacturaPK;
     }
 
-    public ProductoFactura(ProductoFacturaPK productoFacturaPK, long precio, int cantidad) {
+    public ProductoFactura(ProductoFacturaPK productoFacturaPK, String nombreProducto, long precio, int cantidad) {
         this.productoFacturaPK = productoFacturaPK;
+        this.nombreProducto = nombreProducto;
         this.precio = precio;
         this.cantidad = cantidad;
     }
@@ -69,6 +72,14 @@ public class ProductoFactura implements Serializable {
 
     public void setProductoFacturaPK(ProductoFacturaPK productoFacturaPK) {
         this.productoFacturaPK = productoFacturaPK;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
     public long getPrecio() {

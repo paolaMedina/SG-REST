@@ -12,9 +12,7 @@ import javax.persistence.Embeddable;
 
 /**
  *
- * @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 @Embeddable
 public class ProductoFacturaPK implements Serializable {

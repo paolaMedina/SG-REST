@@ -8,50 +8,38 @@ package Clases;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 @Entity
 @Table(name = "producto")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
-    @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.id = :id"),
-    @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
+    @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.productoPK.id = :id"),
+    @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.productoPK.nombre = :nombre"),
     @NamedQuery(name = "Producto.findByPrecio", query = "SELECT p FROM Producto p WHERE p.precio = :precio"),
     @NamedQuery(name = "Producto.findByDescripcion", query = "SELECT p FROM Producto p WHERE p.descripcion = :descripcion"),
-    @NamedQuery(name = "Producto.findByEstado", query = "SELECT p FROM Producto p WHERE p.estado = :estado")})
+    @NamedQuery(name = "Producto.findByEstado", query = "SELECT p FROM Producto p WHERE p.estado = :estado"),
+    @NamedQuery(name = "Producto.findByFotografia", query = "SELECT p FROM Producto p WHERE p.fotografia = :fotografia")})
 public class Producto implements Serializable {
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Basic(optional = false)
-    @Column(name = "nombre")
-    private String nombre;
-    @Lob
-    @Column(name = "fotografia")
-    private byte[] fotografia;
+    @EmbeddedId
+    protected ProductoPK productoPK;
     @Basic(optional = false)
     @Column(name = "precio")
     private long precio;
@@ -60,48 +48,37 @@ public class Producto implements Serializable {
     @Basic(optional = false)
     @Column(name = "estado")
     private boolean estado;
-    @ManyToMany(mappedBy = "productoCollection")
-    private Collection<Pedido> pedidoCollection;
+    @Column(name = "fotografia")
+    private String fotografia;
     @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
     @ManyToOne(optional = false)
     private CategoriaProducto idCategoria;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "producto")
+    private Collection<ProductoPedido> productoPedidoCollection;
 
     public Producto() {
     }
 
-    public Producto(Integer id) {
-        this.id = id;
+    public Producto(ProductoPK productoPK) {
+        this.productoPK = productoPK;
     }
 
-    public Producto(Integer id, String nombre, long precio, boolean estado) {
-        this.id = id;
-        this.nombre = nombre;
+    public Producto(ProductoPK productoPK, long precio, boolean estado) {
+        this.productoPK = productoPK;
         this.precio = precio;
         this.estado = estado;
     }
 
-    public Integer getId() {
-        return id;
+    public Producto(int id, String nombre) {
+        this.productoPK = new ProductoPK(id, nombre);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public ProductoPK getProductoPK() {
+        return productoPK;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public byte[] getFotografia() {
-        return fotografia;
-    }
-
-    public void setFotografia(byte[] fotografia) {
-        this.fotografia = fotografia;
+    public void setProductoPK(ProductoPK productoPK) {
+        this.productoPK = productoPK;
     }
 
     public long getPrecio() {
@@ -128,13 +105,12 @@ public class Producto implements Serializable {
         this.estado = estado;
     }
 
-    @XmlTransient
-    public Collection<Pedido> getPedidoCollection() {
-        return pedidoCollection;
+    public String getFotografia() {
+        return fotografia;
     }
 
-    public void setPedidoCollection(Collection<Pedido> pedidoCollection) {
-        this.pedidoCollection = pedidoCollection;
+    public void setFotografia(String fotografia) {
+        this.fotografia = fotografia;
     }
 
     public CategoriaProducto getIdCategoria() {
@@ -145,10 +121,19 @@ public class Producto implements Serializable {
         this.idCategoria = idCategoria;
     }
 
+    @XmlTransient
+    public Collection<ProductoPedido> getProductoPedidoCollection() {
+        return productoPedidoCollection;
+    }
+
+    public void setProductoPedidoCollection(Collection<ProductoPedido> productoPedidoCollection) {
+        this.productoPedidoCollection = productoPedidoCollection;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (productoPK != null ? productoPK.hashCode() : 0);
         return hash;
     }
 
@@ -159,7 +144,7 @@ public class Producto implements Serializable {
             return false;
         }
         Producto other = (Producto) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.productoPK == null && other.productoPK != null) || (this.productoPK != null && !this.productoPK.equals(other.productoPK))) {
             return false;
         }
         return true;
@@ -167,7 +152,7 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "Clases.Producto[ id=" + id + " ]";
+        return "Clases.Producto[ productoPK=" + productoPK + " ]";
     }
     
 }

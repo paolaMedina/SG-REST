@@ -24,9 +24,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 public class FacturaJpaController implements Serializable {
 

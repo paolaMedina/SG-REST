@@ -13,7 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,9 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 @Entity
 @Table(name = "empleado")
@@ -42,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Empleado.findByDireccion", query = "SELECT e FROM Empleado e WHERE e.direccion = :direccion"),
     @NamedQuery(name = "Empleado.findByTelefonoFijo", query = "SELECT e FROM Empleado e WHERE e.telefonoFijo = :telefonoFijo"),
     @NamedQuery(name = "Empleado.findByTelefonoCelular", query = "SELECT e FROM Empleado e WHERE e.telefonoCelular = :telefonoCelular"),
-    @NamedQuery(name = "Empleado.findByEmail", query = "SELECT e FROM Empleado e WHERE e.email = :email")})
+    @NamedQuery(name = "Empleado.findByEmail", query = "SELECT e FROM Empleado e WHERE e.email = :email"),
+    @NamedQuery(name = "Empleado.findByFoto", query = "SELECT e FROM Empleado e WHERE e.foto = :foto")})
 public class Empleado implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -64,9 +62,6 @@ public class Empleado implements Serializable {
     @Basic(optional = false)
     @Column(name = "horario")
     private String horario;
-    @Lob
-    @Column(name = "foto")
-    private byte[] foto;
     @Column(name = "direccion")
     private String direccion;
     @Column(name = "telefono_fijo")
@@ -76,9 +71,13 @@ public class Empleado implements Serializable {
     private String telefonoCelular;
     @Column(name = "email")
     private String email;
+    @Column(name = "foto")
+    private String foto;
     @JoinColumn(name = "cargo", referencedColumnName = "id_cargo")
     @ManyToOne(optional = false)
     private CargoEmpleado cargo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "empleado")
+    private Collection<HorarioEmpleado> horarioEmpleadoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idEmpleado")
     private Collection<Pedido> pedidoCollection;
 
@@ -147,14 +146,6 @@ public class Empleado implements Serializable {
         this.horario = horario;
     }
 
-    public byte[] getFoto() {
-        return foto;
-    }
-
-    public void setFoto(byte[] foto) {
-        this.foto = foto;
-    }
-
     public String getDireccion() {
         return direccion;
     }
@@ -187,12 +178,29 @@ public class Empleado implements Serializable {
         this.email = email;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
     public CargoEmpleado getCargo() {
         return cargo;
     }
 
     public void setCargo(CargoEmpleado cargo) {
         this.cargo = cargo;
+    }
+
+    @XmlTransient
+    public Collection<HorarioEmpleado> getHorarioEmpleadoCollection() {
+        return horarioEmpleadoCollection;
+    }
+
+    public void setHorarioEmpleadoCollection(Collection<HorarioEmpleado> horarioEmpleadoCollection) {
+        this.horarioEmpleadoCollection = horarioEmpleadoCollection;
     }
 
     @XmlTransient

@@ -22,9 +22,7 @@ import javax.persistence.EntityManagerFactory;
 
 /**
  *
- * @author Daniel Galarza
- * @author Felipe Tellez
- * @author Paola Medina
+ * @author Daniel
  */
 public class CategoriaProductoJpaController implements Serializable {
 
@@ -47,7 +45,7 @@ public class CategoriaProductoJpaController implements Serializable {
             em.getTransaction().begin();
             Collection<Producto> attachedProductoCollection = new ArrayList<Producto>();
             for (Producto productoCollectionProductoToAttach : categoriaProducto.getProductoCollection()) {
-                productoCollectionProductoToAttach = em.getReference(productoCollectionProductoToAttach.getClass(), productoCollectionProductoToAttach.getId());
+                productoCollectionProductoToAttach = em.getReference(productoCollectionProductoToAttach.getClass(), productoCollectionProductoToAttach.getProductoPK());
                 attachedProductoCollection.add(productoCollectionProductoToAttach);
             }
             categoriaProducto.setProductoCollection(attachedProductoCollection);
@@ -91,7 +89,7 @@ public class CategoriaProductoJpaController implements Serializable {
             }
             Collection<Producto> attachedProductoCollectionNew = new ArrayList<Producto>();
             for (Producto productoCollectionNewProductoToAttach : productoCollectionNew) {
-                productoCollectionNewProductoToAttach = em.getReference(productoCollectionNewProductoToAttach.getClass(), productoCollectionNewProductoToAttach.getId());
+                productoCollectionNewProductoToAttach = em.getReference(productoCollectionNewProductoToAttach.getClass(), productoCollectionNewProductoToAttach.getProductoPK());
                 attachedProductoCollectionNew.add(productoCollectionNewProductoToAttach);
             }
             productoCollectionNew = attachedProductoCollectionNew;
