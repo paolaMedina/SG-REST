@@ -12,6 +12,7 @@ import Controladores.exceptions.NonexistentEntityException;
 import java.awt.Image;
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.*;
@@ -519,6 +520,17 @@ public class Gui_empleado extends javax.swing.JFrame {
             habilitar();
             jTextFieldIdentificacion.setEnabled(false);
             
+            //datos del horario
+            HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
+            List<HorarioEmpleado> horarioEmpList = daoHorarioEmpleado.findHorarioEmpleado(empleado.getIdentificacion());
+            HorarioEmpleado horarioEmp = horarioEmpList.get(0);
+            
+            this.fechaInicio = horarioEmp.getFechaInicio();
+            this.fechaFinal = horarioEmp.getFechaFin();
+            this.HorarioSeleccionado = horarioEmp.getHorarios();
+            
+            
+            
         }catch(NullPointerException e){
             JOptionPane.showMessageDialog(null, "El empleado no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -577,13 +589,13 @@ public class Gui_empleado extends javax.swing.JFrame {
         
         HorarioEmpleado horarioEmpleado = new HorarioEmpleado();
         horarioEmpleado.setEmpleado(empleado);
-        horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
-        horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
-        horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
         
         System.err.println("");
         try {
             if (verificarCamposVacios() == false) {
+                horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
+                horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
+                horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
                 daoEmpleado.create(empleado);
                 daoHorarioEmpleado.create(horarioEmpleado);
                 botones();
@@ -599,17 +611,22 @@ public class Gui_empleado extends javax.swing.JFrame {
             limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         System.err.println(this.elegirHorario.HorarioSeleccionado.getHorariosPK().getHorarioFin());
-        
-        
-
+        }    
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+        
         // Obtencion de datos de la interfaz
         String id=jTextFieldIdentificacion.getText(),nom=jTextFieldNombre.getText(),ape=jTextFieldApellidos.getText();
         String cargo=this.jComboBoxCargo.getSelectedItem().toString();
+        int cargoId =0;
+        if (cargo.equalsIgnoreCase("Gerente")) {
+            cargoId = 1;
+        }else if (cargo.equalsIgnoreCase("Mesero")) {
+            cargoId = 2;
+        }else{
+            cargoId = 3;
+        }
         String dni=jComboBoxEstado.getSelectedItem().toString();
         boolean estado = true;
         if (dni.equalsIgnoreCase("activo")) {
@@ -622,7 +639,11 @@ public class Gui_empleado extends javax.swing.JFrame {
         String contraseña = jTextFieldContraseña.getText();
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+        //Se crea el controlador del cargo_empleado
+        CargoEmpleadoJpaController daoCargoEmpleado = new CargoEmpleadoJpaController(emf);
+        CargoEmpleado cargoEmpleado = daoCargoEmpleado.findCargoEmpleado(cargoId);
         
         //se crea el controlador del empleado y del ususario asociaro
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
@@ -633,31 +654,41 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setPassword(contraseña);
         empleado.setNombre(nom);
         empleado.setApelllido(ape);
-        //empleado.setCargo(cargo);
+        empleado.setCargo(cargoEmpleado);
         empleado.setEstado(estado);
         empleado.setDireccion(dir);
         empleado.setTelefonoFijo(tel);
         empleado.setTelefonoCelular(cel);
         empleado.setEmail(emil);
-        empleado.setPassword(contraseña);
         
+        //se crea un HorarioEmpleado
+        HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
+        
+        HorarioEmpleado horarioEmpleado = new HorarioEmpleado();
+        horarioEmpleado.setEmpleado(empleado);
+        
+        System.err.println("");
         try {
             if (verificarCamposVacios() == false) {
+                horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
+                horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
+                horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
                 daoEmpleado.edit(empleado);
+                daoHorarioEmpleado.edit(horarioEmpleado);
+                botones();
                 limpiar();
-                habilitarBotones();
-                deshabilitar();
-                JOptionPane.showMessageDialog(null, "El empleado se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                limpiar();
             }
             
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    
-
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
