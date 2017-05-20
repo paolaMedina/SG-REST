@@ -32,13 +32,10 @@ public class Gui_login extends javax.swing.JFrame {
     /**************************************************/
     //Metodo que se encarga de hacer el logueo de un usuario
     //  -> loguear -> void
-    private String loguear(){
+    private String loguear(String usuario, String password){
         String validacion = null;
         
-        String usuario=jTextFieldIdentificacion.getText();
-        String password = jPassword.getText();
-        
-        
+
         if( usuario.trim().isEmpty() || password.trim().isEmpty() ) {
         
             validacion= "Ingrese los datos completos";
@@ -55,21 +52,23 @@ public class Gui_login extends javax.swing.JFrame {
                 CargoEmpleado cargoEmpleado = empleado.getCargo();
                 String cargo = cargoEmpleado.getCargo();
                 
+                
                 switch (cargo){
                     case "Gerente":
                         Gui_VentanaPrincipal principalGenrente = new Gui_VentanaPrincipal(this);
                         principalGenrente.setVisible(true);
                         validacion= "El gerente ingreso exitosamente";
+                        this.dispose();
                         
-                    case "Cajero":
+                    /*case "Cajero":
                         Gui_VentanaPrincipal principalCajero = new Gui_VentanaPrincipal(this);
                         principalCajero.setVisible(true);
-                        validacion= "El cajero ingreso exitosamente";
+                        validacion= "El cajero ingreso exitosamente";*/
                         
-                    case "Mesero":
+                    /*case "Mesero":
                         Gui_VentanaPrincipal principalMesero = new Gui_VentanaPrincipal(this);
                         principalMesero.setVisible(true);
-                        validacion= "El mesero ingreso exitosamente";
+                        validacion= "El mesero ingreso exitosamente";*/
                 }
                         
             }
@@ -171,18 +170,11 @@ public class Gui_login extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIdentificacionActionPerformed
 
     private void jButtonIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIngresarActionPerformed
-        /*// TODO add your handling code here:
-         jTextFieldIdentificacion.setText(" ");
-         jPassword.setText("");
-         try{
-         Gui_VentanaPrincipal gui_principal =new Gui_VentanaPrincipal(this);
-    
-         gui_principal.show();
-         gui_principal.setLocation(50, 5);
-         this.dispose();
-       }catch(Exception e){}*/
+        String usuario=jTextFieldIdentificacion.getText();
+        String password = jPassword.getText();
+        
         try{
-            String validacion = this.loguear();
+            String validacion = this.loguear(usuario, password);
             
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, "Error al ingresar", "Error!", JOptionPane.ERROR_MESSAGE);
