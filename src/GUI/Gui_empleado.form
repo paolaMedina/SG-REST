@@ -260,7 +260,7 @@
                   <StringArray count="4">
                     <StringItem index="0" value="Seleccione..."/>
                     <StringItem index="1" value="Gerente"/>
-                    <StringItem index="2" value="Contador"/>
+                    <StringItem index="2" value="Cajero"/>
                     <StringItem index="3" value="Mesero"/>
                   </StringArray>
                 </Property>
@@ -336,6 +336,7 @@
             <Component class="javax.swing.JButton" name="jButtonHorario">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Fijar Horario"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonHorarioActionPerformed"/>

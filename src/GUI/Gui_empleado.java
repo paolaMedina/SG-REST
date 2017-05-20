@@ -11,6 +11,7 @@ import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import java.awt.Image;
 import java.io.File;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.*;
@@ -27,7 +28,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Gui_empleado extends javax.swing.JFrame {
 
     Gui_VentanaPrincipal gui_principal = null;
-    HorarioEmpleado horarioEmpleado = null;
+    Date fechaInicio;
+    Date fechaFinal;
+    Horarios HorarioSeleccionado;
+    Gui_ElegirHorario elegirHorario = null;
     /**
      * Creates new form empleado
      */
@@ -116,7 +120,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             }
         });
 
-        jComboBoxCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Gerente", "Contador", "Mesero" }));
+        jComboBoxCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Gerente", "Cajero", "Mesero" }));
 
         jTextFieldTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -160,6 +164,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         });
 
         jButtonHorario.setText("Fijar Horario");
+        jButtonHorario.setEnabled(false);
         jButtonHorario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonHorarioActionPerformed(evt);
@@ -509,6 +514,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             this.jButtonModificar.setEnabled(true);
             this.jButtonEliminar.setEnabled(true);
             this.jButtonNuevo.setEnabled(false);
+            this.jButtonHorario.setEnabled(true);
             
             habilitar();
             jTextFieldIdentificacion.setEnabled(false);
@@ -561,15 +567,25 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setApelllido(ape);
         empleado.setCargo(cargoEmpleado);
         empleado.setEstado(estado);
-        empleado.setHorario("");
         empleado.setDireccion(dir);
         empleado.setTelefonoFijo(tel);
         empleado.setTelefonoCelular(cel);
         empleado.setEmail(emil);
         
+        //se crea un HorarioEmpleado
+        HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
+        
+        HorarioEmpleado horarioEmpleado = new HorarioEmpleado();
+        horarioEmpleado.setEmpleado(empleado);
+        horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
+        horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
+        horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
+        
+        System.err.println("");
         try {
             if (verificarCamposVacios() == false) {
                 daoEmpleado.create(empleado);
+                daoHorarioEmpleado.create(horarioEmpleado);
                 botones();
                 limpiar();
                 JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
@@ -584,7 +600,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+         System.err.println(this.elegirHorario.HorarioSeleccionado.getHorariosPK().getHorarioFin());
         
         
 
@@ -619,7 +635,6 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setApelllido(ape);
         //empleado.setCargo(cargo);
         empleado.setEstado(estado);
-        empleado.setHorario("");
         empleado.setDireccion(dir);
         empleado.setTelefonoFijo(tel);
         empleado.setTelefonoCelular(cel);
@@ -694,6 +709,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonEliminar.setEnabled(false);
         this.jButtonNuevo.setEnabled(false);
         this.jButtonSeleccionarFoto.setEnabled(true);
+        this.jButtonHorario.setEnabled(true);
 
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
@@ -706,7 +722,8 @@ public class Gui_empleado extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldContraseñaActionPerformed
 
     private void jButtonHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHorarioActionPerformed
-        Gui_ElegirHorario elegirHorario = new Gui_ElegirHorario(this.horarioEmpleado);
+        this.elegirHorario = new Gui_ElegirHorario(HorarioSeleccionado, fechaInicio, fechaFinal);
+        elegirHorario.setVisible(true);
 
     }//GEN-LAST:event_jButtonHorarioActionPerformed
 
@@ -717,6 +734,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonModificar.setEnabled(false);
         this.jButtonEliminar.setEnabled(false);
         this.jButtonSeleccionarFoto.setEnabled(false);
+        this.jButtonHorario.setEnabled(false);
         
      }
      
