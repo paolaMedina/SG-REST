@@ -42,7 +42,7 @@ public class Gui_loginTest {
      */
     @Test
     public void testLoguear1() {
-        System.out.println("loguear");
+
         String usuario = "";
         String password = "";
         Gui_login instance = new Gui_login();
@@ -55,7 +55,7 @@ public class Gui_loginTest {
     
     @Test
     public void testLoguear2() {
-        System.out.println("loguear");
+
         String usuario = "1111";
         String password = "12345";
         Gui_login instance = new Gui_login();
@@ -68,7 +68,7 @@ public class Gui_loginTest {
     
     @Test
     public void testLoguear3() {
-        System.out.println("loguear");
+
         String usuario = "1111";
         String password = "1111";
         Gui_login instance = new Gui_login();
@@ -81,7 +81,7 @@ public class Gui_loginTest {
     
     @Test
     public void testLoguear4() {
-        System.out.println("loguear");
+
         String usuario = "3333";
         String password = "3333";
         Gui_login instance = new Gui_login();
@@ -94,7 +94,7 @@ public class Gui_loginTest {
     
     @Test
     public void testLoguear5() {
-        System.out.println("loguear");
+
         String usuario = "4444";
         String password = "4444";
         Gui_login instance = new Gui_login();
