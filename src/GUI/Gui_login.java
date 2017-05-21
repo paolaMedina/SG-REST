@@ -31,8 +31,8 @@ public class Gui_login extends javax.swing.JFrame {
     
     /**************************************************/
     //Metodo que se encarga de hacer el logueo de un usuario
-    //  -> loguear -> void
-    private String loguear(String usuario, String password){
+    //  String String -> loguear -> String
+    public String loguear(String usuario, String password){
         String validacion = null;
         
 
@@ -52,28 +52,36 @@ public class Gui_login extends javax.swing.JFrame {
                 CargoEmpleado cargoEmpleado = empleado.getCargo();
                 String cargo = cargoEmpleado.getCargo();
                 
-                
-                switch (cargo){
-                    case "Gerente":
-                        Gui_VentanaPrincipal principalGenrente = new Gui_VentanaPrincipal(this);
-                        principalGenrente.setVisible(true);
-                        validacion= "El gerente ingreso exitosamente";
-                        this.dispose();
+                if (cargo.equalsIgnoreCase("Gerente")) {
+                    
+                    Gui_VentanaPrincipal principalGenrente = new Gui_VentanaPrincipal(this);
+                    principalGenrente.setVisible(true);
+                    validacion= "El gerente ingreso exitosamente";
+                    this.dispose();
+                                       
+                }else if (cargo.equalsIgnoreCase("Cajero")) {
+                    
+                     Gui_VentanaPrincipal principalCajero = new Gui_VentanaPrincipal(this);
+                    principalCajero.setVisible(true);
+                    validacion= "El cajero ingreso exitosamente";
+                    this.dispose();
                         
-                    /*case "Cajero":
-                        Gui_VentanaPrincipal principalCajero = new Gui_VentanaPrincipal(this);
-                        principalCajero.setVisible(true);
-                        validacion= "El cajero ingreso exitosamente";*/
-                        
-                    /*case "Mesero":
-                        Gui_VentanaPrincipal principalMesero = new Gui_VentanaPrincipal(this);
-                        principalMesero.setVisible(true);
-                        validacion= "El mesero ingreso exitosamente";*/
+                }else{
+                    
+                    Gui_VentanaPrincipal principalMesero = new Gui_VentanaPrincipal(this);
+                    principalMesero.setVisible(true);
+                    validacion= "El mesero ingreso exitosamente";
+                    this.dispose();
                 }
-                        
+                      
+            }else{
+                validacion= "Contraseña incorrecta";
+                JOptionPane.showMessageDialog(null, "Contraseña incorrecta", "Error!", JOptionPane.ERROR_MESSAGE);
             }
         }
         
+        jTextFieldIdentificacion.setText("");
+        jPassword.setText("");
         return validacion;
     }
     
