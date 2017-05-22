@@ -109,16 +109,18 @@ public class ProductoJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            
             if (idCategoriaNew != null) {
                 idCategoriaNew = em.getReference(idCategoriaNew.getClass(), idCategoriaNew.getIdCategoria());
                 producto.setIdCategoria(idCategoriaNew);
             }
+            /*
             Collection<ProductoPedido> attachedProductoPedidoCollectionNew = new ArrayList<ProductoPedido>();
             for (ProductoPedido productoPedidoCollectionNewProductoPedidoToAttach : productoPedidoCollectionNew) {
                 productoPedidoCollectionNewProductoPedidoToAttach = em.getReference(productoPedidoCollectionNewProductoPedidoToAttach.getClass(), productoPedidoCollectionNewProductoPedidoToAttach.getProductoPedidoPK());
                 attachedProductoPedidoCollectionNew.add(productoPedidoCollectionNewProductoPedidoToAttach);
             }
-            productoPedidoCollectionNew = attachedProductoPedidoCollectionNew;
+            productoPedidoCollectionNew = attachedProductoPedidoCollectionNew;*/
             producto.setProductoPedidoCollection(productoPedidoCollectionNew);
             producto = em.merge(producto);
             if (idCategoriaOld != null && !idCategoriaOld.equals(idCategoriaNew)) {
@@ -128,7 +130,7 @@ public class ProductoJpaController implements Serializable {
             if (idCategoriaNew != null && !idCategoriaNew.equals(idCategoriaOld)) {
                 idCategoriaNew.getProductoCollection().add(producto);
                 idCategoriaNew = em.merge(idCategoriaNew);
-            }
+            }/*
             for (ProductoPedido productoPedidoCollectionNewProductoPedido : productoPedidoCollectionNew) {
                 if (!productoPedidoCollectionOld.contains(productoPedidoCollectionNewProductoPedido)) {
                     Producto oldProductoOfProductoPedidoCollectionNewProductoPedido = productoPedidoCollectionNewProductoPedido.getProducto();
@@ -139,7 +141,7 @@ public class ProductoJpaController implements Serializable {
                         oldProductoOfProductoPedidoCollectionNewProductoPedido = em.merge(oldProductoOfProductoPedidoCollectionNewProductoPedido);
                     }
                 }
-            }
+            }*/
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
