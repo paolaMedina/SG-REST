@@ -16,6 +16,7 @@ import Clases.HorarioEmpleado;
 import Clases.HorarioEmpleadoPK;
 import Controladores.exceptions.NonexistentEntityException;
 import Controladores.exceptions.PreexistingEntityException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -197,6 +198,28 @@ public class HorarioEmpleadoJpaController implements Serializable {
         }
     }
 
+    public List<HorarioEmpleado> findHorarioEmpleado(String empleadoIdentificacion) {
+        EntityManager em = getEntityManager();
+        List <HorarioEmpleado> productos;
+        try {
+            
+            Query q = em.createNamedQuery("HorarioEmpleado.findByEmpleadoIdentificacion");
+            q.setParameter("empleadoIdentificacion", empleadoIdentificacion);
+            
+            productos = q.getResultList();
+           
+            
+        } catch (Exception e){
+            productos = new ArrayList<HorarioEmpleado>();
+        }
+          
+        finally {
+            em.close();
+        }
+        
+        return productos;
+        }
+    
     public int getHorarioEmpleadoCount() {
         EntityManager em = getEntityManager();
         try {

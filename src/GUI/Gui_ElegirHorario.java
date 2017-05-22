@@ -20,13 +20,19 @@ import javax.persistence.Persistence;
 public class Gui_ElegirHorario extends javax.swing.JFrame {
 
     List<Horarios> horarios = null;
+    Date fechaInicio;
+    Date fechaFinal;
+    Horarios HorarioSeleccionado;
     
-    
-    public Gui_ElegirHorario(HorarioEmpleado horarioEmpleado) {
+    public Gui_ElegirHorario(Horarios horario, Date fechaInicio, Date fechaFinal) {
         initComponents();
         jDateChooserInicio.setDate(new Date());
         jDateChooserFinal.setDate(new Date());
         this.setLocationRelativeTo(null);
+        
+        horario = HorarioSeleccionado;
+        fechaInicio = this.fechaInicio;
+        fechaFinal = this.fechaFinal;
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
@@ -37,6 +43,10 @@ public class Gui_ElegirHorario extends javax.swing.JFrame {
         for (int i = 0; i < horarios.size(); i++) {
             jComboBoxHoraInicio.addItem(this.horarios.get(i).getHorariosPK().getHorarioInicio().getHours());
         }
+    }
+
+    private Gui_ElegirHorario(HorarioEmpleado horarioEmpleado) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -50,7 +60,7 @@ public class Gui_ElegirHorario extends javax.swing.JFrame {
 
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jDateChooserInicio = new com.toedter.calendar.JDateChooser();
-        jButton1 = new javax.swing.JButton();
+        jButtonAgregar = new javax.swing.JButton();
         jDateChooserFinal = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -62,10 +72,10 @@ public class Gui_ElegirHorario extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Agregar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAgregar.setText("Agregar");
+        jButtonAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonAgregarActionPerformed(evt);
             }
         });
 
@@ -98,7 +108,7 @@ public class Gui_ElegirHorario extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(37, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonAgregar)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -138,19 +148,29 @@ public class Gui_ElegirHorario extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabelHoraFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(jButtonAgregar)
                 .addGap(54, 54, 54))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Date fechaInicio = jDateChooserInicio.getDate();
-        Date fechaFinal = jDateChooserFinal.getDate();
+    private void jButtonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarActionPerformed
+        this.fechaInicio = jDateChooserInicio.getDate();
+        this.fechaFinal = jDateChooserFinal.getDate();
         
+        String horaIni =jComboBoxHoraInicio.getSelectedItem().toString();
+        String horafin =jLabelHoraFinal.getText();
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+        for (int i = 0; i < horarios.size(); i++) {
+            if (this.horarios.get(i).getHorariosPK().getHorarioInicio().getHours() == Integer.parseInt(horaIni)) {
+                
+                this.HorarioSeleccionado = horarios.get(i);
+            }
+        }
+        
+        this.setVisible(false);
+    }//GEN-LAST:event_jButtonAgregarActionPerformed
 
     private void jComboBoxHoraInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxHoraInicioActionPerformed
         // TODO add your handling code here:
@@ -199,7 +219,7 @@ public class Gui_ElegirHorario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonAgregar;
     private javax.swing.JComboBox jComboBoxHoraInicio;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooserFinal;
