@@ -80,9 +80,9 @@ public class HorarioEmpleadoJpaController implements Serializable {
     }
 
     public void edit(HorarioEmpleado horarioEmpleado) throws NonexistentEntityException, Exception {
-        horarioEmpleado.getHorarioEmpleadoPK().setHorariosHorarioFin(horarioEmpleado.getHorarios().getHorariosPK().getHorarioFin());
+        /*horarioEmpleado.getHorarioEmpleadoPK().setHorariosHorarioFin(horarioEmpleado.getHorarios().getHorariosPK().getHorarioFin());
         horarioEmpleado.getHorarioEmpleadoPK().setHorariosHorarioInicio(horarioEmpleado.getHorarios().getHorariosPK().getHorarioInicio());
-        horarioEmpleado.getHorarioEmpleadoPK().setEmpleadoIdentificacion(horarioEmpleado.getEmpleado().getIdentificacion());
+        horarioEmpleado.getHorarioEmpleadoPK().setEmpleadoIdentificacion(horarioEmpleado.getEmpleado().getIdentificacion());*/
         EntityManager em = null;
         try {
             em = getEntityManager();

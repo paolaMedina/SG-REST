@@ -46,6 +46,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         botones();
         deshabilitar();
         
+        
     }
     
    
@@ -515,7 +516,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
             this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar.setEnabled(true);
+            this.jButtonEliminar.setEnabled(false);
             this.jButtonNuevo.setEnabled(false);
             this.jButtonHorario.setEnabled(true);
             
@@ -672,25 +673,34 @@ public class Gui_empleado extends javax.swing.JFrame {
         System.err.println("");
         try {
             if (verificarCamposVacios() == false) {
-                horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
-                horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
-                horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
-                daoEmpleado.edit(empleado);
-                daoHorarioEmpleado.edit(horarioEmpleado);
-                botones();
-                limpiar();
-                JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+                if (elegirHorario == null) {
+                    daoEmpleado.edit(empleado);
+                    botones();
+                    limpiar();
+                    JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+            
+                }else{
+                    horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
+                    horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
+                    horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
+                    daoEmpleado.edit(empleado);
+                    daoHorarioEmpleado.edit(horarioEmpleado);
+                    botones();
+                    limpiar();
+                    JOptionPane.showMessageDialog(null, "El empleado se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+            
+                }
+
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-                limpiar();
+                botones();
+                    limpiar();
             }
             
-        } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-            limpiar();
-        } catch (Exception ex) {
+        }  catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
@@ -709,12 +719,19 @@ public class Gui_empleado extends javax.swing.JFrame {
         String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del empleado que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
 
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
         //se crea el controlador del empleado y del ususario asociaro
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-
+        
+        //se crea el controlador para el horario asociado a un empleado
+        HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
+            
         try {
+            List<HorarioEmpleado> he = daoHorarioEmpleado.findHorarioEmpleado(id);
+            HorarioEmpleado he1 = he.get(0);
+            
+            daoHorarioEmpleado.destroy(he1.getHorarioEmpleadoPK());
             daoEmpleado.destroy(id);
             JOptionPane.showMessageDialog(null, "El empleado se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
         } catch (IllegalOrphanException ex) {
@@ -765,7 +782,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
+        this.jButtonEliminar.setEnabled(true);
         this.jButtonSeleccionarFoto.setEnabled(false);
         this.jButtonHorario.setEnabled(false);
         

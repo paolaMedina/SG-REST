@@ -115,14 +115,14 @@ public class EmpleadoJpaController implements Serializable {
             Collection<Pedido> pedidoCollectionOld = persistentEmpleado.getPedidoCollection();
             Collection<Pedido> pedidoCollectionNew = empleado.getPedidoCollection();
             List<String> illegalOrphanMessages = null;
-            for (HorarioEmpleado horarioEmpleadoCollectionOldHorarioEmpleado : horarioEmpleadoCollectionOld) {
+            /*for (HorarioEmpleado horarioEmpleadoCollectionOldHorarioEmpleado : horarioEmpleadoCollectionOld) {
                 if (!horarioEmpleadoCollectionNew.contains(horarioEmpleadoCollectionOldHorarioEmpleado)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain HorarioEmpleado " + horarioEmpleadoCollectionOldHorarioEmpleado + " since its empleado field is not nullable.");
                 }
-            }
+            }*/
             for (Pedido pedidoCollectionOldPedido : pedidoCollectionOld) {
                 if (!pedidoCollectionNew.contains(pedidoCollectionOldPedido)) {
                     if (illegalOrphanMessages == null) {
@@ -139,17 +139,17 @@ public class EmpleadoJpaController implements Serializable {
                 empleado.setCargo(cargoNew);
             }
             Collection<HorarioEmpleado> attachedHorarioEmpleadoCollectionNew = new ArrayList<HorarioEmpleado>();
-            for (HorarioEmpleado horarioEmpleadoCollectionNewHorarioEmpleadoToAttach : horarioEmpleadoCollectionNew) {
+            /*for (HorarioEmpleado horarioEmpleadoCollectionNewHorarioEmpleadoToAttach : horarioEmpleadoCollectionNew) {
                 horarioEmpleadoCollectionNewHorarioEmpleadoToAttach = em.getReference(horarioEmpleadoCollectionNewHorarioEmpleadoToAttach.getClass(), horarioEmpleadoCollectionNewHorarioEmpleadoToAttach.getHorarioEmpleadoPK());
                 attachedHorarioEmpleadoCollectionNew.add(horarioEmpleadoCollectionNewHorarioEmpleadoToAttach);
-            }
+            }*/
             horarioEmpleadoCollectionNew = attachedHorarioEmpleadoCollectionNew;
             empleado.setHorarioEmpleadoCollection(horarioEmpleadoCollectionNew);
             Collection<Pedido> attachedPedidoCollectionNew = new ArrayList<Pedido>();
-            for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
+            /*for (Pedido pedidoCollectionNewPedidoToAttach : pedidoCollectionNew) {
                 pedidoCollectionNewPedidoToAttach = em.getReference(pedidoCollectionNewPedidoToAttach.getClass(), pedidoCollectionNewPedidoToAttach.getNumPedido());
                 attachedPedidoCollectionNew.add(pedidoCollectionNewPedidoToAttach);
-            }
+            }*/
             pedidoCollectionNew = attachedPedidoCollectionNew;
             empleado.setPedidoCollection(pedidoCollectionNew);
             empleado = em.merge(empleado);
