@@ -7,9 +7,12 @@ package GUI;
 
 import Clases.*;
 import Controladores.*;
+import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import java.awt.Image;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
@@ -375,9 +378,20 @@ public class Gui_producto extends javax.swing.JFrame {
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         // TODO add your handling code here:
 
-        String id=JOptionPane.showInputDialog("INGRESE EL IDENTIFICADOR DEL PRODUCTO A BUSCAR, si desea puede editar, modificar o eliminar el registro");
+        StringTokenizer llave = new StringTokenizer(JOptionPane.showInputDialog("INGRESE EL IDENTIFICADOR DEL PRODUCTO A BUSCAR, si desea puede editar, modificar o eliminar el registro"), "-");
         
-
+        ArrayList<String> llaveString = new ArrayList<String>();
+        
+        while (llave.hasMoreTokens()) {
+            llaveString.add(llave.nextToken());
+        }
+        
+        Integer id = Integer.parseInt(llaveString.get(0));
+        
+        String nombre = llaveString.get(1);
+        
+        ProductoPK productopk = new ProductoPK(id, nombre);
+              
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         
@@ -385,12 +399,12 @@ public class Gui_producto extends javax.swing.JFrame {
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         try{
-            Producto producto = daoProducto.findProducto(Integer.parseInt(id));
+            Producto producto = daoProducto.findProducto(productopk);
            
             //llenar campos con los datos del empleado
-            
-            jTextFieldNombre.setText(producto.getNombre());
-            this.jLabelId.setText(producto.getId().toString());
+          
+            this.jTextFieldNombre.setText(productopk.getNombre());
+            this.jLabelId.setText(Integer.toString(productopk.getId()));
             String precio=Integer.toString((int) producto.getPrecio());
             this.jTextFieldPrecio.setText(precio); 
             this.jTextAreaDescripcion.setText(producto.getDescripcion());
@@ -428,7 +442,8 @@ public class Gui_producto extends javax.swing.JFrame {
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
         // Obtencion de datos de la interfaz
         
-        String id=jLabelId.getText(),nom=jTextFieldNombre.getText();
+        int id = Integer.parseInt(jLabelId.getText());
+        String nom=jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
         String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
@@ -457,9 +472,8 @@ public class Gui_producto extends javax.swing.JFrame {
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         //se crea un objeto producto y se le asignan sus atributos
-        Producto producto = new Producto();
-        producto.setId(idCategoria);
-        producto.setNombre(nombre);
+        Producto producto = new Producto(id,nombre);
+             
         producto.setPrecio(precio);
         producto.setIdCategoria(categoriaProducto);
         producto.setDescripcion(descripcion);
@@ -487,14 +501,17 @@ public class Gui_producto extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        botones();
  
 
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        // Obtencion de datos de la interfaz
+       //Obtencion de datos de la interfaz
         
-        String id=jLabelId.getText(),nom=jTextFieldNombre.getText();
+        int id = Integer.parseInt(jLabelId.getText());
+        String nom =jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
         String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
@@ -523,9 +540,8 @@ public class Gui_producto extends javax.swing.JFrame {
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         //se crea un objeto producto y se le asignan sus atributos
-        Producto producto = new Producto();
-        producto.setId(Integer.parseInt(id));
-        producto.setNombre(nombre);
+        Producto producto = new Producto(id,nombre);
+             
         producto.setPrecio(precio);
         producto.setIdCategoria(categoriaProducto);
         producto.setDescripcion(descripcion);
@@ -539,14 +555,17 @@ public class Gui_producto extends javax.swing.JFrame {
         try {
             if (verificarCamposVacios() == false) {
                 daoProducto.edit(producto);
-                limpiar();
                 deshabilitar();
+                limpiar();
                 JOptionPane.showMessageDialog(null, "El producto se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
                 
             }
             
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+            limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -554,7 +573,7 @@ public class Gui_producto extends javax.swing.JFrame {
         deshabilitar();
  
 
-
+        
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
@@ -584,6 +603,7 @@ public class Gui_producto extends javax.swing.JFrame {
         limpiar();
         habilitar();
         this.jButtonBuscar.setEnabled(false);
+        this.jButtonagregar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
         this.jButtonEliminar1.setEnabled(false);
         String id =Integer.toString(daoProducto.getProductoCount()+1);
@@ -591,8 +611,20 @@ public class Gui_producto extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminar1ActionPerformed
-        String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del producto que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
-
+        StringTokenizer llave = new StringTokenizer(JOptionPane.showInputDialog(null, "Ingrese el codigo del producto que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE), "-");
+        
+       
+        ArrayList<String> llaveString = new ArrayList<String>();
+        
+        while (llave.hasMoreTokens()) {
+            llaveString.add(llave.nextToken());
+        }
+        
+        Integer id = Integer.parseInt(llaveString.get(0));
+        String nombre = llaveString.get(1);
+        
+        ProductoPK productopk = new ProductoPK(id, nombre);
+        
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
 
@@ -600,12 +632,16 @@ public class Gui_producto extends javax.swing.JFrame {
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         try {
-            daoProducto.destroy(Integer.parseInt(id));
+            daoProducto.destroy(productopk);
             JOptionPane.showMessageDialog(null, "El producto se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
         } catch (NonexistentEntityException ex) {
             JOptionPane.showMessageDialog(null, "El producto que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
+        limpiar();
+        botones();
         
     }//GEN-LAST:event_jButtonEliminar1ActionPerformed
 
