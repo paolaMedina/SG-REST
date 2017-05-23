@@ -377,126 +377,132 @@ public class Gui_producto extends javax.swing.JFrame {
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         // TODO add your handling code here:
-
-        StringTokenizer llave = new StringTokenizer(JOptionPane.showInputDialog("INGRESE EL IDENTIFICADOR DEL PRODUCTO A BUSCAR, si desea puede editar, modificar o eliminar el registro"), "-");
-        
-        ArrayList<String> llaveString = new ArrayList<String>();
-        
-        while (llave.hasMoreTokens()) {
-            llaveString.add(llave.nextToken());
-        }
-        
-        Integer id = Integer.parseInt(llaveString.get(0));
-        
-        String nombre = llaveString.get(1);
-        
-        ProductoPK productopk = new ProductoPK(id, nombre);
-              
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //se crea el controlador del empleado y del ususario asociaro
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        
         try{
-            Producto producto = daoProducto.findProducto(productopk);
-           
-            //llenar campos con los datos del empleado
-          
-            this.jTextFieldNombre.setText(productopk.getNombre());
-            this.jLabelId.setText(Integer.toString(productopk.getId()));
-            String precio=Integer.toString((int) producto.getPrecio());
-            this.jTextFieldPrecio.setText(precio); 
-            this.jTextAreaDescripcion.setText(producto.getDescripcion());
-            this.jButtonEliminar1.setEnabled(false);
+            StringTokenizer llave = new StringTokenizer(JOptionPane.showInputDialog("INGRESE EL IDENTIFICADOR DEL PRODUCTO A BUSCAR, si desea puede editar, modificar o eliminar el registro"), "-");
+            ArrayList<String> llaveString = new ArrayList<String>();
+        
+            while (llave.hasMoreTokens()) {
+                llaveString.add(llave.nextToken());
+            }
+
+            Integer id = Integer.parseInt(llaveString.get(0));
+
+            String nombre = llaveString.get(1);
+            
+            ProductoPK productopk = new ProductoPK(id, nombre);
+            
+            //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+            //se crea el controlador del empleado y del ususario asociaro
+            ProductoJpaController daoProducto = new ProductoJpaController(emf);
+        
+            try{
+                Producto producto = daoProducto.findProducto(productopk);
+
+                //llenar campos con los datos del empleado
+
+                this.jTextFieldNombre.setText(productopk.getNombre());
+                this.jLabelId.setText(Integer.toString(productopk.getId()));
+                String precio=Integer.toString((int) producto.getPrecio());
+                this.jTextFieldPrecio.setText(precio); 
+                this.jTextAreaDescripcion.setText(producto.getDescripcion());
+                this.jButtonEliminar1.setEnabled(false);
 
 
-            //campos que son comboBox
-            for (int i=0; i<jComboBoxCategoria.getItemCount()-1;i++){
-                if (producto.getIdCategoria().getNombreCategoria().equalsIgnoreCase(jComboBoxCategoria.getItemAt(i)) ) {
-                 
-                    jComboBoxCategoria.setSelectedIndex(i);
+                //campos que son comboBox
+                for (int i=0; i<jComboBoxCategoria.getItemCount()-1;i++){
+                    if (producto.getIdCategoria().getNombreCategoria().equalsIgnoreCase(jComboBoxCategoria.getItemAt(i)) ) {
+
+                        jComboBoxCategoria.setSelectedIndex(i);
+                    }
                 }
-            }
 
-            if (producto.getEstado() == true) {
-                jComboBoxEstado.setSelectedIndex(1);
-            }else{
-                jComboBoxEstado.setSelectedIndex(2);
-            }
-            
-            this.jButtonagregar.setEnabled(false);
-            this.jButtonBuscar.setEnabled(false);
-            this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar1.setEnabled(true);
-            this.jButtonNuevo.setEnabled(false);
-            
-            habilitar();
-            
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(null, "El producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                if (producto.getEstado() == true) {
+                    jComboBoxEstado.setSelectedIndex(1);
+                }else{
+                    jComboBoxEstado.setSelectedIndex(2);
+                }
 
+                this.jButtonagregar.setEnabled(false);
+                this.jButtonBuscar.setEnabled(false);
+                this.jButtonModificar.setEnabled(true);
+                this.jButtonEliminar1.setEnabled(true);
+                this.jButtonNuevo.setEnabled(false);
+
+                habilitar();
+            
+            }catch(NullPointerException e){
+                JOptionPane.showMessageDialog(null, "El producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+        }catch(NumberFormatException ex){
+            JOptionPane.showMessageDialog(null, "El codigo del producto debe estar escrito de la forma id-nombreproducto");
         }
+       
+        
+              
+      
+        
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
-        // Obtencion de datos de la interfaz
-        
-        int id = Integer.parseInt(jLabelId.getText());
-        String nom=jTextFieldNombre.getText();
-        String nombre =jTextFieldNombre.getText();
-        int precio= Integer.parseInt(jTextFieldPrecio.getText());
-        String categoria=this.jComboBoxCategoria.getSelectedItem().toString();        
-        int idCategoria = 0;
-        if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
-            idCategoria = 1;
-        }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
-            idCategoria = 2;
-        }else if (categoria.equalsIgnoreCase("Bebidas")){
-            idCategoria = 3;
-        }else if (categoria.equalsIgnoreCase("Helados")){
-            idCategoria = 4;
-        }
-        
-        String estado=this.jComboBoxEstado.getSelectedItem().toString();
-        String descripcion=this.jTextAreaDescripcion.getText();
-        
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //Se crea el controlador de la categoria del producto
-        CategoriaProductoJpaController daoCategoriaProducto = new CategoriaProductoJpaController(emf);
-        CategoriaProducto categoriaProducto = daoCategoriaProducto.findCategoriaProducto(idCategoria);
-        
-        //se crea el controlador del producto 
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        
-        //se crea un objeto producto y se le asignan sus atributos
-        Producto producto = new Producto(id,nombre);
-             
-        producto.setPrecio(precio);
-        producto.setIdCategoria(categoriaProducto);
-        producto.setDescripcion(descripcion);
-        if (estado=="Activo"){
-            producto.setEstado(true);
-        }
-        else{
-             producto.setEstado(false);
-        }
-       
+         
         try {
             if (verificarCamposVacios() == false) {
+                
+                int id = Integer.parseInt(jLabelId.getText());
+                String nom=jTextFieldNombre.getText();
+                String nombre =jTextFieldNombre.getText();
+                int precio= Integer.parseInt(jTextFieldPrecio.getText());
+                String categoria=this.jComboBoxCategoria.getSelectedItem().toString();        
+                int idCategoria = 0;
+                if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
+                    idCategoria = 1;
+                }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
+                    idCategoria = 2;
+                }else if (categoria.equalsIgnoreCase("Bebidas")){
+                    idCategoria = 3;
+                }else if (categoria.equalsIgnoreCase("Helados")){
+                    idCategoria = 4;
+                }
+
+                String estado=this.jComboBoxEstado.getSelectedItem().toString();
+                String descripcion=this.jTextAreaDescripcion.getText();
+
+                //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+
+                //Se crea el controlador de la categoria del producto
+                CategoriaProductoJpaController daoCategoriaProducto = new CategoriaProductoJpaController(emf);
+                CategoriaProducto categoriaProducto = daoCategoriaProducto.findCategoriaProducto(idCategoria);
+
+                //se crea el controlador del producto 
+                ProductoJpaController daoProducto = new ProductoJpaController(emf);
+
+                //se crea un objeto producto y se le asignan sus atributos
+                Producto producto = new Producto(id,nombre);
+
+                producto.setPrecio(precio);
+                producto.setIdCategoria(categoriaProducto);
+                producto.setDescripcion(descripcion);
+                if (estado=="Activo"){
+                    producto.setEstado(true);
+                }
+                else{
+                     producto.setEstado(false);
+                }
+                
                 daoProducto.create(producto);
                 deshabilitar();
                 limpiar();
+                
                 JOptionPane.showMessageDialog(null, "El producto se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
-                JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-                
+                JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);               
             }
             
         } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
@@ -508,55 +514,57 @@ public class Gui_producto extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-       //Obtencion de datos de la interfaz
-        
-        int id = Integer.parseInt(jLabelId.getText());
-        String nom =jTextFieldNombre.getText();
-        String nombre =jTextFieldNombre.getText();
-        int precio= Integer.parseInt(jTextFieldPrecio.getText());
-        String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
-        int idCategoria = 0;
-        if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
-            idCategoria = 1;
-        }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
-            idCategoria = 2;
-        }else if (categoria.equalsIgnoreCase("Bebidas")){
-            idCategoria = 3;
-        }else{
-            idCategoria = 4;
-        }
-        
-        String estado=this.jComboBoxEstado.getSelectedItem().toString();
-        String descripcion=this.jTextAreaDescripcion.getText();
-        
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //Se crea el controlador de la categoria del producto
-        CategoriaProductoJpaController daoCategoriaProducto = new CategoriaProductoJpaController(emf);
-        CategoriaProducto categoriaProducto = daoCategoriaProducto.findCategoriaProducto(idCategoria);
-        
-        //se crea el controlador del producto 
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        
-        //se crea un objeto producto y se le asignan sus atributos
-        Producto producto = new Producto(id,nombre);
              
-        producto.setPrecio(precio);
-        producto.setIdCategoria(categoriaProducto);
-        producto.setDescripcion(descripcion);
-        if (estado=="Activo"){
-            producto.setEstado(true);
-        }
-        else{
-             producto.setEstado(false);
-        }
-       
         try {
             if (verificarCamposVacios() == false) {
+                
+                //Obtencion de datos de la interfaz
+        
+                int id = Integer.parseInt(jLabelId.getText());
+                String nom =jTextFieldNombre.getText();
+                String nombre =jTextFieldNombre.getText();
+                int precio= Integer.parseInt(jTextFieldPrecio.getText());
+                String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
+                int idCategoria = 0;
+                if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
+                    idCategoria = 1;
+                }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
+                    idCategoria = 2;
+                }else if (categoria.equalsIgnoreCase("Bebidas")){
+                    idCategoria = 3;
+                }else{
+                    idCategoria = 4;
+                }
+
+                String estado=this.jComboBoxEstado.getSelectedItem().toString();
+                String descripcion=this.jTextAreaDescripcion.getText();
+
+                //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+
+                //Se crea el controlador de la categoria del producto
+                CategoriaProductoJpaController daoCategoriaProducto = new CategoriaProductoJpaController(emf);
+                CategoriaProducto categoriaProducto = daoCategoriaProducto.findCategoriaProducto(idCategoria);
+
+                //se crea el controlador del producto 
+                ProductoJpaController daoProducto = new ProductoJpaController(emf);
+
+                //se crea un objeto producto y se le asignan sus atributos
+                Producto producto = new Producto(id,nombre);
+
+                producto.setPrecio(precio);
+                producto.setIdCategoria(categoriaProducto);
+                producto.setDescripcion(descripcion);
+                if (estado=="Activo"){
+                    producto.setEstado(true);
+                }
+                else{
+                     producto.setEstado(false);
+                }
                 daoProducto.edit(producto);
                 deshabilitar();
                 limpiar();
+                
                 JOptionPane.showMessageDialog(null, "El producto se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -564,7 +572,6 @@ public class Gui_producto extends javax.swing.JFrame {
             }
             
         } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
             limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
