@@ -5,11 +5,15 @@
  */
 package GUI;
 
+import Clases.CategoriaProducto;
 import Clases.Empleado;
 import Clases.EstadoPedido;
 import Clases.Mesa;
 import Clases.Pedido;
 import Clases.Producto;
+import Clases.ProductoPedido;
+import Clases.ProductoPedidoPK;
+import Controladores.CategoriaProductoJpaController;
 //import Clases.ProductoPedido;
 //import Clases.ProductoPedidoPK;
 import Controladores.EmpleadoJpaController;
@@ -17,6 +21,7 @@ import Controladores.EstadoPedidoJpaController;
 import Controladores.MesaJpaController;
 import Controladores.PedidoJpaController;
 import Controladores.ProductoJpaController;
+import Controladores.ProductoPedidoJpaController;
 //import Controladores.ProductoPedidoJpaController;
 import Controladores.exceptions.*;
 import java.awt.Image;
@@ -49,13 +54,19 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Gui_pedido extends javax.swing.JFrame {
 
-    DefaultTableModel modelo = new DefaultTableModel();
+    DefaultTableModel modeloProductosPedido = new DefaultTableModel();
+    DefaultTableModel modeloProductosSeleccion = new DefaultTableModel();
+   
     /**
      * Creates new form empleado
      */
     public Gui_pedido(Gui_VentanaPrincipal principal) {
         initComponents();
+        
+        
+        botones();
         deshabilitar();
+       
         
     }
     
@@ -77,7 +88,6 @@ public class Gui_pedido extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextFieldMesa = new javax.swing.JTextField();
         jPanelProductos = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<>();
@@ -87,7 +97,16 @@ public class Gui_pedido extends javax.swing.JFrame {
         jTableProductos = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
         jTextFieldCantidad = new javax.swing.JTextField();
-        jButtonagregar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTableProductosCategoria = new javax.swing.JTable();
+        jLabelHoraInicio = new javax.swing.JLabel();
+        jLabelNumPedido = new javax.swing.JLabel();
+        jTextFieldMesero = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabelHoraFin = new javax.swing.JLabel();
+        jComboBoxMesas = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jComboBoxEstado = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jButtonBuscar = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
@@ -95,11 +114,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         jButtonEliminar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonNuevo = new javax.swing.JButton();
-        jLabelHoraInicio = new javax.swing.JLabel();
-        jLabelNumPedido = new javax.swing.JLabel();
-        jTextFieldMesero = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabelHoraFin = new javax.swing.JLabel();
+        jButtonagregar = new javax.swing.JButton();
 
         jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -119,17 +134,17 @@ public class Gui_pedido extends javax.swing.JFrame {
 
         jLabel4.setText("Hora Inicio del Pedido:");
 
-        jTextFieldMesa.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextFieldMesaKeyTyped(evt);
-            }
-        });
-
         jPanelProductos.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Productos del pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
 
-        jLabel7.setText("Producto: ");
+        jLabel7.setText("Categoria Producto: ");
 
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Almuerzo-Cena", "Brunch-Desayunos", "Bebidas", "Helados" }));
         jComboBox2.setToolTipText("");
+        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox2ItemStateChanged(evt);
+            }
+        });
 
         jButtonAgregarProducto.setText("Agregar al pedido");
         jButtonAgregarProducto.setToolTipText("");
@@ -141,6 +156,11 @@ public class Gui_pedido extends javax.swing.JFrame {
 
         jButtonEliminarProducto.setText("Eliminar del pedido");
         jButtonEliminarProducto.setToolTipText("");
+        jButtonEliminarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEliminarProductoActionPerformed(evt);
+            }
+        });
 
         jTableProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -169,66 +189,156 @@ public class Gui_pedido extends javax.swing.JFrame {
             }
         });
 
-        jButtonagregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (Save).jpg"))); // NOI18N
-        jButtonagregar.setText("Realizar Pedido");
-        jButtonagregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonagregarActionPerformed(evt);
+        jTableProductosCategoria.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Id", "Nombre Producto", "Precio"
             }
-        });
+        ));
+        jScrollPane2.setViewportView(jTableProductosCategoria);
 
         javax.swing.GroupLayout jPanelProductosLayout = new javax.swing.GroupLayout(jPanelProductos);
         jPanelProductos.setLayout(jPanelProductosLayout);
         jPanelProductosLayout.setHorizontalGroup(
             jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelProductosLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(14, 14, 14)
                 .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelProductosLayout.createSequentialGroup()
-                        .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 649, Short.MAX_VALUE)
-                            .addGroup(jPanelProductosLayout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(38, 38, 38))
                     .addGroup(jPanelProductosLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, 0)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(140, 140, 140)
+                        .addComponent(jLabel8)
+                        .addGap(13, 13, 13)
+                        .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelProductosLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
                         .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelProductosLayout.createSequentialGroup()
-                                .addGap(124, 124, 124)
-                                .addComponent(jButtonAgregarProducto))
-                            .addGroup(jPanelProductosLayout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(43, 43, 43)
-                        .addComponent(jButtonEliminarProducto)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelProductosLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonagregar)
-                        .addGap(66, 66, 66))))
+                                .addGap(20, 20, 20)
+                                .addComponent(jButtonAgregarProducto)
+                                .addGap(33, 33, 33)
+                                .addComponent(jButtonEliminarProducto))))))
         );
         jPanelProductosLayout.setVerticalGroup(
             jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelProductosLayout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonAgregarProducto)
-                    .addComponent(jButtonEliminarProducto)
+                .addGap(4, 4, 4)
+                .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(jButtonagregar)
-                .addContainerGap())
+                .addGap(20, 20, 20)
+                .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelProductosLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonAgregarProducto)
+                            .addComponent(jButtonEliminarProducto)))))
         );
+
+        jTextFieldMesero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldMeseroActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Hora Fin del Pedido:");
+
+        jLabel3.setText("Estado: ");
+
+        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Pendiente", "Entregado", "Finalizado" }));
+        jComboBoxEstado.setToolTipText("");
+        jComboBoxEstado.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxEstadoItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(jPanelProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(10, 10, 10)
+                        .addComponent(jComboBoxMesas, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(36, 36, 36)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel)
+                    .addComponent(jLabel3))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBoxEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldMesero, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(jLabel4)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabelHoraInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabelHoraFin, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldMesero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel))
+                    .addComponent(jLabelHoraInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel2))
+                            .addComponent(jComboBoxMesas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel5))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jLabelHoraFin, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))))
+                .addGap(8, 8, 8)
+                .addComponent(jPanelProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jLabelNumPedido.getAccessibleContext().setAccessibleName("jLabelNumPedido");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -281,30 +391,39 @@ public class Gui_pedido extends javax.swing.JFrame {
             }
         });
 
+        jButtonagregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (Save).jpg"))); // NOI18N
+        jButtonagregar.setText("Realizar Pedido");
+        jButtonagregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonagregarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(188, 188, 188)
-                        .addComponent(jButtonCancelar))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addComponent(jButtonCancelar)
+                        .addGap(70, 70, 70))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jButtonNuevo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonBuscar)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonBuscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonagregar)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
+                        .addGap(6, 6, 6)
                         .addComponent(jButtonModificar)
-                        .addGap(32, 32, 32)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonEliminar)))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -314,7 +433,8 @@ public class Gui_pedido extends javax.swing.JFrame {
                     .addComponent(jButtonNuevo)
                     .addComponent(jButtonBuscar)
                     .addComponent(jButtonModificar)
-                    .addComponent(jButtonEliminar))
+                    .addComponent(jButtonEliminar)
+                    .addComponent(jButtonagregar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -322,93 +442,27 @@ public class Gui_pedido extends javax.swing.JFrame {
                 .addGap(159, 159, 159))
         );
 
-        jTextFieldMesero.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldMeseroActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("Hora Fin del Pedido:");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(jLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldMesero, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldMesa, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabelHoraInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabelHoraFin, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanelProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel)
-                        .addComponent(jLabelNumPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addComponent(jTextFieldMesero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabelHoraInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(jTextFieldMesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5))
-                    .addComponent(jLabelHoraFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        jLabelNumPedido.getAccessibleContext().setAccessibleName("jLabelNumPedido");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(567, 567, 567))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel2.getAccessibleContext().setAccessibleName("");
@@ -417,11 +471,11 @@ public class Gui_pedido extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 701, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -436,42 +490,36 @@ public class Gui_pedido extends javax.swing.JFrame {
 
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
         // TODO add your handling code here:
-        limpiar();
         habilitar();
+        this.jButtonBuscar.setEnabled(false);
+        this.jButtonagregar.setEnabled(true);
         
+        EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+        //Se crea un objeto tipo Date donde se almacenara la hora donde inicia el pedido
         Date fechaActual = new Date();
-        
-        SimpleDateFormat horaFormato = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat horaFormato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String horaInicio = horaFormato.format(fechaActual);
         this.jLabelHoraInicio.setText(horaInicio);
         
         
-        
-        EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
         PedidoJpaController daoPedido = new PedidoJpaController(emf1);
-        
         String numPedido = Integer.toString(daoPedido.getPedidoCount() + 1);
-        
         this.jLabelNumPedido.setText(numPedido);
         
+        modeloProductosSeleccion.addColumn("Id");
+        modeloProductosSeleccion.addColumn("Nombre");
+        modeloProductosSeleccion.addColumn("Precio");
+  
+        MesaJpaController daoMesa = new MesaJpaController(emf1);
+        List<Mesa> mesas =  daoMesa.findMesaEntities();
         
-        this.jComboBox2.setModel(this.obtenerProductos());
+        for (int i = 0; i < mesas.size(); i++) {
+            this.jComboBoxMesas.addItem(mesas.get(i).getNumMesa().toString());
+        }
         
         
-        //this.jComboBox2.setModel(this.obtenerProductos(this.jComboBox.getSelectedItem().toString()));
         
-        /*this.jComboBox1.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if ( e.getStateChange() == ItemEvent.SELECTED ) 
-                {
-                    // los nuevos registros son agregados al MODEL del JCombo HIJO
-                    String item = jComboBox1.getSelectedItem().toString();
-                    jComboBox2.setModel( obtenerProductos(item) );
-                }
-            }
-            });*/
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     public DefaultComboBoxModel obtenerProductos(){
@@ -484,10 +532,10 @@ public class Gui_pedido extends javax.swing.JFrame {
         List<Producto> listaProductos = daoProducto.findProductoEntities();
         
        
-        for (int i = 0; i < listaProductos.size(); i++) {
+        /*for (int i = 0; i < listaProductos.size(); i++) {
             listmModel.addElement(listaProductos.get(i).getNombre());
            
-        }
+        }*/
         
         return listmModel;    
         
@@ -523,52 +571,68 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
         //variables para el pedido
-        /*
+        
         int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
         String idMesero = this.jTextFieldMesero.getText();
-        int numMesa = Integer.parseInt(this.jTextFieldMesa.getText());
+        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+        Empleado empleado = daoEmpleado.findEmpleado(idMesero);
+        
+        int numMesa = this.jComboBoxMesas.getSelectedIndex()+1;
+        MesaJpaController daoMesa = new MesaJpaController(emf);
+        Mesa mesa = daoMesa.findMesa(numMesa);
+        
         Date horaFinal = new Date();
-        Date horaInicio = null;
         
-        
-        SimpleDateFormat formato = new SimpleDateFormat("hh:mm:ss");
+      
+        Date horaInicio = null;    
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             horaInicio = formato.parse(this.jLabelHoraInicio.getText());
         } catch (ParseException ex) {
             Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        String estadoSeleccionado = this.jComboBoxEstado.getSelectedItem().toString();
+        int idEstado = 0;
+       
+        if (estadoSeleccionado.equalsIgnoreCase("Pendiente")) {
+            idEstado = 1;
+        }else if (estadoSeleccionado.equalsIgnoreCase("Entregado")) {
+            idEstado = 2;
+        }else if (estadoSeleccionado.equalsIgnoreCase("Finalizado")){
+            idEstado = 3;
+            try {
+                horaFinal = formato.parse(this.jLabelHoraFin.getText());
+            } catch (ParseException ex) {
+                Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
+        EstadoPedido estado = daoEstadoPedido.findEstadoPedido(idEstado);
+        
         Pedido pedido = new Pedido();
         
         pedido.setNumPedido(numPedido);
         pedido.setHoraFinalPedido(horaFinal);
         pedido.setHoraInicioPedido(horaInicio);
-        pedido.setNumMesa(numMesa);
-             
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG_RESTPU");
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        Empleado empleado = daoEmpleado.findEmpleado(idMesero);
+        pedido.setNumMesa(mesa);
         pedido.setIdEmpleado(empleado);
-        
-        
-        
+        pedido.setIdEstadoPedido(estado);
         
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
-        
-        
-        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
-        
-        ProductoPedido productoPedido = new ProductoPedido();
-        ProductoPedidoPK productoPedidopk = new ProductoPedidoPK();
         
         try {
             if (verificarCamposVacios() == false) {
                 daoPedido.edit(pedido);
                 deshabilitar();
-                JOptionPane.showMessageDialog(null, "El pedido se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+               
             }else{
-                JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Llene los datos obligatoriosl", "Error", JOptionPane.ERROR_MESSAGE);
                 limpiar();
             }
             
@@ -577,96 +641,114 @@ public class Gui_pedido extends javax.swing.JFrame {
             limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         
-        for (int i = 0; i < modelo.getRowCount(); i++) {
+        }     
+        
+     
+        ProductoJpaController daoProducto = new ProductoJpaController(emf);
+        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+        
+        for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
             
-            String nombreProducto = modelo.getValueAt(i, 0).toString();
-            String cantidadProducto = modelo.getValueAt(i, 1).toString();
+            String nombreProducto = modeloProductosPedido.getValueAt(i, 0).toString();
+            int cantidadProducto = Integer.parseInt(modeloProductosPedido.getValueAt(i, 1).toString());
             
-            System.out.println(nombreProducto + cantidadProducto);
-                    
-            ProductoJpaController daoProducto = new ProductoJpaController(emf);
-            List<Producto> producto = daoProducto.findProductoNombre(nombreProducto);
+            List<Producto> productos = daoProducto.findProducto(nombreProducto);
             
-            Producto producto1;
+            Producto producto = productos.get(0);
+            int idProducto = producto.getProductoPK().getId();
             
-            producto1 = producto.get(0);
+            ProductoPedido productoPedido = new ProductoPedido();
+            ProductoPedidoPK productoPedidoPK = new ProductoPedidoPK(numPedido, idProducto, nombreProducto);
             
-            
-            productoPedido.setProducto(producto1);
-            productoPedido.setCantProductos(Integer.parseInt(cantidadProducto));
             productoPedido.setPedido(pedido);
-            
-            
+            productoPedido.setProducto(producto);
+            productoPedido.setCatidad(cantidadProducto);
+            productoPedido.setProductoPedidoPK(productoPedidoPK);
             
             try {
-                daoProductoPedido.edit(productoPedido);
-            } catch (NonexistentEntityException ex) {
-                System.out.println("1");
-            } catch (PreexistingEntityException ex) {
-                System.out.println("2");
-            } catch (Exception ex) {
-                System.out.println("3");
-            }
             
-        }  */
+                daoProductoPedido.edit(productoPedido);
+                
+                JOptionPane.showMessageDialog(null, "El pedido se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+            
+            } catch (NullPointerException ex) {
+               limpiar();
+            } catch (Exception ex) {
+                Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+            }     
+
+        }
+        limpiar();
+        botones();
             
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-       
+        while(modeloProductosSeleccion.getRowCount()>0)modeloProductosSeleccion.removeRow(0);
         
-        String id = JOptionPane.showInputDialog(null, "Ingrese el del pedido que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
+        String numPedido = JOptionPane.showInputDialog(null, "Ingrese el numero del pedido que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
 
-        int idParse = Integer.parseInt(id);
+        int idParse = Integer.parseInt(numPedido);
+        
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        
+               
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
+        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+        ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
         try{
-            Pedido pedido = daoPedido.findPedido(idParse);
-            
+            List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(idParse);
+
            
-            ArrayList<Producto> productoPedido = (ArrayList)pedido.getProductoCollection();
-            this.modelo = (DefaultTableModel) jTableProductos.getModel();
+            this.modeloProductosPedido = (DefaultTableModel) jTableProductos.getModel();
             
-            for (int i = 0; i < productoPedido.size(); i++) {
+            for (int i = 0; i < productosPedido.size(); i++) {
                 
-                Producto pro = productoPedido.get(i);
+                int idProducto = productosPedido.get(i).getProductoPedidoPK().getProductoId();
+                String nombreProducto = daoProducto.findProducto(idProducto).get(0).getProductoPK().getNombre();
                 Vector<String> vector = new Vector<String>();
-                
-                String producto = pro.getNombre();
-                vector.add(producto);
-               /* String cantidad = Integer.toString(productoPedido.get(i).);
-                vector.add(cantidad);*/
-                
-                this.modelo.addRow(vector);
+                               
+                vector.add(nombreProducto);
+                String cantidad = Integer.toString(productosPedido.get(i).getCatidad());
+                vector.add(cantidad);
+                this.modeloProductosPedido.addRow(vector);
             }
             
-        
-        
-            
-           
+            Pedido pedido = daoPedido.findPedido(idParse);
             this.jLabelNumPedido.setText(Integer.toString(pedido.getNumPedido()));
             
                     
-            SimpleDateFormat horaFormato = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat horaFormato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             String horaInicio = horaFormato.format(pedido.getHoraInicioPedido());
             this.jLabelHoraInicio.setText(horaInicio);
             
             String horaFin = horaFormato.format(pedido.getHoraFinalPedido());
             this.jLabelHoraFin.setText(horaFin);
             
-            this.jTextFieldMesa.setText(Integer.toString(pedido.getNumMesa().getNumMesa()));
-            
             this.jTextFieldMesero.setText(pedido.getIdEmpleado().getIdentificacion());
-
             
             
+            MesaJpaController daoMesa = new MesaJpaController(emf);
+            List<Mesa> mesas =  daoMesa.findMesaEntities();
+        
+            for (int i = 0; i < mesas.size(); i++) {
+            this.jComboBoxMesas.addItem(mesas.get(i).getNumMesa().toString());
+            }
             
+            this.jComboBoxMesas.setSelectedIndex(pedido.getNumMesa().getNumMesa() - 1);            
+            
+            if(pedido.getIdEstadoPedido().getEstado().equalsIgnoreCase("Pendiente")){
+                this.jComboBoxEstado.setSelectedIndex(1);
+            }else if(pedido.getIdEstadoPedido().getEstado().equalsIgnoreCase("Entregado")){
+                this.jComboBoxEstado.setSelectedIndex(2);
+            }else{
+                this.jComboBoxEstado.setSelectedIndex(3);
+            }
+            
+            modeloProductosSeleccion.addColumn("Id");
+            modeloProductosSeleccion.addColumn("Nombre");
+            modeloProductosSeleccion.addColumn("Precio");
             
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
@@ -690,19 +772,35 @@ public class Gui_pedido extends javax.swing.JFrame {
         
         int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
         String idMesero = this.jTextFieldMesero.getText();
-        int numMesa = Integer.parseInt(this.jTextFieldMesa.getText());
+        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+        Empleado empleado = daoEmpleado.findEmpleado(idMesero);
+        
+        int numMesa = this.jComboBoxMesas.getSelectedIndex()+1;
         MesaJpaController daoMesa = new MesaJpaController(emf);
         Mesa mesa = daoMesa.findMesa(numMesa);
-        Date horaFinal = new Date();
-        Date horaInicio = null;
         
-        
-        SimpleDateFormat formato = new SimpleDateFormat("hh:mm:ss");
+        Date horaFinal = null;
+        Date horaInicio = null;    
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             horaInicio = formato.parse(this.jLabelHoraInicio.getText());
         } catch (ParseException ex) {
             Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        String estadoSeleccionado = this.jComboBoxEstado.getSelectedItem().toString();
+        int idEstado = 0;
+       
+        if (estadoSeleccionado.equalsIgnoreCase("Pendiente")) {
+            idEstado = 1;
+        }else if (estadoSeleccionado.equalsIgnoreCase("Entregado")) {
+            idEstado = 2;
+        }else if (estadoSeleccionado.equalsIgnoreCase("Finalizado")){
+            idEstado = 3;
+        }
+        
+        EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
+        EstadoPedido estado = daoEstadoPedido.findEstadoPedido(idEstado);
         
         Pedido pedido = new Pedido();
         
@@ -710,46 +808,16 @@ public class Gui_pedido extends javax.swing.JFrame {
         pedido.setHoraFinalPedido(horaFinal);
         pedido.setHoraInicioPedido(horaInicio);
         pedido.setNumMesa(mesa);
-        pedido.setProductoCollection(new ArrayList<Producto>());
-             
-        //id del mesero
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        Empleado empleado = daoEmpleado.findEmpleado(idMesero);
         pedido.setIdEmpleado(empleado);
+        pedido.setIdEstadoPedido(estado);
         
-        
-        //estado del producto
-        EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
-        EstadoPedido estadoPedido=daoEstadoPedido.findEstadoPedido(1);
-        //
-        pedido.setIdEstadoPedido(estadoPedido);
-        
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
-        Pedido pedido1 = new Pedido(numPedido);
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            
-            String nombreProducto = modelo.getValueAt(i, 0).toString();
-            String cantidadProducto = modelo.getValueAt(i, 1).toString();
-            
-            //Producto producto = daoProducto.findProductoNombre(nombreProducto);
-            List<Producto> producto = daoProducto.findProductoNombre(nombreProducto);
-            
-            Producto producto1;
-            
-            producto1 = producto.get(0);
-            System.err.println(producto1.getId());
-            
-            pedido.getProductoCollection().add(producto1);
-
-        }
-        
         
         try {
             if (verificarCamposVacios() == false) {
                 daoPedido.create(pedido);
                 deshabilitar();
-                JOptionPane.showMessageDialog(null, "El pedido se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+               
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
                 limpiar();
@@ -760,15 +828,53 @@ public class Gui_pedido extends javax.swing.JFrame {
             limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+        }     
+        
+     
+        ProductoJpaController daoProducto = new ProductoJpaController(emf);
+        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+        
+        for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
+            
+            String nombreProducto = modeloProductosPedido.getValueAt(i, 0).toString();
+            int cantidadProducto = Integer.parseInt(modeloProductosPedido.getValueAt(i, 1).toString());
+            
+            List<Producto> productos = daoProducto.findProducto(nombreProducto);
+            
+            Producto producto = productos.get(0);
+            int idProducto = producto.getProductoPK().getId();
+            
+            ProductoPedido productoPedido = new ProductoPedido();
+            ProductoPedidoPK productoPedidoPK = new ProductoPedidoPK(numPedido, idProducto, nombreProducto);
+            
+            productoPedido.setPedido(pedido);
+            productoPedido.setProducto(producto);
+            productoPedido.setCatidad(cantidadProducto);
+            productoPedido.setProductoPedidoPK(productoPedidoPK);
+            
+            try {
+            
+                daoProductoPedido.create(productoPedido);
+                
+                JOptionPane.showMessageDialog(null, "El pedido se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+            
+            } catch (NullPointerException ex) {
+               limpiar();
+            } catch (Exception ex) {
+                Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+            }     
+
         }
-   
+        limpiar();
+        botones();
+       
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     public boolean verificarCamposVacios(){
         boolean var =false;
          
-         if (jTextFieldCantidad.getText().equalsIgnoreCase("") || jTextFieldMesa.getText().equalsIgnoreCase("") ||
-                 jTextFieldMesero.getText().equalsIgnoreCase("") || jComboBox2.getSelectedItem().toString().equalsIgnoreCase("") ) {
+         if (jTextFieldCantidad.getText().equalsIgnoreCase("") || jTextFieldMesero.getText().equalsIgnoreCase("") || jComboBox2.getSelectedItem().toString().equalsIgnoreCase("Seleccione...") 
+                 ) {
              
              var = true;             
          }
@@ -780,29 +886,17 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCantidadActionPerformed
 
     private void jButtonAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoActionPerformed
-        String producto = this.jComboBox2.getSelectedItem().toString();
+        int seleccion = this.jTableProductosCategoria.getSelectedRow();            
+        String producto = this.jTableProductosCategoria.getValueAt(seleccion, 1).toString();
         String cantidad = this.jTextFieldCantidad.getText();
-        
-        
-        
-        this.modelo = (DefaultTableModel) jTableProductos.getModel();
+        this.modeloProductosPedido = (DefaultTableModel) jTableProductos.getModel();
                
         Object []object = new Object[2];
-        
         object[0] = producto;
         object[1] = cantidad;
         
-        this.modelo.addRow(object);
+        this.modeloProductosPedido.addRow(object);
     }//GEN-LAST:event_jButtonAgregarProductoActionPerformed
-
-    private void jTextFieldMesaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldMesaKeyTyped
-        // TODO add your handling code here:
-        char c = evt.getKeyChar();
-                  
-        if(Character.isLetter(c)) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_jTextFieldMesaKeyTyped
 
     private void jTextFieldMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMeseroActionPerformed
         // TODO add your handling code here:
@@ -810,51 +904,115 @@ public class Gui_pedido extends javax.swing.JFrame {
 
     private void jButtonEliminarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarProductoActionPerformed
         int fila = jTableProductos.getSelectedRow();
-        modelo.removeRow(fila);
+        modeloProductosPedido.removeRow(fila);
     }//GEN-LAST:event_jButtonEliminarProductoActionPerformed
 
-    File fichero;
+    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
+       
+       
+        while(modeloProductosSeleccion.getRowCount()>0)modeloProductosSeleccion.removeRow(0);
+        
+        String categoria = jComboBox2.getSelectedItem().toString();    
+       
+        int idCategoria = 0;
+        if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
+            idCategoria = 1;
+        }else if (categoria.equalsIgnoreCase("Brunch-Desayunos")) {
+            idCategoria = 2;
+        }else if (categoria.equalsIgnoreCase("Bebidas")){
+            idCategoria = 3;
+        }else if(categoria.equalsIgnoreCase("Helados")){
+            idCategoria = 4;
+        }
+        
+             
+        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+        ProductoJpaController daoProducto = new ProductoJpaController(emf);
+        CategoriaProductoJpaController daoCategoria = new CategoriaProductoJpaController(emf);
+        
+       
+        
+        List<Producto> productos = daoProducto.findProductoEntities(idCategoria);
+         
+        Object[] fila = null;      
+               
+        for (int i = 0; i < productos.size(); i++) {
+           
+            modeloProductosSeleccion.addRow(fila);
+            modeloProductosSeleccion.setValueAt(productos.get(i).getProductoPK().getId(), i, 0);
+            modeloProductosSeleccion.setValueAt(productos.get(i).getProductoPK().getNombre(), i, 1);
+            modeloProductosSeleccion.setValueAt(productos.get(i).getPrecio(), i, 2);
+        }
+        
+        this.jTableProductosCategoria.setModel(modeloProductosSeleccion);
+      
+    }//GEN-LAST:event_jComboBox2ItemStateChanged
+
+    private void jComboBoxEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEstadoItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEstadoItemStateChanged
+
+
      public void botones(){
-        this.jButtonagregar.setEnabled(false);
+        
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
+        this.jButtonagregar.setEnabled(false);
+        this.jButtonAgregarProducto.setEnabled(false);
+        this.jButtonEliminarProducto.setEnabled(false);
         this.jButtonModificar.setEnabled(false);
         this.jButtonEliminar.setEnabled(false);
-     }
+        
+      
+    }
     public void limpiar(){
         this.jTextFieldCantidad.setText("");
-        this.jTextFieldMesa.setText("");
-        generarTablaProductos();
-        //this.jComboBox1.setSelectedIndex(0);
+        this.jTextFieldMesero.setText("");
+        this.jLabelNumPedido.setText("");
+        this.jLabelHoraInicio.setText("");
+        this.jLabelHoraFin.setText("");
+        this.jComboBox2.setSelectedIndex(0);
+        this.jComboBoxEstado.setSelectedIndex(0);
+        this.jComboBoxMesas.setSelectedIndex(0);
+        
+        while(modeloProductosSeleccion.getRowCount()>0)modeloProductosSeleccion.removeRow(0);
+        while(modeloProductosPedido.getRowCount()>0)modeloProductosPedido.removeRow(0);
+       
         
     }
     
     public void generarTablaProductos(){
         
     }
-     public void habilitar(){
+    
+    public void habilitar(){
        this.jLabelNumPedido.setEnabled(true);
-       this.jTextFieldMesa.setEnabled(true);
+       this.jComboBoxMesas.setEnabled(true);
        this.jLabelHoraInicio.setEnabled(true);
        this.jTextFieldMesero.setEnabled(true);
        this.jButtonAgregarProducto.setEnabled(true);
        this.jButtonEliminarProducto.setEnabled(true);
-       //this.jComboBox1.setEnabled(true);
+       this.jComboBoxEstado.setEnabled(true);
+       this.jComboBoxMesas.setEnabled(true);
        this.jComboBox2.setEnabled(true);
        this.jTextFieldCantidad.setEnabled(true);
        this.jTableProductos.setEnabled(true);
+       this.jTableProductosCategoria.setEnabled(true);
   }
     public void deshabilitar(){
-       this.jLabelNumPedido.setEnabled(false);
-       this.jTextFieldMesa.setEnabled(false);
-       this.jTextFieldMesero.setEnabled(false);
-       this.jLabelHoraInicio.setEnabled(false);
-       this.jButtonAgregarProducto.setEnabled(false);
-       this.jButtonEliminarProducto.setEnabled(false);
-       
-       this.jComboBox2.setEnabled(false);
-       this.jTextFieldCantidad.setEnabled(false);
-       this.jTableProductos.setEnabled(false);
+        
+        
+        this.jLabelNumPedido.setEnabled(false);
+        this.jComboBoxMesas.setEnabled(false);
+        this.jTextFieldMesero.setEnabled(false);
+        this.jLabelHoraInicio.setEnabled(false);
+        this.jComboBoxEstado.setEnabled(false);
+        this.jComboBoxMesas.setEnabled(false);
+        this.jComboBox2.setEnabled(false);
+        this.jTextFieldCantidad.setEnabled(false);
+        this.jTableProductos.setEnabled(false);
     }
     /**
      * @param args the command line arguments
@@ -880,9 +1038,12 @@ public class Gui_pedido extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JButton jButtonagregar;
     private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBoxEstado;
+    private javax.swing.JComboBox<String> jComboBoxMesas;
     private javax.swing.JLabel jLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
@@ -895,10 +1056,11 @@ public class Gui_pedido extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelProductos;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableProductos;
+    private javax.swing.JTable jTableProductosCategoria;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextFieldCantidad;
-    private javax.swing.JTextField jTextFieldMesa;
     private javax.swing.JTextField jTextFieldMesero;
     // End of variables declaration//GEN-END:variables
 }

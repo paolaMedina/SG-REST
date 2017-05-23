@@ -446,7 +446,7 @@ public class Gui_producto extends javax.swing.JFrame {
         String nom=jTextFieldNombre.getText();
         String nombre =jTextFieldNombre.getText();
         int precio= Integer.parseInt(jTextFieldPrecio.getText());
-        String categoria=this.jComboBoxCategoria.getSelectedItem().toString();
+        String categoria=this.jComboBoxCategoria.getSelectedItem().toString();        
         int idCategoria = 0;
         if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
             idCategoria = 1;
@@ -454,7 +454,7 @@ public class Gui_producto extends javax.swing.JFrame {
             idCategoria = 2;
         }else if (categoria.equalsIgnoreCase("Bebidas")){
             idCategoria = 3;
-        }else{
+        }else if (categoria.equalsIgnoreCase("Helados")){
             idCategoria = 4;
         }
         
@@ -676,6 +676,7 @@ public class Gui_producto extends javax.swing.JFrame {
          this.jTextFieldNombre.setEnabled(false);
          this.jTextFieldPrecio.setEnabled(false);
          this.jComboBoxCategoria.setEnabled(false);
+         
          this.jComboBoxEstado.setEnabled(false);
          this.jTextAreaDescripcion.setEnabled(false);
      }

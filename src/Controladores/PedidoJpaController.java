@@ -133,7 +133,7 @@ public class PedidoJpaController implements Serializable {
             Collection<ProductoPedido> productoPedidoCollectionOld = persistentPedido.getProductoPedidoCollection();
             Collection<ProductoPedido> productoPedidoCollectionNew = pedido.getProductoPedidoCollection();
             List<String> illegalOrphanMessages = null;
-            for (Factura facturaCollectionOldFactura : facturaCollectionOld) {
+            /*for (Factura facturaCollectionOldFactura : facturaCollectionOld) {
                 if (!facturaCollectionNew.contains(facturaCollectionOldFactura)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
@@ -148,7 +148,7 @@ public class PedidoJpaController implements Serializable {
                     }
                     illegalOrphanMessages.add("You must retain ProductoPedido " + productoPedidoCollectionOldProductoPedido + " since its pedido field is not nullable.");
                 }
-            }
+            }*/
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
@@ -165,17 +165,17 @@ public class PedidoJpaController implements Serializable {
                 pedido.setIdEmpleado(idEmpleadoNew);
             }
             Collection<Factura> attachedFacturaCollectionNew = new ArrayList<Factura>();
-            for (Factura facturaCollectionNewFacturaToAttach : facturaCollectionNew) {
+            /*for (Factura facturaCollectionNewFacturaToAttach : facturaCollectionNew) {
                 facturaCollectionNewFacturaToAttach = em.getReference(facturaCollectionNewFacturaToAttach.getClass(), facturaCollectionNewFacturaToAttach.getIdFactura());
                 attachedFacturaCollectionNew.add(facturaCollectionNewFacturaToAttach);
-            }
+            }*/
             facturaCollectionNew = attachedFacturaCollectionNew;
             pedido.setFacturaCollection(facturaCollectionNew);
             Collection<ProductoPedido> attachedProductoPedidoCollectionNew = new ArrayList<ProductoPedido>();
-            for (ProductoPedido productoPedidoCollectionNewProductoPedidoToAttach : productoPedidoCollectionNew) {
+            /*for (ProductoPedido productoPedidoCollectionNewProductoPedidoToAttach : productoPedidoCollectionNew) {
                 productoPedidoCollectionNewProductoPedidoToAttach = em.getReference(productoPedidoCollectionNewProductoPedidoToAttach.getClass(), productoPedidoCollectionNewProductoPedidoToAttach.getProductoPedidoPK());
                 attachedProductoPedidoCollectionNew.add(productoPedidoCollectionNewProductoPedidoToAttach);
-            }
+            }*/
             productoPedidoCollectionNew = attachedProductoPedidoCollectionNew;
             pedido.setProductoPedidoCollection(productoPedidoCollectionNew);
             pedido = em.merge(pedido);
@@ -202,7 +202,7 @@ public class PedidoJpaController implements Serializable {
             if (idEmpleadoNew != null && !idEmpleadoNew.equals(idEmpleadoOld)) {
                 idEmpleadoNew.getPedidoCollection().add(pedido);
                 idEmpleadoNew = em.merge(idEmpleadoNew);
-            }
+            }/*
             for (Factura facturaCollectionNewFactura : facturaCollectionNew) {
                 if (!facturaCollectionOld.contains(facturaCollectionNewFactura)) {
                     Pedido oldNumPedidoOfFacturaCollectionNewFactura = facturaCollectionNewFactura.getNumPedido();
@@ -224,7 +224,7 @@ public class PedidoJpaController implements Serializable {
                         oldPedidoOfProductoPedidoCollectionNewProductoPedido = em.merge(oldPedidoOfProductoPedidoCollectionNewProductoPedido);
                     }
                 }
-            }
+            }*/
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();

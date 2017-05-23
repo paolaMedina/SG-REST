@@ -30,14 +30,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ProductoPedido.findByPedidoNumPedido", query = "SELECT p FROM ProductoPedido p WHERE p.productoPedidoPK.pedidoNumPedido = :pedidoNumPedido"),
     @NamedQuery(name = "ProductoPedido.findByProductoId", query = "SELECT p FROM ProductoPedido p WHERE p.productoPedidoPK.productoId = :productoId"),
     @NamedQuery(name = "ProductoPedido.findByProductoNombre", query = "SELECT p FROM ProductoPedido p WHERE p.productoPedidoPK.productoNombre = :productoNombre"),
-    @NamedQuery(name = "ProductoPedido.findByCatidad", query = "SELECT p FROM ProductoPedido p WHERE p.catidad = :catidad")})
+    @NamedQuery(name = "ProductoPedido.findByCatidad", query = "SELECT p FROM ProductoPedido p WHERE p.cantidad = :cantidad")})
 public class ProductoPedido implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ProductoPedidoPK productoPedidoPK;
     @Basic(optional = false)
-    @Column(name = "catidad")
-    private int catidad;
+    @Column(name = "cantidad")
+    private int cantidad;
     @JoinColumns({
         @JoinColumn(name = "producto_id", referencedColumnName = "id", insertable = false, updatable = false),
         @JoinColumn(name = "producto_nombre", referencedColumnName = "nombre", insertable = false, updatable = false)})
@@ -56,7 +56,7 @@ public class ProductoPedido implements Serializable {
 
     public ProductoPedido(ProductoPedidoPK productoPedidoPK, int catidad) {
         this.productoPedidoPK = productoPedidoPK;
-        this.catidad = catidad;
+        this.cantidad = cantidad;
     }
 
     public ProductoPedido(int pedidoNumPedido, int productoId, String productoNombre) {
@@ -72,11 +72,11 @@ public class ProductoPedido implements Serializable {
     }
 
     public int getCatidad() {
-        return catidad;
+        return cantidad;
     }
 
-    public void setCatidad(int catidad) {
-        this.catidad = catidad;
+    public void setCatidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 
     public Producto getProducto() {

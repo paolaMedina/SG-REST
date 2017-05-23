@@ -98,29 +98,27 @@ public class ProductoJpaController implements Serializable {
             Collection<ProductoPedido> productoPedidoCollectionOld = persistentProducto.getProductoPedidoCollection();
             Collection<ProductoPedido> productoPedidoCollectionNew = producto.getProductoPedidoCollection();
             List<String> illegalOrphanMessages = null;
-            for (ProductoPedido productoPedidoCollectionOldProductoPedido : productoPedidoCollectionOld) {
+            /*for (ProductoPedido productoPedidoCollectionOldProductoPedido : productoPedidoCollectionOld) {
                 if (!productoPedidoCollectionNew.contains(productoPedidoCollectionOldProductoPedido)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain ProductoPedido " + productoPedidoCollectionOldProductoPedido + " since its producto field is not nullable.");
                 }
-            }
+            }*/
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            
             if (idCategoriaNew != null) {
                 idCategoriaNew = em.getReference(idCategoriaNew.getClass(), idCategoriaNew.getIdCategoria());
                 producto.setIdCategoria(idCategoriaNew);
             }
-            /*
             Collection<ProductoPedido> attachedProductoPedidoCollectionNew = new ArrayList<ProductoPedido>();
-            for (ProductoPedido productoPedidoCollectionNewProductoPedidoToAttach : productoPedidoCollectionNew) {
+            /*for (ProductoPedido productoPedidoCollectionNewProductoPedidoToAttach : productoPedidoCollectionNew) {
                 productoPedidoCollectionNewProductoPedidoToAttach = em.getReference(productoPedidoCollectionNewProductoPedidoToAttach.getClass(), productoPedidoCollectionNewProductoPedidoToAttach.getProductoPedidoPK());
                 attachedProductoPedidoCollectionNew.add(productoPedidoCollectionNewProductoPedidoToAttach);
-            }
-            productoPedidoCollectionNew = attachedProductoPedidoCollectionNew;*/
+            }*/
+            productoPedidoCollectionNew = attachedProductoPedidoCollectionNew;
             producto.setProductoPedidoCollection(productoPedidoCollectionNew);
             producto = em.merge(producto);
             if (idCategoriaOld != null && !idCategoriaOld.equals(idCategoriaNew)) {
@@ -130,8 +128,8 @@ public class ProductoJpaController implements Serializable {
             if (idCategoriaNew != null && !idCategoriaNew.equals(idCategoriaOld)) {
                 idCategoriaNew.getProductoCollection().add(producto);
                 idCategoriaNew = em.merge(idCategoriaNew);
-            }/*
-            for (ProductoPedido productoPedidoCollectionNewProductoPedido : productoPedidoCollectionNew) {
+            }
+            /*for (ProductoPedido productoPedidoCollectionNewProductoPedido : productoPedidoCollectionNew) {
                 if (!productoPedidoCollectionOld.contains(productoPedidoCollectionNewProductoPedido)) {
                     Producto oldProductoOfProductoPedidoCollectionNewProductoPedido = productoPedidoCollectionNewProductoPedido.getProducto();
                     productoPedidoCollectionNewProductoPedido.setProducto(producto);
@@ -203,6 +201,16 @@ public class ProductoJpaController implements Serializable {
     public List<Producto> findProductoEntities(int maxResults, int firstResult) {
         return findProductoEntities(false, maxResults, firstResult);
     }
+    
+    public List<Producto> findProductoEntities(int categoria){
+        EntityManager em = getEntityManager();
+        try{
+            Query q = em.createNativeQuery("SELECT id,nombre,precio FROM Producto WHERE id_categoria = " + categoria, Producto.class);
+            return q.getResultList();
+        }finally{
+            em.close();
+        }
+    }
 
     private List<Producto> findProductoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
@@ -228,6 +236,29 @@ public class ProductoJpaController implements Serializable {
             em.close();
         }
     }
+   
+    public List<Producto> findProducto(String nombre){
+        EntityManager em = getEntityManager();
+        try{
+            Query q = em.createNamedQuery("Producto.findByNombre");
+            q.setParameter("nombre", nombre);
+            return q.getResultList();
+        }finally{
+            em.close();
+        }     
+    }
+    
+    public List<Producto> findProducto(int id){
+        EntityManager em = getEntityManager();
+        try{
+            Query q = em.createNamedQuery("Producto.findById");
+            q.setParameter("id", id);
+            return q.getResultList();
+        }finally{
+            em.close();
+        }     
+    }
+    
 
     public int getProductoCount() {
         EntityManager em = getEntityManager();
