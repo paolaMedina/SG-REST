@@ -188,6 +188,11 @@ public class Gui_pedido extends javax.swing.JFrame {
                 jTextFieldCantidadActionPerformed(evt);
             }
         });
+        jTextFieldCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldCantidadKeyTyped(evt);
+            }
+        });
 
         jTableProductosCategoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -643,6 +648,7 @@ public class Gui_pedido extends javax.swing.JFrame {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }     
         
+        ProductoPedidoPK productoPedidoPk = new ProductoPedidoPK(numPedido, PROPERTIES, idMesero)
      
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
@@ -667,7 +673,7 @@ public class Gui_pedido extends javax.swing.JFrame {
             
             try {
             
-                daoProductoPedido.edit(productoPedido);
+                daoProductoPedido.create(productoPedido);
                 
                 JOptionPane.showMessageDialog(null, "El pedido se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             
@@ -766,57 +772,96 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //variables para el pedido
-        
-        int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
-        String idMesero = this.jTextFieldMesero.getText();
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        Empleado empleado = daoEmpleado.findEmpleado(idMesero);
-        
-        int numMesa = this.jComboBoxMesas.getSelectedIndex()+1;
-        MesaJpaController daoMesa = new MesaJpaController(emf);
-        Mesa mesa = daoMesa.findMesa(numMesa);
-        
-        Date horaFinal = null;
-        Date horaInicio = null;    
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            horaInicio = formato.parse(this.jLabelHoraInicio.getText());
-        } catch (ParseException ex) {
-            Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        String estadoSeleccionado = this.jComboBoxEstado.getSelectedItem().toString();
-        int idEstado = 0;
-       
-        if (estadoSeleccionado.equalsIgnoreCase("Pendiente")) {
-            idEstado = 1;
-        }else if (estadoSeleccionado.equalsIgnoreCase("Entregado")) {
-            idEstado = 2;
-        }else if (estadoSeleccionado.equalsIgnoreCase("Finalizado")){
-            idEstado = 3;
-        }
-        
-        EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
-        EstadoPedido estado = daoEstadoPedido.findEstadoPedido(idEstado);
-        
-        Pedido pedido = new Pedido();
-        
-        pedido.setNumPedido(numPedido);
-        pedido.setHoraFinalPedido(horaFinal);
-        pedido.setHoraInicioPedido(horaInicio);
-        pedido.setNumMesa(mesa);
-        pedido.setIdEmpleado(empleado);
-        pedido.setIdEstadoPedido(estado);
-        
-        PedidoJpaController daoPedido = new PedidoJpaController(emf);
-        
+                    
         try {
             if (verificarCamposVacios() == false) {
+                
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+
+                //variables para el pedido
+
+                int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
+                String idMesero = this.jTextFieldMesero.getText();
+                EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+                Empleado empleado = daoEmpleado.findEmpleado(idMesero);
+
+                int numMesa = this.jComboBoxMesas.getSelectedIndex()+1;
+                MesaJpaController daoMesa = new MesaJpaController(emf);
+                Mesa mesa = daoMesa.findMesa(numMesa);
+
+                Date horaFinal = null;
+                Date horaInicio = null;    
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                
+                try {
+                    horaInicio = formato.parse(this.jLabelHoraInicio.getText());
+                } catch (ParseException ex) {
+                    Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                String estadoSeleccionado = this.jComboBoxEstado.getSelectedItem().toString();
+                int idEstado = 0;
+
+                if (estadoSeleccionado.equalsIgnoreCase("Pendiente")) {
+                    idEstado = 1;
+                }else if (estadoSeleccionado.equalsIgnoreCase("Entregado")) {
+                    idEstado = 2;
+                }else if (estadoSeleccionado.equalsIgnoreCase("Finalizado")){
+                    idEstado = 3;
+                }
+
+                EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
+                EstadoPedido estado = daoEstadoPedido.findEstadoPedido(idEstado);
+
+                Pedido pedido = new Pedido();
+
+                pedido.setNumPedido(numPedido);
+                pedido.setHoraFinalPedido(horaFinal);
+                pedido.setHoraInicioPedido(horaInicio);
+                pedido.setNumMesa(mesa);
+                pedido.setIdEmpleado(empleado);
+                pedido.setIdEstadoPedido(estado);
+
+                PedidoJpaController daoPedido = new PedidoJpaController(emf);
                 daoPedido.create(pedido);
-                deshabilitar();
+                ProductoJpaController daoProducto = new ProductoJpaController(emf);
+                ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+
+                for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
+
+                    String nombreProducto = modeloProductosPedido.getValueAt(i, 0).toString();
+                    int cantidadProducto = Integer.parseInt(modeloProductosPedido.getValueAt(i, 1).toString());
+
+                    List<Producto> productos = daoProducto.findProducto(nombreProducto);
+
+                    Producto producto = productos.get(0);
+                    int idProducto = producto.getProductoPK().getId();
+
+                    ProductoPedido productoPedido = new ProductoPedido();
+                    ProductoPedidoPK productoPedidoPK = new ProductoPedidoPK(numPedido, idProducto, nombreProducto);
+
+                    productoPedido.setPedido(pedido);
+                    productoPedido.setProducto(producto);
+                    productoPedido.setCatidad(cantidadProducto);
+                    productoPedido.setProductoPedidoPK(productoPedidoPK);
+
+                    try {
+
+                        daoProductoPedido.create(productoPedido);
+
+                        JOptionPane.showMessageDialog(null, "El pedido se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+
+                    } catch (NullPointerException ex) {
+                       limpiar();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }     
+
+                }
+                limpiar();
+                botones();
+             
+            deshabilitar();
                
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -831,42 +876,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         }     
         
      
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
-        
-        for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
-            
-            String nombreProducto = modeloProductosPedido.getValueAt(i, 0).toString();
-            int cantidadProducto = Integer.parseInt(modeloProductosPedido.getValueAt(i, 1).toString());
-            
-            List<Producto> productos = daoProducto.findProducto(nombreProducto);
-            
-            Producto producto = productos.get(0);
-            int idProducto = producto.getProductoPK().getId();
-            
-            ProductoPedido productoPedido = new ProductoPedido();
-            ProductoPedidoPK productoPedidoPK = new ProductoPedidoPK(numPedido, idProducto, nombreProducto);
-            
-            productoPedido.setPedido(pedido);
-            productoPedido.setProducto(producto);
-            productoPedido.setCatidad(cantidadProducto);
-            productoPedido.setProductoPedidoPK(productoPedidoPK);
-            
-            try {
-            
-                daoProductoPedido.create(productoPedido);
-                
-                JOptionPane.showMessageDialog(null, "El pedido se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-            
-            } catch (NullPointerException ex) {
-               limpiar();
-            } catch (Exception ex) {
-                Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-            }     
-
-        }
-        limpiar();
-        botones();
+       
        
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
@@ -953,6 +963,14 @@ public class Gui_pedido extends javax.swing.JFrame {
     private void jComboBoxEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEstadoItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxEstadoItemStateChanged
+
+    private void jTextFieldCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldCantidadKeyTyped
+        char c = evt.getKeyChar();
+                  
+        if(Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jTextFieldCantidadKeyTyped
 
 
      public void botones(){
