@@ -90,7 +90,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanelProductos = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        jComboBoxCategoria = new javax.swing.JComboBox<>();
         jButtonAgregarProducto = new javax.swing.JButton();
         jButtonEliminarProducto = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -138,11 +138,11 @@ public class Gui_pedido extends javax.swing.JFrame {
 
         jLabel7.setText("Categoria Producto: ");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Almuerzo-Cena", "Brunch-Desayunos", "Bebidas", "Helados" }));
-        jComboBox2.setToolTipText("");
-        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+        jComboBoxCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Almuerzo-Cena", "Brunch-Desayunos", "Bebidas", "Helados" }));
+        jComboBoxCategoria.setToolTipText("");
+        jComboBoxCategoria.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBox2ItemStateChanged(evt);
+                jComboBoxCategoriaItemStateChanged(evt);
             }
         });
 
@@ -214,7 +214,7 @@ public class Gui_pedido extends javax.swing.JFrame {
                     .addGroup(jPanelProductosLayout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(0, 0, 0)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBoxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(140, 140, 140)
                         .addComponent(jLabel8)
                         .addGap(13, 13, 13)
@@ -236,7 +236,7 @@ public class Gui_pedido extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
@@ -526,26 +526,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButtonNuevoActionPerformed
-
-    public DefaultComboBoxModel obtenerProductos(){
-        
-        DefaultComboBoxModel listmModel = new DefaultComboBoxModel();
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        
-        List<Producto> listaProductos = daoProducto.findProductoEntities();
-        
-       
-        /*for (int i = 0; i < listaProductos.size(); i++) {
-            listmModel.addElement(listaProductos.get(i).getNombre());
-           
-        }*/
-        
-        return listmModel;    
-        
-    }
-    
+   
    
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
@@ -560,7 +541,32 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
-        // TODO add your handling code here:
+        String id = JOptionPane.showInputDialog(null, "Ingrese el numero del pedido que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
+
+        int numPedido = Integer.parseInt(id);
+        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+        //se crea el controlador del pedido
+        PedidoJpaController daoPedido = new PedidoJpaController(emf);
+        
+        //se crea el controlador para el productoPedido asociado a un pedido
+        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+            
+        try {
+            
+            List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
+            for (int i = 0; i < productosPedido.size(); i++) {
+                daoProductoPedido.destroy(productosPedido.get(i).getProductoPedidoPK());
+            }
+            
+            daoPedido.destroy(numPedido);
+            JOptionPane.showMessageDialog(null, "El pedido se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            JOptionPane.showMessageDialog(null, "El pedido que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
     }//GEN-LAST:event_jButtonEliminarActionPerformed
 
@@ -576,69 +582,113 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //variables para el pedido
-        
-        int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
-        String idMesero = this.jTextFieldMesero.getText();
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        Empleado empleado = daoEmpleado.findEmpleado(idMesero);
-        
-        int numMesa = this.jComboBoxMesas.getSelectedIndex()+1;
-        MesaJpaController daoMesa = new MesaJpaController(emf);
-        Mesa mesa = daoMesa.findMesa(numMesa);
-        
-        Date horaFinal = new Date();
-        
-      
-        Date horaInicio = null;    
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            horaInicio = formato.parse(this.jLabelHoraInicio.getText());
-        } catch (ParseException ex) {
-            Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        String estadoSeleccionado = this.jComboBoxEstado.getSelectedItem().toString();
-        int idEstado = 0;
-       
-        if (estadoSeleccionado.equalsIgnoreCase("Pendiente")) {
-            idEstado = 1;
-        }else if (estadoSeleccionado.equalsIgnoreCase("Entregado")) {
-            idEstado = 2;
-        }else if (estadoSeleccionado.equalsIgnoreCase("Finalizado")){
-            idEstado = 3;
-            try {
-                horaFinal = formato.parse(this.jLabelHoraFin.getText());
-            } catch (ParseException ex) {
-                Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
-        EstadoPedido estado = daoEstadoPedido.findEstadoPedido(idEstado);
-        
-        Pedido pedido = new Pedido();
-        
-        pedido.setNumPedido(numPedido);
-        pedido.setHoraFinalPedido(horaFinal);
-        pedido.setHoraInicioPedido(horaInicio);
-        pedido.setNumMesa(mesa);
-        pedido.setIdEmpleado(empleado);
-        pedido.setIdEstadoPedido(estado);
-        
-        PedidoJpaController daoPedido = new PedidoJpaController(emf);
-        
+               
         try {
             if (verificarCamposVacios() == false) {
+                EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+                //variables para el pedido
+
+                int numPedido = Integer.parseInt(this.jLabelNumPedido.getText());
+                String idMesero = this.jTextFieldMesero.getText();
+                EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+                Empleado empleado = daoEmpleado.findEmpleado(idMesero);
+
+                int numMesa = this.jComboBoxMesas.getSelectedIndex()+1;
+                MesaJpaController daoMesa = new MesaJpaController(emf);
+                Mesa mesa = daoMesa.findMesa(numMesa);
+
+                Date horaFinal = new Date();
+
+
+                Date horaInicio = null;    
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                try {
+                    horaInicio = formato.parse(this.jLabelHoraInicio.getText());
+                } catch (ParseException ex) {
+                    Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                String estadoSeleccionado = this.jComboBoxEstado.getSelectedItem().toString();
+                int idEstado = 0;
+
+                if (estadoSeleccionado.equalsIgnoreCase("Pendiente")) {
+                    idEstado = 1;
+                }else if (estadoSeleccionado.equalsIgnoreCase("Entregado")) {
+                    idEstado = 2;
+                }else if (estadoSeleccionado.equalsIgnoreCase("Finalizado")){
+                    idEstado = 3;
+                    try {
+                        horaFinal = formato.parse(this.jLabelHoraFin.getText());
+                    } catch (ParseException ex) {
+                        Logger.getLogger(Gui_pedido.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                EstadoPedidoJpaController daoEstadoPedido = new EstadoPedidoJpaController(emf);
+                EstadoPedido estado = daoEstadoPedido.findEstadoPedido(idEstado);
+
+                Pedido pedido = new Pedido();
+
+                pedido.setNumPedido(numPedido);
+                pedido.setHoraFinalPedido(horaFinal);
+                pedido.setHoraInicioPedido(horaInicio);
+                pedido.setNumMesa(mesa);
+                pedido.setIdEmpleado(empleado);
+                pedido.setIdEstadoPedido(estado);
+
+                PedidoJpaController daoPedido = new PedidoJpaController(emf);
                 daoPedido.edit(pedido);
                 deshabilitar();
-               
+                
+                
+                
+     
+                ProductoJpaController daoProducto = new ProductoJpaController(emf);
+                ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+                List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
+                for (int i = 0; i < productosPedido.size(); i++) {
+                    daoProductoPedido.destroy(productosPedido.get(i).getProductoPedidoPK());
+                }
+                
+           
+                for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
+
+                    String nombreProducto = modeloProductosPedido.getValueAt(i, 0).toString();
+                    int cantidadProducto = Integer.parseInt(modeloProductosPedido.getValueAt(i, 1).toString());
+
+                    List<Producto> productos = daoProducto.findProducto(nombreProducto);
+
+                    Producto producto = productos.get(0);
+                    int idProducto = producto.getProductoPK().getId();
+
+                    ProductoPedido productoPedido = new ProductoPedido();
+                    ProductoPedidoPK productoPedidoPK = new ProductoPedidoPK(numPedido, idProducto, nombreProducto);
+
+                    productoPedido.setPedido(pedido);
+                    productoPedido.setProducto(producto);
+                    productoPedido.setCatidad(cantidadProducto);
+                    productoPedido.setProductoPedidoPK(productoPedidoPK);
+
+                    try {
+
+                        daoProductoPedido.create(productoPedido);
+
+                        JOptionPane.showMessageDialog(null, "El pedido se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+
+                    } catch (NullPointerException ex) {
+                       limpiar();
+                    } catch (Exception ex) {
+                        Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }     
+
+                }
+                limpiar();
+                botones();
+
+                
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatoriosl", "Error", JOptionPane.ERROR_MESSAGE);
-                limpiar();
             }
             
         } catch (NullPointerException ex) {
@@ -648,48 +698,17 @@ public class Gui_pedido extends javax.swing.JFrame {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }     
         
-        ProductoPedidoPK productoPedidoPk = new ProductoPedidoPK(numPedido, PROPERTIES, idMesero)
-     
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
-        
-        for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
-            
-            String nombreProducto = modeloProductosPedido.getValueAt(i, 0).toString();
-            int cantidadProducto = Integer.parseInt(modeloProductosPedido.getValueAt(i, 1).toString());
-            
-            List<Producto> productos = daoProducto.findProducto(nombreProducto);
-            
-            Producto producto = productos.get(0);
-            int idProducto = producto.getProductoPK().getId();
-            
-            ProductoPedido productoPedido = new ProductoPedido();
-            ProductoPedidoPK productoPedidoPK = new ProductoPedidoPK(numPedido, idProducto, nombreProducto);
-            
-            productoPedido.setPedido(pedido);
-            productoPedido.setProducto(producto);
-            productoPedido.setCatidad(cantidadProducto);
-            productoPedido.setProductoPedidoPK(productoPedidoPK);
-            
-            try {
-            
-                daoProductoPedido.create(productoPedido);
-                
-                JOptionPane.showMessageDialog(null, "El pedido se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-            
-            } catch (NullPointerException ex) {
-               limpiar();
-            } catch (Exception ex) {
-                Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-            }     
 
-        }
-        limpiar();
-        botones();
             
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        while(modeloProductosSeleccion.getColumnCount()== 0){  
+            modeloProductosSeleccion.addColumn("Id");
+            modeloProductosSeleccion.addColumn("Nombre");
+            modeloProductosSeleccion.addColumn("Precio");
+        }
+            
         while(modeloProductosSeleccion.getRowCount()>0)modeloProductosSeleccion.removeRow(0);
         
         String numPedido = JOptionPane.showInputDialog(null, "Ingrese el numero del pedido que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
@@ -752,9 +771,7 @@ public class Gui_pedido extends javax.swing.JFrame {
                 this.jComboBoxEstado.setSelectedIndex(3);
             }
             
-            modeloProductosSeleccion.addColumn("Id");
-            modeloProductosSeleccion.addColumn("Nombre");
-            modeloProductosSeleccion.addColumn("Precio");
+           
             
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
@@ -789,7 +806,7 @@ public class Gui_pedido extends javax.swing.JFrame {
                 MesaJpaController daoMesa = new MesaJpaController(emf);
                 Mesa mesa = daoMesa.findMesa(numMesa);
 
-                Date horaFinal = null;
+                Date horaFinal = new Date();
                 Date horaInicio = null;    
                 SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 
@@ -848,20 +865,20 @@ public class Gui_pedido extends javax.swing.JFrame {
                     try {
 
                         daoProductoPedido.create(productoPedido);
-
-                        JOptionPane.showMessageDialog(null, "El pedido se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-
                     } catch (NullPointerException ex) {
-                       limpiar();
+                        
+                        JOptionPane.showMessageDialog(null, "Uno de los productos no se agrego satisfactoriamente", "Alerta!", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
                     } catch (Exception ex) {
                         Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
                     }     
 
                 }
+                
+                JOptionPane.showMessageDialog(null, "El pedido se realizo con exito", "Exito!", JOptionPane.INFORMATION_MESSAGE);
                 limpiar();
                 botones();
-             
-            deshabilitar();
+                deshabilitar();
                
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -874,19 +891,15 @@ public class Gui_pedido extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         }     
-        
-     
-       
-       
+
     }//GEN-LAST:event_jButtonagregarActionPerformed
 
     public boolean verificarCamposVacios(){
         boolean var =false;
          
-         if (jTextFieldCantidad.getText().equalsIgnoreCase("") || jTextFieldMesero.getText().equalsIgnoreCase("") || jComboBox2.getSelectedItem().toString().equalsIgnoreCase("Seleccione...") 
-                 ) {
+         if (jTextFieldMesero.getText().equalsIgnoreCase("") || jComboBoxEstado.getSelectedItem().toString().equalsIgnoreCase("Seleccione...")) {
              
-             var = true;             
+            var = true;             
          }
          
          return var;
@@ -896,16 +909,45 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCantidadActionPerformed
 
     private void jButtonAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoActionPerformed
-        int seleccion = this.jTableProductosCategoria.getSelectedRow();            
-        String producto = this.jTableProductosCategoria.getValueAt(seleccion, 1).toString();
-        String cantidad = this.jTextFieldCantidad.getText();
-        this.modeloProductosPedido = (DefaultTableModel) jTableProductos.getModel();
-               
-        Object []object = new Object[2];
-        object[0] = producto;
-        object[1] = cantidad;
+        int seleccion = this.jTableProductosCategoria.getSelectedRow();   
+        boolean existe = false;
         
-        this.modeloProductosPedido.addRow(object);
+        for (int i = 0; i < modeloProductosPedido.getRowCount(); i++) {
+            if( this.jTableProductosCategoria.getValueAt(seleccion, 1).toString().equalsIgnoreCase(modeloProductosPedido.getValueAt(i, 0).toString())){
+               existe =true;
+               break;
+            }else{
+                existe = false;
+            } 
+        }
+        
+        if(existe == false){
+            if( !this.jTextFieldCantidad.getText().equalsIgnoreCase("")){
+            
+                              
+                    String producto = this.jTableProductosCategoria.getValueAt(seleccion, 1).toString();
+                    String cantidad = this.jTextFieldCantidad.getText();
+                    this.modeloProductosPedido = (DefaultTableModel) jTableProductos.getModel();
+
+                    Object []object = new Object[2];
+                    object[0] = producto;
+                    object[1] = cantidad;
+
+                    this.modeloProductosPedido.addRow(object);
+            }else{
+            JOptionPane.showMessageDialog(null, "Ingrese la cantidad del producto","ALERTA!",JOptionPane.INFORMATION_MESSAGE);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "El producto ya se encuentra en el pedido si desea agregar mas items del mismo borre primero el anterior registro", "Alerta!", JOptionPane.ERROR_MESSAGE);
+
+        }
+        
+        
+        
+        
+        
+        
+        
     }//GEN-LAST:event_jButtonAgregarProductoActionPerformed
 
     private void jTextFieldMeseroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMeseroActionPerformed
@@ -917,12 +959,12 @@ public class Gui_pedido extends javax.swing.JFrame {
         modeloProductosPedido.removeRow(fila);
     }//GEN-LAST:event_jButtonEliminarProductoActionPerformed
 
-    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
+    private void jComboBoxCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxCategoriaItemStateChanged
        
        
         while(modeloProductosSeleccion.getRowCount()>0)modeloProductosSeleccion.removeRow(0);
         
-        String categoria = jComboBox2.getSelectedItem().toString();    
+        String categoria = jComboBoxCategoria.getSelectedItem().toString();    
        
         int idCategoria = 0;
         if (categoria.equalsIgnoreCase("Almuerzo-Cena")) {
@@ -958,7 +1000,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         
         this.jTableProductosCategoria.setModel(modeloProductosSeleccion);
       
-    }//GEN-LAST:event_jComboBox2ItemStateChanged
+    }//GEN-LAST:event_jComboBoxCategoriaItemStateChanged
 
     private void jComboBoxEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEstadoItemStateChanged
         // TODO add your handling code here:
@@ -981,7 +1023,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         this.jButtonAgregarProducto.setEnabled(false);
         this.jButtonEliminarProducto.setEnabled(false);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
+        this.jButtonEliminar.setEnabled(true);
         
       
     }
@@ -991,7 +1033,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         this.jLabelNumPedido.setText("");
         this.jLabelHoraInicio.setText("");
         this.jLabelHoraFin.setText("");
-        this.jComboBox2.setSelectedIndex(0);
+        this.jComboBoxCategoria.setSelectedIndex(0);
         this.jComboBoxEstado.setSelectedIndex(0);
         this.jComboBoxMesas.setSelectedIndex(0);
         
@@ -1014,7 +1056,7 @@ public class Gui_pedido extends javax.swing.JFrame {
        this.jButtonEliminarProducto.setEnabled(true);
        this.jComboBoxEstado.setEnabled(true);
        this.jComboBoxMesas.setEnabled(true);
-       this.jComboBox2.setEnabled(true);
+       this.jComboBoxCategoria.setEnabled(true);
        this.jTextFieldCantidad.setEnabled(true);
        this.jTableProductos.setEnabled(true);
        this.jTableProductosCategoria.setEnabled(true);
@@ -1028,7 +1070,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         this.jLabelHoraInicio.setEnabled(false);
         this.jComboBoxEstado.setEnabled(false);
         this.jComboBoxMesas.setEnabled(false);
-        this.jComboBox2.setEnabled(false);
+        this.jComboBoxCategoria.setEnabled(false);
         this.jTextFieldCantidad.setEnabled(false);
         this.jTableProductos.setEnabled(false);
     }
@@ -1055,7 +1097,7 @@ public class Gui_pedido extends javax.swing.JFrame {
     private javax.swing.JButton jButtonNuevo;
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JButton jButtonagregar;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBoxCategoria;
     private javax.swing.JComboBox<String> jComboBoxEstado;
     private javax.swing.JComboBox<String> jComboBoxMesas;
     private javax.swing.JLabel jLabel;

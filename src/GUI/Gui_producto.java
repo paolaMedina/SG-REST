@@ -572,6 +572,7 @@ public class Gui_producto extends javax.swing.JFrame {
             }
             
         } catch (NullPointerException ex) {
+           
             limpiar();
         } catch (Exception ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
