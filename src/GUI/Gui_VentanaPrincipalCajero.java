@@ -152,11 +152,11 @@ public class Gui_VentanaPrincipalCajero extends javax.swing.JFrame {
 
     private void jButtonVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVentaActionPerformed
          // TODO add your handling code here:
-         /*try{
+         try{
          Gui_venta venta = new Gui_venta(this);
          venta.setVisible(true);
          this.dispose();
-       }catch(Exception e){}*/
+       }catch(Exception e){}
     }//GEN-LAST:event_jButtonVentaActionPerformed
 
     private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed

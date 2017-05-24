@@ -6,12 +6,18 @@
 package GUI;
 
 import Clases.Empleado;
+import Clases.Factura;
+import Clases.Pago;
 import Clases.Pedido;
 import Clases.Producto;
 import Clases.ProductoPedido;
+import Clases.TipoPago;
+import Controladores.FacturaJpaController;
+import Controladores.PagoJpaController;
 import Controladores.PedidoJpaController;
 import Controladores.ProductoJpaController;
 import Controladores.ProductoPedidoJpaController;
+import Controladores.TipoPagoJpaController;
 import java.awt.Image;
 import java.io.File;
 import java.sql.Timestamp;
@@ -36,10 +42,14 @@ import javax.swing.table.DefaultTableModel;
 public class Gui_venta extends javax.swing.JFrame {
     DefaultTableModel modeloTablaProductos = new DefaultTableModel();
     ArrayList<Long> pagosTarjetas = new ArrayList<Long>();
+    long totalPagar = 0;
+    String tipoPago ="";
+    String idEmpleado = "";
+    int numTargetas=0;
     /**
      * Creates new form empleado
      */
-    public Gui_venta(Gui_VentanaPrincipal principal) {
+    public Gui_venta(Gui_VentanaPrincipalCajero principal) {
         initComponents();
         
         deshabilitar();
@@ -47,8 +57,68 @@ public class Gui_venta extends javax.swing.JFrame {
         
     }
     
+    public Pago generarPago(Long dineroEfectivo, Long dineroTargetas){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        PagoJpaController daoPago = new PagoJpaController(emf);
+        TipoPagoJpaController daoTipoPago = new TipoPagoJpaController(emf);
+        
+        //tipo de pago*********************************************************
+        int tipo=1;
+        if (this.tipoPago.equalsIgnoreCase("Efectivo")) {
+            tipo = 1;
+        }if (this.tipoPago.equalsIgnoreCase("Tarjeta")) {
+            tipo = 2;
+        }else{
+            tipo = 3;
+        }
+            
+        TipoPago tipoPago = daoTipoPago.findTipoPago(tipo);
+        
+        
+        //pago*********************************************************
+        Pago pago = new Pago();
+        pago.setNumTarjetas(this.numTargetas);
+        pago.setDineroEfectivo(dineroEfectivo);
+        pago.setDineroTarjetas(dineroTargetas);
+        pago.setIdTipo(tipoPago);
+        
+        daoPago.create(pago);
+        return pago;
+    }
    
 
+    public void generarFactura(Long dineroEfectivo, Long dineroTargetas){
+        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        FacturaJpaController daoFactura = new FacturaJpaController(emf);
+        PedidoJpaController daoPedido = new PedidoJpaController(emf);
+        
+        //datos de la factura
+        String idCliente = this.jTextFieldIdCliente.getText();
+        String tipoPago=this.tipoPago;
+        int idFactura = Integer.parseInt(this.jLabelNumVenta.getText());
+        long valorTotal = this.totalPagar;
+        String idEmpleado = this.principal.gui_login.usuario;
+        Date fechaHora = new Date();
+        long descuento =  Long.valueOf(jTextFieldDescuentos.getText());
+        long propina =  Long.valueOf(jTextFieldPRopina.getText());
+        long impuestos = 0;/*******************************************/
+        String cedulaCliente = jTextFieldIdCliente.getText();
+        
+        Factura factura = new Factura(idFactura, valorTotal, idEmpleado, fechaHora, descuento, propina, impuestos, cedulaCliente);
+
+        Pedido numPedido = daoPedido.findPedido(idFactura);
+        factura.setNumPedido(numPedido);
+        factura.setIdPago(this.generarPago(dineroEfectivo, dineroTargetas));
+        
+        try {
+            daoFactura.create(factura);
+            JOptionPane.showMessageDialog(null, "La factura se genero exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "No se pudo generar la factura", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,7 +143,7 @@ public class Gui_venta extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jTextFieldPagoTarjeta = new javax.swing.JTextField();
-        jComboBoxTarjetas = new javax.swing.JComboBox<>();
+        jComboBoxTarjetas = new javax.swing.JComboBox<String>();
         jLabel8 = new javax.swing.JLabel();
         jButtonAgregarTarjetas = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
@@ -83,7 +153,7 @@ public class Gui_venta extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jTextFieldDescuentos = new javax.swing.JTextField();
         jCheckBoxPropina = new javax.swing.JCheckBox();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldPRopina = new javax.swing.JTextField();
         jButtonRealizarVenta = new javax.swing.JButton();
         jTextFieldNumTarjetas = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -101,6 +171,8 @@ public class Gui_venta extends javax.swing.JFrame {
         jTableProductos2 = new javax.swing.JTable();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextAreaInfoPedido2 = new javax.swing.JTextArea();
+        jLabel9 = new javax.swing.JLabel();
+        jLabelTotal = new javax.swing.JLabel();
 
         jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -110,11 +182,11 @@ public class Gui_venta extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(51, 0, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(51, 0, 255)));
 
         jLabel1.setText("Numero de la venta:");
 
-        jPanelPedido.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion del pago", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
+        jPanelPedido.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion del pago", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
 
         jLabel2.setText("Identificacion cliente");
 
@@ -257,8 +329,6 @@ public class Gui_venta extends javax.swing.JFrame {
 
         jCheckBoxPropina.setText("Propina");
 
-        jTextField1.setText("jTextField1");
-
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -269,10 +339,10 @@ public class Gui_venta extends javax.swing.JFrame {
                     .addComponent(jCheckBoxPropina)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                    .addComponent(jTextFieldPRopina))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,7 +350,7 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBoxPropina)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldPRopina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -299,9 +369,9 @@ public class Gui_venta extends javax.swing.JFrame {
         jLabel6.setText("Numero de tarjetas:");
 
         jCheckBoxFijarNumTarjetas.setText("Fijar Numero de Tarjetas");
-        jCheckBoxFijarNumTarjetas.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jCheckBoxFijarNumTarjetasItemStateChanged(evt);
+        jCheckBoxFijarNumTarjetas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jCheckBoxFijarNumTarjetasMouseClicked(evt);
             }
         });
         jCheckBoxFijarNumTarjetas.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -309,9 +379,9 @@ public class Gui_venta extends javax.swing.JFrame {
                 jCheckBoxFijarNumTarjetasStateChanged(evt);
             }
         });
-        jCheckBoxFijarNumTarjetas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jCheckBoxFijarNumTarjetasMouseClicked(evt);
+        jCheckBoxFijarNumTarjetas.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxFijarNumTarjetasItemStateChanged(evt);
             }
         });
         jCheckBoxFijarNumTarjetas.addActionListener(new java.awt.event.ActionListener() {
@@ -385,8 +455,6 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addComponent(jButtonRealizarVenta)
                 .addContainerGap(15, Short.MAX_VALUE))
         );
-
-        jPanel5.getAccessibleContext().setAccessibleName("Pago con tarjeta");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -481,7 +549,7 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanelPedido2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion del pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
+        jPanelPedido2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion del pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
 
         jTableProductos2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -516,11 +584,14 @@ public class Gui_venta extends javax.swing.JFrame {
         jPanelPedido2Layout.setVerticalGroup(
             jPanelPedido2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPedido2Layout.createSequentialGroup()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                .addGap(7, 7, 7)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
+        jLabel9.setText("TOTAL A PAGAR:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -528,23 +599,27 @@ public class Gui_venta extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap(18, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)))
+                        .addGap(25, 25, 25))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel9))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanelPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(398, Short.MAX_VALUE)))
+                    .addContainerGap(436, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,17 +627,21 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addComponent(jPanelPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(62, 62, 62))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(41, 41, 41)
+                    .addGap(69, 69, 69)
                     .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(182, Short.MAX_VALUE)))
+                    .addContainerGap(188, Short.MAX_VALUE)))
         );
 
         jLabelNumVenta.getAccessibleContext().setAccessibleName("jLabelNumPedido");
@@ -591,7 +670,7 @@ public class Gui_venta extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 813, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,6 +707,7 @@ public class Gui_venta extends javax.swing.JFrame {
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         
+        jLabelNumVenta.setText(numeroPedido);
         List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
         
         while(modeloTablaProductos.getRowCount()>0)modeloTablaProductos.removeRow(0);
@@ -652,10 +732,14 @@ public class Gui_venta extends javax.swing.JFrame {
             Long precioProductos = precioUnitario * cantidadProducto;
             
             modeloTablaProductos.setValueAt(precioProductos, i, 2);
+            
+            this.totalPagar += precioProductos;
         }
         
         this.jTableProductos2.setModel(modeloTablaProductos);
       
+        this.jLabelTotal.setText(String.valueOf(this.totalPagar));
+        
         Pedido pedido = daoPedido.findPedido(numPedido);
         
         String numeroDelPedido = pedido.getNumPedido().toString();
@@ -709,27 +793,67 @@ public class Gui_venta extends javax.swing.JFrame {
                 //Creacion de la persistencia
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
                 String idCliente = this.jTextFieldIdCliente.getText();
-                String tipoPago;
+                String tipoPago=null;
                 int numeroTarjetas = 0;
                 long cantidadDineroEfectivo = 0;
                 long cantidadDineroTarjetas = 0;
-                long 
+                long propina = Integer.parseInt(jTextFieldPRopina.getText());
+                long descuentos  = Integer.parseInt(jTextFieldDescuentos.getText());
+                long dineroTotalUsuario = 0;
                 
                 if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTargeta.isSelected()){
                     tipoPago = "Mixto";
                     numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
                     cantidadDineroEfectivo = Long.parseLong(jTextFieldPagoEfectivo.getText());
-                    cantidadDineroTarjetas = Long.parseLong(jTextFieldPagoEfectivo.getText());
+                    
+                    for (int i = 0; i < this.pagosTarjetas.size(); i++) {
+                        cantidadDineroTarjetas += pagosTarjetas.get(i);
+                    }
+                    
+                    dineroTotalUsuario = cantidadDineroEfectivo + cantidadDineroTarjetas;
+                    dineroTotalUsuario = dineroTotalUsuario + propina - descuentos;
+                    
+                    if (dineroTotalUsuario < totalPagar) {
+                        JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    }else{
+                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
+                        limpiar();
+                    }
+                    
                 }
                 else if(this.jRadioButtonEfectivo.isSelected()){
                     tipoPago = "Efectivo";
                     numeroTarjetas = 0;
                     cantidadDineroEfectivo = Long.parseLong(jTextFieldPagoEfectivo.getText());
+                     dineroTotalUsuario = cantidadDineroEfectivo;
+                     dineroTotalUsuario = dineroTotalUsuario + propina - descuentos;
+                     if (dineroTotalUsuario < totalPagar) {
+                        JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    }else{
+                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
+                        limpiar();
+                    }
                    
                 }else if(this.jRadioButtonTargeta.isSelected()){
                     tipoPago = "Tarjeta";
                     numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
-                    cantidadDineroTarjetas = Long.parseLong(jTextFieldPagoEfectivo.getText());  
+                    
+                    for (int i = 0; i < this.pagosTarjetas.size(); i++) {
+                        cantidadDineroTarjetas += pagosTarjetas.get(i);
+                    }
+                    
+                     dineroTotalUsuario = cantidadDineroTarjetas;
+                     dineroTotalUsuario = dineroTotalUsuario + propina - descuentos;
+                     
+                     if (dineroTotalUsuario < totalPagar) {
+                        JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    }else{
+                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
+                        limpiar();
+                    }
                 }
                 
                 
@@ -772,9 +896,10 @@ public class Gui_venta extends javax.swing.JFrame {
             this.jTextFieldNumTarjetas.setEnabled(true);
             this.jCheckBoxFijarNumTarjetas.setEnabled(true);
             this.jComboBoxTarjetas.setEnabled(true);
-            if(this.jComboBoxTarjetas.getItemCount()== 0){
+            this.tipoPago = "Tarjeta";
+           /* if(this.jComboBoxTarjetas.getItemCount()== 0){
                 this.jComboBoxTarjetas.addItem("Tarjeta No.1");
-            }
+            }*/
             
         }else{
             this.jTextFieldPagoTarjeta.setEnabled(false);
@@ -782,25 +907,40 @@ public class Gui_venta extends javax.swing.JFrame {
             this.jCheckBoxFijarNumTarjetas.setEnabled(false);
             this.jComboBoxTarjetas.setEnabled(false);
         }
+        
+        if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTargeta.isSelected()){
+            this.tipoPago = "Mixto";
+        }
+        
     }//GEN-LAST:event_jRadioButtonTargetaMouseClicked
 
     private void jRadioButtonEfectivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoMouseClicked
         if(this.jRadioButtonEfectivo.isSelected()){
             this.jTextFieldPagoEfectivo.setEnabled(true);
+            this.tipoPago = "Efectivo";
         }else{
             this.jTextFieldPagoEfectivo.setEnabled(false);
+        }
+        
+        if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTargeta.isSelected()){
+            this.tipoPago = "Mixto";
         }
     }//GEN-LAST:event_jRadioButtonEfectivoMouseClicked
 
     private void jCheckBoxFijarNumTarjetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasMouseClicked
+        
+        jButtonAgregarTarjetas.setEnabled(true);
+        
         if(jCheckBoxFijarNumTarjetas.isSelected()){
             int numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
+            this.numTargetas = numeroTarjetas;
             this.jTextFieldNumTarjetas.setEnabled(false);
             this.jCheckBoxFijarNumTarjetas.setEnabled(false);
             
-            for (int i = 1; i < numeroTarjetas; i++) {
+            for (int i = 0; i < numeroTarjetas; i++) {
                 int index = i+1;
-                this.jComboBoxTarjetas.addItem("Tarjeta No."+ index );                
+                this.jComboBoxTarjetas.addItem("Tarjeta No."+ index );   
+                 pagosTarjetas.add(Long.valueOf(0));
             }
             
         }else{
@@ -811,9 +951,10 @@ public class Gui_venta extends javax.swing.JFrame {
     private void jButtonAgregarTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarTarjetasActionPerformed
         
         Long pagoTarjeta = Long.parseLong(this.jTextFieldPagoTarjeta.getText());
-        int index = this.jComboBoxTarjetas.getSelectedIndex()+ 1;
+        int index = this.jComboBoxTarjetas.getSelectedIndex();
              
         pagosTarjetas.set(index, pagoTarjeta);
+        
     }//GEN-LAST:event_jButtonAgregarTarjetasActionPerformed
 
     public void botones(){
@@ -886,12 +1027,12 @@ public class Gui_venta extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_venta(new Gui_VentanaPrincipal (new Gui_login())).setVisible(true);
+                new Gui_venta(new Gui_VentanaPrincipalCajero (new Gui_login())).setVisible(true);
             }
         });
     }
 
-    private Gui_VentanaPrincipal principal;
+    private Gui_VentanaPrincipalCajero principal;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonAgregarTarjetas;
@@ -913,7 +1054,9 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelNumVenta;
+    private javax.swing.JLabel jLabelTotal;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -929,11 +1072,11 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTable jTableProductos2;
     private javax.swing.JTextArea jTextAreaInfoPedido2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextFieldDescuentos;
     private javax.swing.JTextField jTextFieldIdCliente;
     private javax.swing.JTextField jTextFieldNumTarjetas;
+    private javax.swing.JTextField jTextFieldPRopina;
     private javax.swing.JTextField jTextFieldPagoEfectivo;
     private javax.swing.JTextField jTextFieldPagoTarjeta;
     // End of variables declaration//GEN-END:variables
