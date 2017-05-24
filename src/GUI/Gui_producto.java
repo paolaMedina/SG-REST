@@ -496,7 +496,7 @@ public class Gui_producto extends javax.swing.JFrame {
                 producto.setEstado(false);
             }
             try {
-
+p
                 if (verificarPrecioNum()) {
                     daoProducto.create(producto);
                     deshabilitar();
