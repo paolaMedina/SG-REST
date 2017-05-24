@@ -28,12 +28,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Paola
  */
 public class Gui_producto extends javax.swing.JFrame {
-
+    
+    Gui_VentanaPrincipal gui_principal = null;
     /**
      * Creates new form Gui_pedido
      */
     public Gui_producto(Gui_VentanaPrincipal principal) {
         initComponents();
+        this.gui_principal = principal;   
         deshabilitar();
         botones();
     }

@@ -31,6 +31,7 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jButtonReportes = new javax.swing.JButton();
         jButtonEmpleados = new javax.swing.JButton();
         jButtonProductos = new javax.swing.JButton();
         jButtonPedidos = new javax.swing.JButton();
@@ -39,12 +40,22 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jLabelFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ventana Principal SG_REST");
 
         jPanel1.setLayout(null);
+
+        jButtonReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Reportes.png"))); // NOI18N
+        jButtonReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonReportesActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButtonReportes);
+        jButtonReportes.setBounds(230, 170, 130, 130);
 
         jButtonEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/1 persona.png"))); // NOI18N
         jButtonEmpleados.addActionListener(new java.awt.event.ActionListener() {
@@ -83,9 +94,9 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
         jPanel1.add(jButtonVenta);
         jButtonVenta.setBounds(50, 180, 130, 120);
 
-        jLabel3.setText("Empleados");
+        jLabel3.setText("Reportes");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(80, 140, 70, 14);
+        jLabel3.setBounds(260, 300, 70, 14);
 
         jLabel1.setText("Items del Menú");
         jPanel1.add(jLabel1);
@@ -98,6 +109,10 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
         jLabel4.setText("Caja");
         jPanel1.add(jLabel4);
         jLabel4.setBounds(100, 310, 22, 14);
+
+        jLabel5.setText("Empleados");
+        jPanel1.add(jLabel5);
+        jLabel5.setBounds(80, 140, 70, 14);
 
         jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondoPrincipal.jpg"))); // NOI18N
         jPanel1.add(jLabelFondo);
@@ -131,12 +146,13 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
 
     private void jButtonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProductosActionPerformed
         // TODO add your handling code here:
-         try{
+          // TODO add your handling code here:
+        try{
          Gui_producto producto =new Gui_producto(this);
     
-         producto.show();
-         producto.setLocation(50, 5);
+         producto.setVisible(true);
          this.dispose();
+         
        }catch(Exception e){}
     }//GEN-LAST:event_jButtonProductosActionPerformed
 
@@ -145,8 +161,7 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
          try{
          Gui_pedido pedido =new Gui_pedido(this);
     
-         pedido.show();
-         pedido.setLocation(50, 5);
+         pedido.setVisible(true);
          this.dispose();
        }catch(Exception e){}
         
@@ -160,6 +175,10 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
          this.dispose();
        }catch(Exception e){}
     }//GEN-LAST:event_jButtonVentaActionPerformed
+
+    private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonReportesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -200,11 +219,13 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButtonEmpleados;
     private javax.swing.JButton jButtonPedidos;
     private javax.swing.JButton jButtonProductos;
+    private javax.swing.JButton jButtonReportes;
     private javax.swing.JButton jButtonVenta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelFondo;
     public static javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

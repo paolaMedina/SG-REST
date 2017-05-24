@@ -54,6 +54,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Gui_pedido extends javax.swing.JFrame {
 
+    Gui_VentanaPrincipal gui_principal = null;
+    
     DefaultTableModel modeloProductosPedido = new DefaultTableModel();
     DefaultTableModel modeloProductosSeleccion = new DefaultTableModel();
    
@@ -63,6 +65,7 @@ public class Gui_pedido extends javax.swing.JFrame {
     public Gui_pedido(Gui_VentanaPrincipal principal) {
         initComponents();
         
+        this.gui_principal = principal;
         
         botones();
         deshabilitar();
