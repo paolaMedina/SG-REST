@@ -29,12 +29,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Gui_producto extends javax.swing.JFrame {
     
-    Gui_VentanaPrincipal gui_principal = null;
+    Gui_VentanaPrincipalGerente gui_principal = null;
     /**
      * Creates new form Gui_pedido
      */
-    public Gui_producto(Gui_VentanaPrincipal principal) {
+    public Gui_producto(Gui_VentanaPrincipalGerente principal) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.gui_principal = principal;   
         deshabilitar();
         botones();
@@ -589,10 +590,7 @@ public class Gui_producto extends javax.swing.JFrame {
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         // TODO add your handling code here:
         try{
-         Gui_VentanaPrincipal gui_principal =new Gui_VentanaPrincipal(new Gui_login());
-    
-         gui_principal.show();
-         gui_principal.setLocation(50, 5);
+         this.gui_principal.setVisible(true);
          this.dispose();
        }catch(Exception e){}
     }//GEN-LAST:event_jButtonSalirActionPerformed
@@ -736,7 +734,7 @@ public class Gui_producto extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_producto(new Gui_VentanaPrincipal(new Gui_login())).setVisible(true);
+                new Gui_producto(new Gui_VentanaPrincipalGerente(new Gui_login())).setVisible(true);
             }
         });
     }

@@ -9,14 +9,15 @@ package GUI;
  *
  * @author Paola
  */
-public class Gui_VentanaPrincipal extends javax.swing.JFrame {
+public class Gui_VentanaPrincipalGerente extends javax.swing.JFrame {
 
     public Gui_login gui_login;
     /**
      * Creates new form Gui_VentanaPrincipal
      */
-    public Gui_VentanaPrincipal(Gui_login login) {
+    public Gui_VentanaPrincipalGerente(Gui_login login) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.gui_login = login;
     
     }
@@ -34,13 +35,10 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
         jButtonReportes = new javax.swing.JButton();
         jButtonEmpleados = new javax.swing.JButton();
         jButtonProductos = new javax.swing.JButton();
-        jButtonPedidos = new javax.swing.JButton();
-        jButtonVenta = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jButtonSalir = new javax.swing.JButton();
         jLabelFondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -55,7 +53,7 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonReportes);
-        jButtonReportes.setBounds(230, 170, 130, 130);
+        jButtonReportes.setBounds(400, 100, 130, 130);
 
         jButtonEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/1 persona.png"))); // NOI18N
         jButtonEmpleados.addActionListener(new java.awt.event.ActionListener() {
@@ -64,7 +62,7 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonEmpleados);
-        jButtonEmpleados.setBounds(50, 10, 130, 130);
+        jButtonEmpleados.setBounds(40, 100, 130, 130);
 
         jButtonProductos.setBackground(new java.awt.Color(255, 255, 255));
         jButtonProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/1 productos.png"))); // NOI18N
@@ -74,45 +72,28 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButtonProductos);
-        jButtonProductos.setBounds(220, 10, 140, 130);
-
-        jButtonPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/1 pedido.jpg"))); // NOI18N
-        jButtonPedidos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonPedidosActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButtonPedidos);
-        jButtonPedidos.setBounds(400, 10, 140, 130);
-
-        jButtonVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/1 venta.png"))); // NOI18N
-        jButtonVenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVentaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButtonVenta);
-        jButtonVenta.setBounds(50, 180, 130, 120);
+        jButtonProductos.setBounds(210, 100, 140, 130);
 
         jLabel3.setText("Reportes");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(260, 300, 70, 14);
+        jLabel3.setBounds(430, 230, 70, 14);
 
         jLabel1.setText("Items del Menú");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(250, 140, 90, 14);
-
-        jLabel2.setText("Pedido");
-        jPanel1.add(jLabel2);
-        jLabel2.setBounds(450, 140, 41, 14);
-
-        jLabel4.setText("Caja");
-        jPanel1.add(jLabel4);
-        jLabel4.setBounds(100, 310, 22, 14);
+        jLabel1.setBounds(240, 230, 90, 14);
 
         jLabel5.setText("Empleados");
         jPanel1.add(jLabel5);
-        jLabel5.setBounds(80, 140, 70, 14);
+        jLabel5.setBounds(70, 230, 70, 14);
+
+        jButtonSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Botón_apagar.png"))); // NOI18N
+        jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalirActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButtonSalir);
+        jButtonSalir.setBounds(490, 20, 60, 60);
 
         jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondoPrincipal.jpg"))); // NOI18N
         jPanel1.add(jLabelFondo);
@@ -134,51 +115,39 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
 
     private void jButtonEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEmpleadosActionPerformed
         // TODO add your handling code here:
-        /*try{
+        try{
          Gui_empleado empleado =new Gui_empleado(this);
     
          empleado.setVisible(true);
          this.dispose();
          
-       }catch(Exception e){}*/
+       }catch(Exception e){}
       
     }//GEN-LAST:event_jButtonEmpleadosActionPerformed
 
     private void jButtonProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProductosActionPerformed
         // TODO add your handling code here:
           // TODO add your handling code here:
-        /*try{
+        try{
          Gui_producto producto =new Gui_producto(this);
     
          producto.setVisible(true);
          this.dispose();
          
-       }catch(Exception e){}*/
+       }catch(Exception e){}
     }//GEN-LAST:event_jButtonProductosActionPerformed
-
-    private void jButtonPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPedidosActionPerformed
-        // TODO add your handling code here:
-         /*try{
-         Gui_pedido pedido =new Gui_pedido(this);
-    
-         pedido.setVisible(true);
-         this.dispose();
-       }catch(Exception e){}*/
-        
-    }//GEN-LAST:event_jButtonPedidosActionPerformed
-
-    private void jButtonVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVentaActionPerformed
-         // TODO add your handling code here:
-        /* try{
-         Gui_venta venta = new Gui_venta(this);
-         venta.setVisible(true);
-         this.dispose();
-       }catch(Exception e){}*/
-    }//GEN-LAST:event_jButtonVentaActionPerformed
 
     private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonReportesActionPerformed
+
+    private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
+        this.setVisible(false); 
+        
+        Gui_otros gui_Otros = new Gui_otros(this);
+        
+        gui_Otros.setVisible(true); 
+    }//GEN-LAST:event_jButtonSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -197,34 +166,32 @@ public class Gui_VentanaPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Gui_VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_VentanaPrincipalGerente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Gui_VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_VentanaPrincipalGerente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Gui_VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_VentanaPrincipalGerente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Gui_VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_VentanaPrincipalGerente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_VentanaPrincipal(new Gui_login ()).setVisible(true);
+                new Gui_VentanaPrincipalGerente(new Gui_login ()).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEmpleados;
-    private javax.swing.JButton jButtonPedidos;
     private javax.swing.JButton jButtonProductos;
     private javax.swing.JButton jButtonReportes;
-    private javax.swing.JButton jButtonVenta;
+    private javax.swing.JButton jButtonSalir;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelFondo;
     public static javax.swing.JPanel jPanel1;

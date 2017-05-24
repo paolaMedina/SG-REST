@@ -26,6 +26,7 @@ public class Gui_login extends javax.swing.JFrame {
      */
     public Gui_login() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     
@@ -49,26 +50,31 @@ public class Gui_login extends javax.swing.JFrame {
             Empleado empleado = daoEmpleado.findEmpleado(usuario);
             
             if (empleado.getPassword().equalsIgnoreCase(password)) {
+
                 CargoEmpleado cargoEmpleado = empleado.getCargo();
                 String cargo = cargoEmpleado.getCargo();
                 
+                this.usuario = empleado.getIdentificacion();
+                this.cargoUsuario = cargo;
+                System.err.println(cargo);
+                
                 if (cargo.equalsIgnoreCase("Gerente")) {
                     
-                    Gui_VentanaPrincipal principalGenrente = new Gui_VentanaPrincipal(this);
+                    Gui_VentanaPrincipalGerente principalGenrente = new Gui_VentanaPrincipalGerente(this);
                     principalGenrente.setVisible(true);
                     validacion= "El gerente ingreso exitosamente";
                     this.dispose();
                                        
                 }else if (cargo.equalsIgnoreCase("Cajero")) {
                     
-                     Gui_VentanaPrincipal principalCajero = new Gui_VentanaPrincipal(this);
+                     Gui_VentanaPrincipalCajero principalCajero = new Gui_VentanaPrincipalCajero(this);
                     principalCajero.setVisible(true);
                     validacion= "El cajero ingreso exitosamente";
                     this.dispose();
                         
                 }else{
                     
-                    Gui_VentanaPrincipal principalMesero = new Gui_VentanaPrincipal(this);
+                    Gui_VentanaPrincipalMesero principalMesero = new Gui_VentanaPrincipalMesero(this);
                     principalMesero.setVisible(true);
                     validacion= "El mesero ingreso exitosamente";
                     this.dispose();

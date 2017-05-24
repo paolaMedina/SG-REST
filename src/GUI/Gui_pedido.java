@@ -54,7 +54,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Gui_pedido extends javax.swing.JFrame {
 
-    Gui_VentanaPrincipal gui_principal = null;
+    Gui_VentanaPrincipalMesero gui_mesero = null;
+    Gui_VentanaPrincipalCajero gui_cajero = null;
     
     DefaultTableModel modeloProductosPedido = new DefaultTableModel();
     DefaultTableModel modeloProductosSeleccion = new DefaultTableModel();
@@ -62,15 +63,24 @@ public class Gui_pedido extends javax.swing.JFrame {
     /**
      * Creates new form empleado
      */
-    public Gui_pedido(Gui_VentanaPrincipal principal) {
+    public Gui_pedido(Gui_VentanaPrincipalMesero principal) {
         initComponents();
+        this.setLocationRelativeTo(null);
         
-        this.gui_principal = principal;
+        this.gui_mesero = principal;        
+        botones();
+        deshabilitar();
+        
+        this.jTextFieldMesero.setEnabled(false);
+    }
+    
+    public Gui_pedido(Gui_VentanaPrincipalCajero principal) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.gui_cajero = principal;
         
         botones();
         deshabilitar();
-       
-        
     }
     
    
@@ -515,6 +525,15 @@ public class Gui_pedido extends javax.swing.JFrame {
         String numPedido = Integer.toString(daoPedido.getPedidoCount() + 1);
         this.jLabelNumPedido.setText(numPedido);
         
+        //Traer el id del empleado
+        String id_empleado = null;
+        if (gui_cajero == null) {
+            id_empleado = this.gui_mesero.gui_login.usuario;
+        }else{
+            id_empleado = this.gui_cajero.gui_login.usuario;
+        }
+        
+        jTextFieldMesero.setText(id_empleado);
         modeloProductosSeleccion.addColumn("Id");
         modeloProductosSeleccion.addColumn("Nombre");
         modeloProductosSeleccion.addColumn("Precio");
@@ -576,12 +595,12 @@ public class Gui_pedido extends javax.swing.JFrame {
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         // TODO add your handling code here:
         try{
-         Gui_VentanaPrincipal gui_principal =new Gui_VentanaPrincipal(new Gui_login());
-    
-         gui_principal.show();
-         gui_principal.setLocation(50, 5);
+         this.gui_cajero.setVisible(true);
          this.dispose();
-       }catch(Exception e){}
+       }catch(NullPointerException e){
+           this.gui_mesero.setVisible(true);
+         this.dispose();
+       }
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
@@ -1054,7 +1073,7 @@ public class Gui_pedido extends javax.swing.JFrame {
        this.jLabelNumPedido.setEnabled(true);
        this.jComboBoxMesas.setEnabled(true);
        this.jLabelHoraInicio.setEnabled(true);
-       this.jTextFieldMesero.setEnabled(true);
+       this.jTextFieldMesero.setEnabled(false);
        this.jButtonAgregarProducto.setEnabled(true);
        this.jButtonEliminarProducto.setEnabled(true);
        this.jComboBoxEstado.setEnabled(true);
@@ -1085,7 +1104,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_pedido(new Gui_VentanaPrincipal (new Gui_login())).setVisible(true);
+                new Gui_pedido(new Gui_VentanaPrincipalMesero (new Gui_login())).setVisible(true);
             }
         });
     }

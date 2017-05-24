@@ -28,10 +28,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Paola
  */
-public class Gui_empleado extends javax.swing.JFrame {
+public class Gui_UsuarioInfo extends javax.swing.JFrame {
 
     //GUI de la ventana principal del gerente
-    Gui_VentanaPrincipalGerente gui_gerente = null;
+    Gui_VentanaPrincipalCajero gui_cajero = null;
+    Gui_VentanaPrincipalMesero gui_mesero = null;
     
     Date fechaInicio;
     Date fechaFinal;
@@ -39,16 +40,94 @@ public class Gui_empleado extends javax.swing.JFrame {
     Gui_ElegirHorario elegirHorario = null;
    
     
-    public Gui_empleado(Gui_VentanaPrincipalGerente principal) {
+    public Gui_UsuarioInfo(Gui_VentanaPrincipalCajero principal) {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.gui_gerente = principal;        
+        this.gui_cajero = principal;  
         
-        botones();
+        //trae la informacion del empleado que esta en sesion
+        buscarDatos();
         deshabilitar();
+  
+    }
+    
+    public Gui_UsuarioInfo(Gui_VentanaPrincipalMesero principal) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        this.gui_mesero = principal;  
+        
+        //trae la informacion del empleado que esta en sesion
+        buscarDatos();
+        deshabilitar();
+  
     }
     
 
+    public void buscarDatos(){
+        String id = null;
+        if (gui_cajero == null) {
+            id = this.gui_mesero.gui_login.usuario;
+        }else{
+            id = this.gui_cajero.gui_login.usuario;
+        }
+        
+
+        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        
+        //se crea el controlador del empleado y del ususario asociaro
+        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+        
+        try{
+            Empleado empleado = daoEmpleado.findEmpleado(id);
+           
+            //llenar campos con los datos del empleado
+            jTextFieldNombre.setText(empleado.getNombre());
+            jTextFieldIdentificacion.setText(id);
+            jTextFieldApellidos.setText(empleado.getApelllido());
+            jTextFieldTelefono.setText(empleado.getTelefonoFijo());
+            jTextFieldCelular.setText(empleado.getTelefonoCelular());
+            jTextFieldDireccion.setText(empleado.getDireccion());
+            jTextFieldEmail.setText(empleado.getEmail());
+            jTextFieldContraseña.setText(empleado.getPassword());
+
+
+            //campos que son combo box
+            if (empleado.getCargo().getCargo().equalsIgnoreCase("Gerente")) {
+                jComboBoxCargo.setSelectedIndex(1);
+            }else if (empleado.getCargo().getCargo().equalsIgnoreCase("Cajero")) {
+                jComboBoxCargo.setSelectedIndex(2);
+            }else{
+                jComboBoxCargo.setSelectedIndex(3);
+            }
+            jComboBoxCargo.setEnabled(false);
+
+            if (empleado.getEstado() == true) {
+                jComboBoxEstado.setSelectedIndex(1);
+            }else{
+                jComboBoxEstado.setSelectedIndex(2);
+            }
+            jComboBoxEstado.setEnabled(false);
+            
+             //******************************************************************
+            jTextFieldIdentificacion.setEnabled(false);
+            
+            //datos del horario
+            HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
+            List<HorarioEmpleado> horarioEmpList = daoHorarioEmpleado.findHorarioEmpleado(empleado.getIdentificacion());
+            HorarioEmpleado horarioEmp = horarioEmpList.get(0);
+            
+            this.fechaInicio = horarioEmp.getFechaInicio();
+            this.fechaFinal = horarioEmp.getFechaFin();
+            this.HorarioSeleccionado = horarioEmp.getHorarios();
+            
+            
+            
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
    
 
     /**
@@ -86,13 +165,10 @@ public class Gui_empleado extends javax.swing.JFrame {
         jTextFieldContraseña = new javax.swing.JTextField();
         jButtonHorario = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jButtonBuscar = new javax.swing.JButton();
-        jButtonagregar = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
         jButtonSalir = new javax.swing.JButton();
-        jButtonEliminar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
-        jButtonNuevo = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -279,24 +355,8 @@ public class Gui_empleado extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jButtonBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (Search).jpg"))); // NOI18N
-        jButtonBuscar.setText("buscar");
-        jButtonBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBuscarActionPerformed(evt);
-            }
-        });
-
-        jButtonagregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (Save).jpg"))); // NOI18N
-        jButtonagregar.setText("agregar");
-        jButtonagregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonagregarActionPerformed(evt);
-            }
-        });
-
         jButtonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (User edit).jpg"))); // NOI18N
-        jButtonModificar.setText("modificar");
+        jButtonModificar.setText("Aceptar");
         jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonModificarActionPerformed(evt);
@@ -311,14 +371,6 @@ public class Gui_empleado extends javax.swing.JFrame {
             }
         });
 
-        jButtonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (User delete).jpg"))); // NOI18N
-        jButtonEliminar.setText("eliminar");
-        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEliminarActionPerformed(evt);
-            }
-        });
-
         jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Wzdelete.jpg"))); // NOI18N
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -327,11 +379,10 @@ public class Gui_empleado extends javax.swing.JFrame {
             }
         });
 
-        jButtonNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (User add).jpg"))); // NOI18N
-        jButtonNuevo.setText("nuevo");
-        jButtonNuevo.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Modificar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonNuevoActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -340,40 +391,28 @@ public class Gui_empleado extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonagregar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(188, 188, 188)
-                        .addComponent(jButtonCancelar)
-                        .addGap(52, 52, 52)
-                        .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1)
+                    .addComponent(jButtonCancelar))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonModificar))
+                .addContainerGap(317, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonNuevo)
-                    .addComponent(jButtonagregar)
-                    .addComponent(jButtonBuscar)
                     .addComponent(jButtonModificar)
-                    .addComponent(jButtonEliminar))
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonSalir)
                     .addComponent(jButtonCancelar))
-                .addGap(155, 155, 155))
+                .addGap(157, 157, 157))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -475,148 +514,6 @@ public class Gui_empleado extends javax.swing.JFrame {
          }
     }//GEN-LAST:event_jButtonSeleccionarFotoActionPerformed
 
-    private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
-        String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del empleado que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
-
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //se crea el controlador del empleado y del ususario asociaro
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        
-        try{
-            Empleado empleado = daoEmpleado.findEmpleado(id);
-           
-            //llenar campos con los datos del empleado
-            jTextFieldNombre.setText(empleado.getNombre());
-            jTextFieldIdentificacion.setText(id);
-            jTextFieldApellidos.setText(empleado.getApelllido());
-            jTextFieldTelefono.setText(empleado.getTelefonoFijo());
-            jTextFieldCelular.setText(empleado.getTelefonoCelular());
-            jTextFieldDireccion.setText(empleado.getDireccion());
-            jTextFieldEmail.setText(empleado.getEmail());
-            jTextFieldContraseña.setText(empleado.getPassword());
-
-
-            //campos que son combo box
-            if (empleado.getCargo().getCargo().equalsIgnoreCase("Gerente")) {
-                jComboBoxCargo.setSelectedIndex(1);
-            }else if (empleado.getCargo().getCargo().equalsIgnoreCase("Cajero")) {
-                jComboBoxCargo.setSelectedIndex(2);
-            }else{
-                jComboBoxCargo.setSelectedIndex(3);
-            }
-
-            if (empleado.getEstado() == true) {
-                jComboBoxEstado.setSelectedIndex(1);
-            }else{
-                jComboBoxEstado.setSelectedIndex(2);
-            }
-            
-            this.jButtonagregar.setEnabled(false);
-            this.jButtonBuscar.setEnabled(false);
-            this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar.setEnabled(false);
-            this.jButtonNuevo.setEnabled(false);
-            this.jButtonHorario.setEnabled(true);
-            
-            habilitar();
-            jTextFieldIdentificacion.setEnabled(false);
-            
-            //datos del horario
-            HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
-            List<HorarioEmpleado> horarioEmpList = daoHorarioEmpleado.findHorarioEmpleado(empleado.getIdentificacion());
-            HorarioEmpleado horarioEmp = horarioEmpList.get(0);
-            
-            this.fechaInicio = horarioEmp.getFechaInicio();
-            this.fechaFinal = horarioEmp.getFechaFin();
-            this.HorarioSeleccionado = horarioEmp.getHorarios();
-            
-            
-            
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(null, "El empleado no existe", "Error", JOptionPane.ERROR_MESSAGE);
-
-        }
-    }//GEN-LAST:event_jButtonBuscarActionPerformed
-
-    private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
-
-        // Obtencion de datos de la interfaz
-        String id=jTextFieldIdentificacion.getText(),nom=jTextFieldNombre.getText(),ape=jTextFieldApellidos.getText();
-        String cargo=this.jComboBoxCargo.getSelectedItem().toString();
-        int cargoId =0;
-        if (cargo.equalsIgnoreCase("Gerente")) {
-            cargoId = 1;
-        }else if (cargo.equalsIgnoreCase("Cajero")) {
-            cargoId = 2;
-        }else{
-            cargoId = 3;
-        }
-        String dni=jComboBoxEstado.getSelectedItem().toString();
-        boolean estado = true;
-        if (dni.equalsIgnoreCase("activo")) {
-            estado = true;
-        }else{
-            estado = false;
-        }
-        String tel=jTextFieldTelefono.getText(),cel=jTextFieldCelular.getText(),emil=jTextFieldEmail.getText();
-        String dir=jTextFieldDireccion.getText();
-        String contraseña = jTextFieldContraseña.getText();
-        
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //Se crea el controlador del cargo_empleado
-        CargoEmpleadoJpaController daoCargoEmpleado = new CargoEmpleadoJpaController(emf);
-        CargoEmpleado cargoEmpleado = daoCargoEmpleado.findCargoEmpleado(cargoId);
-        
-        //se crea el controlador del empleado y del ususario asociaro
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        
-        //se crea un objeto empleado y se le asignan sus atributos
-        Empleado empleado = new Empleado();
-        empleado.setIdentificacion(id);
-        empleado.setPassword(contraseña);
-        empleado.setNombre(nom);
-        empleado.setApelllido(ape);
-        empleado.setCargo(cargoEmpleado);
-        empleado.setEstado(estado);
-        empleado.setDireccion(dir);
-        empleado.setTelefonoFijo(tel);
-        empleado.setTelefonoCelular(cel);
-        empleado.setEmail(emil);
-        
-        //se crea un HorarioEmpleado
-        HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
-        
-        HorarioEmpleado horarioEmpleado = new HorarioEmpleado();
-        horarioEmpleado.setEmpleado(empleado);
-        
-        System.err.println("");
-        try {
-            if (verificarCamposVacios() == false) {
-                horarioEmpleado.setFechaFin(this.elegirHorario.fechaFinal);
-                horarioEmpleado.setFechaInicio(this.elegirHorario.fechaInicio);
-                horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
-                daoEmpleado.create(empleado);
-                daoHorarioEmpleado.create(horarioEmpleado);
-                botones();
-                limpiar();
-                JOptionPane.showMessageDialog(null, "El empleado se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-            }else{
-                JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-                limpiar();
-            }
-            
-        } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-            limpiar();
-        } catch (Exception ex) {
-            Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-        }    
-    }//GEN-LAST:event_jButtonagregarActionPerformed
-
     private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
         
         // Obtencion de datos de la interfaz
@@ -675,8 +572,9 @@ public class Gui_empleado extends javax.swing.JFrame {
             if (verificarCamposVacios() == false) {
                 if (elegirHorario == null) {
                     daoEmpleado.edit(empleado);
-                    botones();
-                    limpiar();
+                     //******************************************************************
+                    buscarDatos();
+                    deshabilitar();
                     JOptionPane.showMessageDialog(null, "El empleado se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             
                 }else{
@@ -685,20 +583,21 @@ public class Gui_empleado extends javax.swing.JFrame {
                     horarioEmpleado.setHorarios(this.elegirHorario.HorarioSeleccionado);
                     daoEmpleado.edit(empleado);
                     daoHorarioEmpleado.edit(horarioEmpleado);
-                    botones();
-                    limpiar();
+                    
+                    //******************************************************************
+                    buscarDatos();
+                    deshabilitar();
                     JOptionPane.showMessageDialog(null, "El empleado se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
             
                 }
 
             }else{
                 JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);
-                botones();
-                    limpiar();
+                
             }
             
         }  catch (Exception ex) {
-            Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Gui_UsuarioInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_jButtonModificarActionPerformed
@@ -706,59 +605,20 @@ public class Gui_empleado extends javax.swing.JFrame {
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         // TODO add your handling code here:
          try{
-         this.gui_gerente.setVisible(true);
+         this.gui_cajero.setVisible(true);
          this.dispose();
-       }catch(Exception e){}
-
+       }catch(NullPointerException e){
+           this.gui_mesero.setVisible(true);
+         this.dispose();
+       }
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
-    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
-        String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del empleado que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
-
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //se crea el controlador del empleado y del ususario asociaro
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        
-        //se crea el controlador para el horario asociado a un empleado
-        HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
-            
-        try {
-            List<HorarioEmpleado> he = daoHorarioEmpleado.findHorarioEmpleado(id);
-            HorarioEmpleado he1 = he.get(0);
-            
-            daoHorarioEmpleado.destroy(he1.getHorarioEmpleadoPK());
-            daoEmpleado.destroy(id);
-            JOptionPane.showMessageDialog(null, "El empleado se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NonexistentEntityException ex) {
-            JOptionPane.showMessageDialog(null, "El empleado que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jButtonEliminarActionPerformed
-
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        limpiar();
-        habilitar();
-        deshabilitar();
-        habilitarBotones();
+        
+        this.deshabilitar();
+        this.buscarDatos();
         
     }//GEN-LAST:event_jButtonCancelarActionPerformed
-
-    private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
-
-        habilitar();
-        limpiar();
-        this.jButtonagregar.setEnabled(true);
-        this.jButtonBuscar.setEnabled(false);
-        this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
-        this.jButtonNuevo.setEnabled(false);
-        this.jButtonSeleccionarFoto.setEnabled(true);
-        this.jButtonHorario.setEnabled(true);
-
-    }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jTextFieldIdentificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIdentificacionActionPerformed
         // TODO add your handling code here:
@@ -774,53 +634,12 @@ public class Gui_empleado extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonHorarioActionPerformed
 
-       public void botones(){
-        this.jButtonagregar.setEnabled(false);
-        this.jButtonNuevo.setEnabled(true);
-        this.jButtonBuscar.setEnabled(true);
-        this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(true);
-        this.jButtonSeleccionarFoto.setEnabled(false);
-        this.jButtonHorario.setEnabled(false);
-        
-     }
-     
-     public void habilitarBotones(){
-        this.jButtonBuscar.setEnabled(true);
-        this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(true);
-        this.jButtonNuevo.setEnabled(true);
-        this.jButtonagregar.setEnabled(false);
-     }
-     public void limpiar(){
-         this.jTextFieldIdentificacion.setText("");
-         this.jTextFieldNombre.setText("");
-         this.jTextFieldApellidos.setText(""); 
-         this.jComboBoxCargo.setSelectedIndex(0);
-         this.jComboBoxEstado.setSelectedIndex(0);
-         this.jTextFieldTelefono.setText("");
-         this.jTextFieldCelular.setText("");
-         this.jTextFieldEmail.setText("");
-         this.jTextFieldContraseña.setText("");
-         jTextFieldDireccion.setText("");
-         jLabelFoto.setIcon(null);
-         
-     }
-     
-     public void habilitar(){
-         this.jTextFieldIdentificacion.setEnabled(true);
-         this.jTextFieldNombre.setEnabled(true);
-         this.jTextFieldApellidos.setEnabled(true);
-         this.jComboBoxCargo.setEnabled(true);
-         this.jComboBoxEstado.setEnabled(true);
-         this.jTextFieldTelefono.setEnabled(true);
-         this.jTextFieldCelular.setEnabled(true);
-         this.jTextFieldEmail.setEnabled(true);
-         this.jTextFieldContraseña.setEnabled(true);
-         jTextFieldDireccion.setEnabled(true);
-  }
-     public void deshabilitar(){
-         this.jTextFieldIdentificacion.setEnabled(false);
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.habilitar();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    public void deshabilitar(){
+        this.jTextFieldIdentificacion.setEnabled(false);
          this.jTextFieldNombre.setEnabled(false);
          this.jTextFieldApellidos.setEnabled(false); 
          this.jComboBoxCargo.setEnabled(false);
@@ -830,8 +649,34 @@ public class Gui_empleado extends javax.swing.JFrame {
          this.jTextFieldEmail.setEnabled(false);
          jTextFieldDireccion.setEnabled(false);
          this.jTextFieldContraseña.setEnabled(false);
-     }
+    }
+    
+    public void habilitar(){
+         this.jTextFieldNombre.setEnabled(true);
+         this.jTextFieldApellidos.setEnabled(true);
+         this.jTextFieldTelefono.setEnabled(true);
+         this.jTextFieldCelular.setEnabled(true);
+         this.jTextFieldEmail.setEnabled(true);
+         this.jTextFieldContraseña.setEnabled(true);
+         jTextFieldDireccion.setEnabled(true);
+    }
+    
+    public void limpiar(){
+        this.jTextFieldIdentificacion.setText("");
+        this.jTextFieldNombre.setText("");
+        this.jTextFieldApellidos.setText(""); 
+        this.jComboBoxCargo.setSelectedIndex(0);
+        this.jComboBoxEstado.setSelectedIndex(0);
+        this.jTextFieldTelefono.setText("");
+        this.jTextFieldCelular.setText("");
+        this.jTextFieldEmail.setText("");
+        this.jTextFieldContraseña.setText("");
+        jTextFieldDireccion.setText("");
+        jLabelFoto.setIcon(null);
+         
+    }
      
+
      public boolean verificarCamposVacios(){
          boolean var =false;
          
@@ -861,14 +706,18 @@ public class Gui_empleado extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Gui_empleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_UsuarioInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Gui_empleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_UsuarioInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Gui_empleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_UsuarioInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Gui_empleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui_UsuarioInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -877,21 +726,18 @@ public class Gui_empleado extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_empleado(new Gui_VentanaPrincipalGerente(new Gui_login())).setVisible(true);
+                new Gui_UsuarioInfo(new Gui_VentanaPrincipalCajero(new Gui_login())).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonEliminar;
     private javax.swing.JButton jButtonHorario;
     private javax.swing.JButton jButtonModificar;
-    private javax.swing.JButton jButtonNuevo;
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JButton jButtonSeleccionarFoto;
-    private javax.swing.JButton jButtonagregar;
     private javax.swing.JComboBox jComboBoxCargo;
     private javax.swing.JComboBox jComboBoxEstado;
     private javax.swing.JLabel jLabel1;
