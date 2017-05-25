@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,8 +46,9 @@ public class ReporteCuenta {
 
         DecimalFormat formatea = new DecimalFormat("###,###.##");
         try {
+            URL url= getClass().getResource("/Reportes/cuenta" + numCuenta + ".pdf");
 
-            OutputStream archivo = new FileOutputStream(new File("\\Reportes\\" + numCuenta + ".pdf"));
+            OutputStream archivo = new FileOutputStream(new File(url.toString()));
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
