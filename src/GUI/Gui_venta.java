@@ -49,6 +49,7 @@ public class Gui_venta extends javax.swing.JFrame {
     DefaultTableModel modeloTablaProductos = new DefaultTableModel();
     ArrayList<Long> pagosTarjetas = new ArrayList<Long>();
     long totalPagar = 0;
+    long subtotal = 0;
     String tipoPago ="";
     String idEmpleado = "";
     int numTargetas=0;
@@ -148,6 +149,7 @@ public class Gui_venta extends javax.swing.JFrame {
         String tipoPago=this.tipoPago;
         int idFactura = Integer.parseInt(this.jLabelNumVenta.getText());
         long valorTotal = this.totalPagar;
+        
         String idEmpleado = this.principal.gui_login.usuario;
         Date fechaHora = new Date();
         long descuento =  Long.valueOf(jTextFieldDescuentos.getText());
@@ -180,12 +182,11 @@ public class Gui_venta extends javax.swing.JFrame {
 
         jTextField3 = new javax.swing.JTextField();
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanelPedido = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextFieldIdCliente = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jRadioButtonTarjeta = new javax.swing.JRadioButton();
@@ -199,12 +200,6 @@ public class Gui_venta extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jTextFieldPagoEfectivo = new javax.swing.JTextField();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jTextFieldDescuentos = new javax.swing.JTextField();
-        jCheckBoxPropina = new javax.swing.JCheckBox();
-        jTextFieldPRopina = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
         jButtonRealizarVenta = new javax.swing.JButton();
         jTextFieldNumTarjetas = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -222,13 +217,25 @@ public class Gui_venta extends javax.swing.JFrame {
         jTableProductos2 = new javax.swing.JTable();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextAreaInfoPedido2 = new javax.swing.JTextArea();
+        jLabelSubTotal = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextFieldDescuentos = new javax.swing.JTextField();
+        jCheckBoxPropina = new javax.swing.JCheckBox();
+        jTextFieldPRopina = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jLabelTotal = new javax.swing.JLabel();
+        jTextFieldIdCliente = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTextField3KeyTyped(evt);
             }
         });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -237,8 +244,6 @@ public class Gui_venta extends javax.swing.JFrame {
         jLabel1.setText("Numero de la venta:");
 
         jPanelPedido.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion del pago", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
-
-        jLabel2.setText("Identificacion cliente");
 
         jLabel3.setText("Forma de pago");
 
@@ -299,7 +304,13 @@ public class Gui_venta extends javax.swing.JFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Pago con tarjeta"));
         jPanel5.setToolTipText("");
 
-        jLabel5.setText("Cantidad de dinero");
+        jLabel5.setText("Cantidad de dinero:");
+
+        jTextFieldPagoTarjeta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldPagoTarjetaKeyTyped(evt);
+            }
+        });
 
         jComboBoxTarjetas.setToolTipText("");
 
@@ -322,16 +333,14 @@ public class Gui_venta extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldPagoTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextFieldPagoTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonAgregarTarjetas))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBoxTarjetas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonAgregarTarjetas)
-                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,15 +351,20 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextFieldPagoTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonAgregarTarjetas)
-                .addContainerGap(16, Short.MAX_VALUE))
+                    .addComponent(jTextFieldPagoTarjeta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAgregarTarjetas))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Pago en efectivo"));
 
-        jLabel4.setText("Cantidad de dinero");
+        jLabel4.setText("Cantidad de dinero:");
+
+        jTextFieldPagoEfectivo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldPagoEfectivoKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -359,9 +373,9 @@ public class Gui_venta extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jLabel4)
-                .addGap(34, 34, 34)
-                .addComponent(jTextFieldPagoEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldPagoEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -371,50 +385,6 @@ public class Gui_venta extends javax.swing.JFrame {
                     .addComponent(jTextFieldPagoEfectivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(0, 11, Short.MAX_VALUE))
-        );
-
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Extras"));
-
-        jLabel7.setText("Descuentos");
-
-        jCheckBoxPropina.setText("Propina");
-
-        jLabel9.setText("TOTAL A PAGAR:");
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jCheckBoxPropina)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPRopina)))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel9)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBoxPropina)
-                    .addComponent(jTextFieldPRopina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
-                .addGap(7, 7, 7))
         );
 
         jButtonRealizarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (Save).jpg"))); // NOI18N
@@ -456,51 +426,45 @@ public class Gui_venta extends javax.swing.JFrame {
             .addGroup(jPanelPedidoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelPedidoLayout.createSequentialGroup()
                         .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelPedidoLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextFieldIdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButtonRealizarVenta)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanelPedidoLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPedidoLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jCheckBoxFijarNumTarjetas)
+                            .addGroup(jPanelPedidoLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldNumTarjetas)))
+                        .addGap(60, 60, 60))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPedidoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jCheckBoxFijarNumTarjetas)
-                    .addGroup(jPanelPedidoLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNumTarjetas)))
-                .addGap(60, 60, 60))
+                .addComponent(jButtonRealizarVenta)
+                .addContainerGap())
         );
         jPanelPedidoLayout.setVerticalGroup(
             jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPedidoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldIdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNumTarjetas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addGroup(jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelPedidoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(jPanelPedidoLayout.createSequentialGroup()
@@ -508,11 +472,9 @@ public class Gui_venta extends javax.swing.JFrame {
                         .addComponent(jCheckBoxFijarNumTarjetas)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonRealizarVenta)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -608,7 +570,7 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanelPedido2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion del pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
+        jPanelPedido2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion de los productos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
 
         jTableProductos2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -644,10 +606,92 @@ public class Gui_venta extends javax.swing.JFrame {
             jPanelPedido2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPedido2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                 .addGap(7, 7, 7)
                 .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+        );
+
+        jLabel10.setText("Subtotal:");
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Informacion Venta"));
+
+        jLabel7.setText("Descuentos:");
+
+        jTextFieldDescuentos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldDescuentosKeyTyped(evt);
+            }
+        });
+
+        jCheckBoxPropina.setText("Propina");
+        jCheckBoxPropina.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jCheckBoxPropinaMouseClicked(evt);
+            }
+        });
+
+        jTextFieldPRopina.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldPRopinaKeyTyped(evt);
+            }
+        });
+
+        jLabel9.setText("TOTAL A PAGAR:");
+
+        jTextFieldIdCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextFieldIdClienteKeyTyped(evt);
+            }
+        });
+
+        jLabel2.setText("Identificacion cliente:");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jCheckBoxPropina)
+                            .addComponent(jLabel7))
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldPRopina, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextFieldIdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldIdCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBoxPropina)
+                    .addComponent(jTextFieldPRopina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDescuentos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -656,45 +700,56 @@ public class Gui_venta extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addContainerGap(18, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addGap(10, 10, 10)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(155, 155, 155)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabelSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jPanelPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(436, Short.MAX_VALUE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanelPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanelPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
-                .addComponent(jLabelTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(69, 69, 69)
-                    .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(188, Short.MAX_VALUE)))
+                .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(62, 62, 62))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabelSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanelPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jLabelNumVenta.getAccessibleContext().setAccessibleName("jLabelNumPedido");
@@ -706,7 +761,7 @@ public class Gui_venta extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(536, 536, 536))
+                .addGap(462, 462, 462))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -729,7 +784,7 @@ public class Gui_venta extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
@@ -766,8 +821,7 @@ public class Gui_venta extends javax.swing.JFrame {
         jLabelNumVenta.setText(numVenta);
         List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
         
-        while(modeloTablaProductos.getRowCount()>0)modeloTablaProductos.removeRow(0);
-        
+      
         modeloTablaProductos.addColumn("Producto");
         modeloTablaProductos.addColumn("Cantidad");
         modeloTablaProductos.addColumn("Precio");
@@ -789,12 +843,12 @@ public class Gui_venta extends javax.swing.JFrame {
             
             modeloTablaProductos.setValueAt(precioProductos, i, 2);
             
-            this.totalPagar += precioProductos;
+            this.subtotal += precioProductos;
         }
         
         this.jTableProductos2.setModel(modeloTablaProductos);
       
-        this.jLabelTotal.setText(String.valueOf(this.totalPagar));
+        this.jLabelSubTotal.setText(String.valueOf(this.subtotal));
         
         Pedido pedido = daoPedido.findPedido(numPedido);
         
@@ -839,6 +893,9 @@ public class Gui_venta extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
+        
+        habilitar();
+        this.jTextFieldPRopina.setEnabled(true);
         while(modeloTablaProductos.getColumnCount()== 0){  
             modeloTablaProductos.addColumn("Producto");
             modeloTablaProductos.addColumn("Cantidad");
@@ -848,6 +905,7 @@ public class Gui_venta extends javax.swing.JFrame {
         while(modeloTablaProductos.getRowCount()>0)modeloTablaProductos.removeRow(0);
         
         String numeroVenta = JOptionPane.showInputDialog(null, "Ingrese el numero de la venta que desea buscar", "Buscar", JOptionPane.QUESTION_MESSAGE);
+        this.jLabelNumVenta.setText(numeroVenta);
         int numVenta = Integer.parseInt(numeroVenta);
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
@@ -884,16 +942,22 @@ public class Gui_venta extends javax.swing.JFrame {
             
             if(pago.getIdTipo().getNombreTipo().equalsIgnoreCase("Efectivo")){
                 this.jRadioButtonEfectivo.doClick();
+                this.jTextFieldPagoEfectivo.setEnabled(true);
                 this.jTextFieldPagoEfectivo.setText(Long.toString(pago.getDineroEfectivo()));
             }else if(pago.getIdTipo().getNombreTipo().equalsIgnoreCase("Tarjeta")){
                 this.jRadioButtonTarjeta.doClick();
+                this.jTextFieldNumTarjetas.setEnabled(true);
                 this.jTextFieldNumTarjetas.setText(Integer.toString(pago.getNumTarjetas()));
+                this.jTextFieldPagoTarjeta.setEnabled(true);
                 this.jTextFieldPagoTarjeta.setText(Long.toString(pago.getDineroTarjetas()));
             }else if(pago.getIdTipo().getNombreTipo().equalsIgnoreCase("Mixto")){
                 this.jRadioButtonEfectivo.doClick();
                 this.jRadioButtonTarjeta.doClick();
+                this.jTextFieldNumTarjetas.setEnabled(true);
                 this.jTextFieldNumTarjetas.setText(Integer.toString(pago.getNumTarjetas()));
+                this.jTextFieldPagoEfectivo.setEnabled(true);
                 this.jTextFieldPagoEfectivo.setText(Long.toString(pago.getDineroEfectivo()));
+                this.jTextFieldPagoTarjeta.setEnabled(true);
                 this.jTextFieldPagoTarjeta.setText(Long.toString(pago.getDineroTarjetas()));
             }
             
@@ -902,21 +966,57 @@ public class Gui_venta extends javax.swing.JFrame {
             this.jTextFieldPRopina.setText(Long.toString(factura.getPropina()));
             this.jTextFieldDescuentos.setText(Long.toString(factura.getDescuento()));
             this.jTextFieldIdCliente.setText(factura.getCedulaCliente());
+            this.jLabelTotal.setText(Long.toString(factura.getValorTotal()));
         }catch(NullPointerException e){
             JOptionPane.showMessageDialog(null, "La factura de la venta no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
         }
-       
+        
+        
+        
 
         
         
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
+    private void jCheckBoxFijarNumTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasActionPerformed
+
+    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasActionPerformed
+
+    private void jCheckBoxFijarNumTarjetasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasItemStateChanged
+
+    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasItemStateChanged
+
+    private void jCheckBoxFijarNumTarjetasStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasStateChanged
+
+    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasStateChanged
+
+    private void jCheckBoxFijarNumTarjetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasMouseClicked
+
+        jButtonAgregarTarjetas.setEnabled(true);
+
+        if(jCheckBoxFijarNumTarjetas.isSelected()){
+            int numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
+            this.numTargetas = numeroTarjetas;
+            this.jTextFieldNumTarjetas.setEnabled(false);
+            this.jCheckBoxFijarNumTarjetas.setEnabled(false);
+
+            for (int i = 0; i < numeroTarjetas; i++) {
+                int index = i+1;
+                this.jComboBoxTarjetas.addItem("Tarjeta No."+ index );
+                pagosTarjetas.add(Long.valueOf(0));
+            }
+
+        }else{
+            this.jTextFieldNumTarjetas.setEnabled(true);
+        }
+    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasMouseClicked
+
     private void jButtonRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarVentaActionPerformed
-        
-            try{
-                if (verificarCamposVacios() == false) {
-                
+
+        try{
+            if (verificarCamposVacios() == false) {
+
                 //Creacion de la persistencia
                 EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
                 String idCliente = this.jTextFieldIdCliente.getText();
@@ -927,19 +1027,24 @@ public class Gui_venta extends javax.swing.JFrame {
                 long propina = Integer.parseInt(jTextFieldPRopina.getText());
                 long descuentos  = Integer.parseInt(jTextFieldDescuentos.getText());
                 long dineroTotalUsuario = 0;
-                
+                long totalPagar = 0;
+
+                JOptionPane.showMessageDialog(null, this.jRadioButtonEfectivo.isSelected());
+
                 if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTarjeta.isSelected()){
                     tipoPago = "Mixto";
                     numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
                     cantidadDineroEfectivo = Long.parseLong(jTextFieldPagoEfectivo.getText());
-                    
+
                     for (int i = 0; i < this.pagosTarjetas.size(); i++) {
                         cantidadDineroTarjetas += pagosTarjetas.get(i);
                     }
-                    
+
                     dineroTotalUsuario = cantidadDineroEfectivo + cantidadDineroTarjetas;
-                    dineroTotalUsuario = dineroTotalUsuario + propina - descuentos;
-                    
+
+                    totalPagar = this.subtotal + propina - descuentos;
+                    this.jLabelTotal.setText(Long.toString(totalPagar));
+
                     if (dineroTotalUsuario < totalPagar) {
                         JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
                         limpiar();
@@ -947,101 +1052,76 @@ public class Gui_venta extends javax.swing.JFrame {
                         generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
                         generarProductoFactura();
                         limpiar();
+                        deshabilitar();
                     }
-                    
+
                 }
                 else if(this.jRadioButtonEfectivo.isSelected()){
                     tipoPago = "Efectivo";
                     numeroTarjetas = 0;
                     cantidadDineroEfectivo = Long.parseLong(jTextFieldPagoEfectivo.getText());
-                     dineroTotalUsuario = cantidadDineroEfectivo;
-                     dineroTotalUsuario = dineroTotalUsuario + propina - descuentos;
-                     if (dineroTotalUsuario < totalPagar) {
+                    dineroTotalUsuario = cantidadDineroEfectivo;
+                    totalPagar = this.subtotal + propina - descuentos;
+                    this.jLabelTotal.setText(Long.toString(totalPagar));
+
+                    if (dineroTotalUsuario < totalPagar) {
                         JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
                         limpiar();
                     }else{
                         generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
                         generarProductoFactura();
                         limpiar();
+                        deshabilitar();
                     }
-                   
+
                 }else if(this.jRadioButtonTarjeta.isSelected()){
                     tipoPago = "Tarjeta";
                     numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
-                    
+
                     for (int i = 0; i < this.pagosTarjetas.size(); i++) {
                         cantidadDineroTarjetas += pagosTarjetas.get(i);
                     }
-                    
-                     dineroTotalUsuario = cantidadDineroTarjetas;
-                     dineroTotalUsuario = dineroTotalUsuario + propina - descuentos;
-                     
-                     if (dineroTotalUsuario < totalPagar) {
+
+                    dineroTotalUsuario = cantidadDineroTarjetas;
+                    totalPagar = this.subtotal + propina - descuentos;
+                    this.jLabelTotal.setText(Long.toString(totalPagar));
+
+                    if (dineroTotalUsuario < totalPagar) {
                         JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
                         limpiar();
                     }else{
                         generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
                         generarProductoFactura();
                         limpiar();
+                        deshabilitar();
                     }
                 }
-                }           
-            }finally{
-                
             }
+        }finally{
+
+        }
     }//GEN-LAST:event_jButtonRealizarVentaActionPerformed
 
-    private void jRadioButtonEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoActionPerformed
-     
-    }//GEN-LAST:event_jRadioButtonEfectivoActionPerformed
-
-    private void jRadioButtonTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTarjetaActionPerformed
-        
-    }//GEN-LAST:event_jRadioButtonTarjetaActionPerformed
-
-    private void jCheckBoxFijarNumTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasActionPerformed
-       
-    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasActionPerformed
-
-    private void jCheckBoxFijarNumTarjetasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasItemStateChanged
-          
-    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasItemStateChanged
-
-    private void jRadioButtonTarjetaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButtonTarjetaItemStateChanged
-       
-    }//GEN-LAST:event_jRadioButtonTarjetaItemStateChanged
-
-    private void jRadioButtonEfectivoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoItemStateChanged
-       
-    }//GEN-LAST:event_jRadioButtonEfectivoItemStateChanged
-
-    private void jCheckBoxFijarNumTarjetasStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasStateChanged
-        
-    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasStateChanged
-
-    private void jRadioButtonTarjetaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButtonTarjetaMouseClicked
-        if(this.jRadioButtonTarjeta.isSelected()){
-            this.jTextFieldPagoTarjeta.setEnabled(true);
-            this.jTextFieldNumTarjetas.setEnabled(true);
-            this.jCheckBoxFijarNumTarjetas.setEnabled(true);
-            this.jComboBoxTarjetas.setEnabled(true);
-            this.tipoPago = "Tarjeta";
-           /* if(this.jComboBoxTarjetas.getItemCount()== 0){
-                this.jComboBoxTarjetas.addItem("Tarjeta No.1");
-            }*/
-            
+    private void jCheckBoxPropinaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBoxPropinaMouseClicked
+        if(jCheckBoxPropina.isSelected()){
+            this.jTextFieldPRopina.setEnabled(true);
         }else{
-            this.jTextFieldPagoTarjeta.setEnabled(false);
-            this.jTextFieldNumTarjetas.setEnabled(false);
-            this.jCheckBoxFijarNumTarjetas.setEnabled(false);
-            this.jComboBoxTarjetas.setEnabled(false);
+            this.jTextFieldPRopina.setEnabled(false);
         }
-        
-        if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTarjeta.isSelected()){
-            this.tipoPago = "Mixto";
-        }
-        
-    }//GEN-LAST:event_jRadioButtonTarjetaMouseClicked
+    }//GEN-LAST:event_jCheckBoxPropinaMouseClicked
+
+    private void jButtonAgregarTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarTarjetasActionPerformed
+
+        Long pagoTarjeta = Long.parseLong(this.jTextFieldPagoTarjeta.getText());
+        int index = this.jComboBoxTarjetas.getSelectedIndex();
+
+        pagosTarjetas.set(index, pagoTarjeta);
+
+    }//GEN-LAST:event_jButtonAgregarTarjetasActionPerformed
+
+    private void jRadioButtonEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoActionPerformed
+
+    }//GEN-LAST:event_jRadioButtonEfectivoActionPerformed
 
     private void jRadioButtonEfectivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoMouseClicked
         if(this.jRadioButtonEfectivo.isSelected()){
@@ -1050,41 +1130,83 @@ public class Gui_venta extends javax.swing.JFrame {
         }else{
             this.jTextFieldPagoEfectivo.setEnabled(false);
         }
-        
+
         if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTarjeta.isSelected()){
             this.tipoPago = "Mixto";
         }
     }//GEN-LAST:event_jRadioButtonEfectivoMouseClicked
 
-    private void jCheckBoxFijarNumTarjetasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBoxFijarNumTarjetasMouseClicked
-        
-        jButtonAgregarTarjetas.setEnabled(true);
-        
-        if(jCheckBoxFijarNumTarjetas.isSelected()){
-            int numeroTarjetas = Integer.parseInt(this.jTextFieldNumTarjetas.getText());
-            this.numTargetas = numeroTarjetas;
+    private void jRadioButtonEfectivoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoItemStateChanged
+
+    }//GEN-LAST:event_jRadioButtonEfectivoItemStateChanged
+
+    private void jRadioButtonTarjetaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTarjetaActionPerformed
+
+    }//GEN-LAST:event_jRadioButtonTarjetaActionPerformed
+
+    private void jRadioButtonTarjetaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButtonTarjetaMouseClicked
+        if(this.jRadioButtonTarjeta.isSelected()){
+            this.jTextFieldPagoTarjeta.setEnabled(true);
+            this.jTextFieldNumTarjetas.setEnabled(true);
+            this.jCheckBoxFijarNumTarjetas.setEnabled(true);
+            this.jComboBoxTarjetas.setEnabled(true);
+            this.tipoPago = "Tarjeta";
+            /* if(this.jComboBoxTarjetas.getItemCount()== 0){
+                this.jComboBoxTarjetas.addItem("Tarjeta No.1");
+            }*/
+
+        }else{
+            this.jTextFieldPagoTarjeta.setEnabled(false);
             this.jTextFieldNumTarjetas.setEnabled(false);
             this.jCheckBoxFijarNumTarjetas.setEnabled(false);
-            
-            for (int i = 0; i < numeroTarjetas; i++) {
-                int index = i+1;
-                this.jComboBoxTarjetas.addItem("Tarjeta No."+ index );   
-                 pagosTarjetas.add(Long.valueOf(0));
-            }
-            
-        }else{
-            this.jTextFieldNumTarjetas.setEnabled(true);
-        }      
-    }//GEN-LAST:event_jCheckBoxFijarNumTarjetasMouseClicked
+            this.jComboBoxTarjetas.setEnabled(false);
+        }
 
-    private void jButtonAgregarTarjetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarTarjetasActionPerformed
-        
-        Long pagoTarjeta = Long.parseLong(this.jTextFieldPagoTarjeta.getText());
-        int index = this.jComboBoxTarjetas.getSelectedIndex();
-             
-        pagosTarjetas.set(index, pagoTarjeta);
-        
-    }//GEN-LAST:event_jButtonAgregarTarjetasActionPerformed
+        if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTarjeta.isSelected()){
+            this.tipoPago = "Mixto";
+        }
+
+    }//GEN-LAST:event_jRadioButtonTarjetaMouseClicked
+
+    private void jRadioButtonTarjetaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButtonTarjetaItemStateChanged
+
+    }//GEN-LAST:event_jRadioButtonTarjetaItemStateChanged
+
+    private void jTextFieldPagoEfectivoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPagoEfectivoKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldPagoEfectivoKeyTyped
+
+    private void jTextFieldPagoTarjetaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPagoTarjetaKeyTyped
+        char c = evt.getKeyChar();
+                  
+        if(Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jTextFieldPagoTarjetaKeyTyped
+
+    private void jTextFieldIdClienteKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldIdClienteKeyTyped
+        char c = evt.getKeyChar();
+                  
+        if(Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jTextFieldIdClienteKeyTyped
+
+    private void jTextFieldPRopinaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPRopinaKeyTyped
+        char c = evt.getKeyChar();
+                  
+        if(Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jTextFieldPRopinaKeyTyped
+
+    private void jTextFieldDescuentosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentosKeyTyped
+        char c = evt.getKeyChar();
+                  
+        if(Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_jTextFieldDescuentosKeyTyped
 
     public void botones(){
         this.jButtonRealizarVenta.setEnabled(false);
@@ -1101,15 +1223,18 @@ public class Gui_venta extends javax.swing.JFrame {
         this.jTextFieldDescuentos.setText("");
         this.jTextFieldNumTarjetas.setText("");
         this.jTextAreaInfoPedido2.setText("");
+        this.jLabelNumVenta.setText("");
+        this.jTextFieldPRopina.setText("");
+        while(modeloTablaProductos.getRowCount()>0)modeloTablaProductos.removeRow(0);
+        
         this.jCheckBoxFijarNumTarjetas.setSelected(false);
         this.jRadioButtonTarjeta.setSelected(false);
         this.jRadioButtonEfectivo.setSelected(false);
         this.jCheckBoxPropina.setSelected(false);
-    }
-    
-    public void generarTablaProductos(){
         
     }
+    
+    
      public void habilitar(){
          
         this.jTextFieldIdCliente.setEnabled(true);
@@ -1119,7 +1244,7 @@ public class Gui_venta extends javax.swing.JFrame {
         this.jLabelNumVenta.setEnabled(true);
         
         this.jTextFieldDescuentos.setEnabled(true);
-        generarTablaProductos();     
+           
     }
      
     public void deshabilitar(){
@@ -1130,8 +1255,8 @@ public class Gui_venta extends javax.swing.JFrame {
         this.jCheckBoxFijarNumTarjetas.setEnabled(false);
         this.jComboBoxTarjetas.setEnabled(false);
         this.jButtonAgregarTarjetas.setEnabled(false);
+        this.jTextFieldPRopina.setEnabled(false);
         
-        generarTablaProductos();
         this.jRadioButtonTarjeta.setEnabled(false);
         this.jRadioButtonEfectivo.setEnabled(false);
         this.jCheckBoxPropina.setEnabled(false);
@@ -1174,8 +1299,10 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSalir;
     private javax.swing.JCheckBox jCheckBoxFijarNumTarjetas;
     private javax.swing.JCheckBox jCheckBoxPropina;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBoxTarjetas;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1185,6 +1312,7 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelNumVenta;
+    private javax.swing.JLabel jLabelSubTotal;
     private javax.swing.JLabel jLabelTotal;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
