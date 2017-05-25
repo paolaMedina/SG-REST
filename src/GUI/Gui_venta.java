@@ -51,6 +51,7 @@ public class Gui_venta extends javax.swing.JFrame {
     DefaultTableModel modeloTablaProductos = new DefaultTableModel();
     ArrayList<Long> pagosTarjetas = new ArrayList<Long>();
     List<ProductoPedido> productosPedido = null;
+    Pedido pedido=null;
     
     
     long subtotal = 0;
@@ -211,11 +212,10 @@ public class Gui_venta extends javax.swing.JFrame {
         jCheckBoxFijarNumTarjetas = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jButtonBuscar = new javax.swing.JButton();
-        jButtonModificar = new javax.swing.JButton();
         jButtonSalir = new javax.swing.JButton();
-        jButtonEliminar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonNuevo = new javax.swing.JButton();
+        jButtonCuenta = new javax.swing.JButton();
         jLabelNumVenta = new javax.swing.JLabel();
         jPanelPedido2 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -494,27 +494,11 @@ public class Gui_venta extends javax.swing.JFrame {
             }
         });
 
-        jButtonModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/3 modificar.png"))); // NOI18N
-        jButtonModificar.setText("Modificar venta");
-        jButtonModificar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonModificarActionPerformed(evt);
-            }
-        });
-
         jButtonSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (Delete).jpg"))); // NOI18N
         jButtonSalir.setText("salir");
         jButtonSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSalirActionPerformed(evt);
-            }
-        });
-
-        jButtonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/3 eliminar.png"))); // NOI18N
-        jButtonEliminar.setText("Eliminar venta");
-        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEliminarActionPerformed(evt);
             }
         });
 
@@ -535,6 +519,13 @@ public class Gui_venta extends javax.swing.JFrame {
             }
         });
 
+        jButtonCuenta.setText("Generar Cuenta");
+        jButtonCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCuentaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -543,21 +534,16 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButtonCancelar)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButtonEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(8, 8, 8)))
+                    .addComponent(jButtonNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonCuenta)
+                .addGap(120, 120, 120))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -566,15 +552,13 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonNuevo)
                     .addComponent(jButtonBuscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonEliminar)
-                    .addComponent(jButtonModificar))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jButtonCuenta)
+                .addContainerGap())
         );
 
         jPanelPedido2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Informacion de los productos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(0, 0, 255))); // NOI18N
@@ -799,7 +783,7 @@ public class Gui_venta extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pack();
@@ -821,7 +805,7 @@ public class Gui_venta extends javax.swing.JFrame {
         int numPedido = Integer.parseInt(numeroPedido);
         habilitar();
         
-        this.jLabelNumPedido.setText(numeroPedido);
+        
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
@@ -830,7 +814,7 @@ public class Gui_venta extends javax.swing.JFrame {
         ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        
+        this.jLabelNumPedido.setText(numeroPedido);
         FacturaJpaController daoFactura = new FacturaJpaController(emf);
         String numVenta = Integer.toString(daoFactura.getFacturaCount() + 1);
             
@@ -866,7 +850,7 @@ public class Gui_venta extends javax.swing.JFrame {
       
         this.jLabelSubTotal.setText(String.valueOf(this.subtotal));
         
-        Pedido pedido = daoPedido.findPedido(numPedido);
+        pedido = daoPedido.findPedido(numPedido);
         
         String numeroDelPedido = pedido.getNumPedido().toString();
         String numMesa = pedido.getNumMesa().getMesa().toString();
@@ -881,8 +865,7 @@ public class Gui_venta extends javax.swing.JFrame {
                                             "Empleado que atendió el pedido: " + empleadoQueAtendio +  "\n" +
                                             "Hora de inicio del pedido: " + horaInicioPedido +  "\n" +
                                             "Hora de finalización del pedido: " + horaFinalPedido +  "\n" );  
-        ReporteCuenta cuenta= new ReporteCuenta();
-        cuenta.generarCuenta(productosPedido, numVenta, pedido);
+        
 
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
@@ -892,11 +875,6 @@ public class Gui_venta extends javax.swing.JFrame {
         deshabilitar();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jButtonEliminarActionPerformed
-
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed
         // TODO add your handling code here:
          try{
@@ -905,10 +883,6 @@ public class Gui_venta extends javax.swing.JFrame {
          this.dispose();
        }catch(Exception e){}
     }//GEN-LAST:event_jButtonSalirActionPerformed
-
-    private void jButtonModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonModificarActionPerformed
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         
@@ -1230,12 +1204,21 @@ public class Gui_venta extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextFieldDescuentosKeyTyped
 
+    private void jButtonCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCuentaActionPerformed
+        // TODO add your handling code here:
+        ReporteCuenta cuenta= new ReporteCuenta();
+        cuenta.generarCuenta(productosPedido, this.jLabelNumVenta.getText(), pedido);
+        
+        
+        
+    }//GEN-LAST:event_jButtonCuentaActionPerformed
+
     public void botones(){
         this.jButtonRealizarVenta.setEnabled(false);
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
-        this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
+        //this.jButtonRealizarVenta.setEnabled(false);
+      
     }
     
     public void limpiar(){
@@ -1314,8 +1297,7 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JButton jButtonAgregarTarjetas;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonEliminar;
-    private javax.swing.JButton jButtonModificar;
+    private javax.swing.JButton jButtonCuenta;
     private javax.swing.JButton jButtonNuevo;
     private javax.swing.JButton jButtonRealizarVenta;
     private javax.swing.JButton jButtonSalir;
