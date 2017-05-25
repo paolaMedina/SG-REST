@@ -46,9 +46,11 @@ public class ReporteCuenta {
 
         DecimalFormat formatea = new DecimalFormat("###,###.##");
         try {
-            URL url= getClass().getResource("/Reportes/cuenta" + numCuenta + ".pdf");
+            String url="Reportes/cuenta"+numCuenta+".pdf";
+            System.out.println("URL"+url);
+         
 
-            OutputStream archivo = new FileOutputStream(new File(url.toString()));
+            OutputStream archivo = new FileOutputStream(new File(url));
             Document doc = new Document();
             PdfWriter.getInstance(doc, archivo);
             doc.open();
@@ -90,9 +92,12 @@ public class ReporteCuenta {
             doc.close(); 
 
         } catch (DocumentException ex) {
+            
             Logger.getLogger(ReporteCuenta.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("1");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ReporteCuenta.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("2");
         }
 
     }
