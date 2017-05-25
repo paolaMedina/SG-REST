@@ -7,6 +7,7 @@ package GUI;
 
 import Clases.Empleado;
 import Clases.Factura;
+import Clases.Factura_;
 import Clases.Pago;
 import Clases.Pedido;
 import Clases.Producto;
@@ -48,7 +49,9 @@ import javax.swing.table.DefaultTableModel;
 public class Gui_venta extends javax.swing.JFrame {
     DefaultTableModel modeloTablaProductos = new DefaultTableModel();
     ArrayList<Long> pagosTarjetas = new ArrayList<Long>();
-    long totalPagar = 0;
+    List<ProductoPedido> productosPedido = null;
+    
+    
     long subtotal = 0;
     String tipoPago ="";
     String idEmpleado = "";
@@ -138,7 +141,7 @@ public class Gui_venta extends javax.swing.JFrame {
                 
     }
 
-    public void generarFactura(Long dineroEfectivo, Long dineroTargetas){
+    public void generarFactura(Long dineroEfectivo, Long dineroTargetas, Long valorTotal){
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         FacturaJpaController daoFactura = new FacturaJpaController(emf);
@@ -148,7 +151,8 @@ public class Gui_venta extends javax.swing.JFrame {
         String idCliente = this.jTextFieldIdCliente.getText();
         String tipoPago=this.tipoPago;
         int idFactura = Integer.parseInt(this.jLabelNumVenta.getText());
-        long valorTotal = this.totalPagar;
+        int numeroPedido = Integer.parseInt(this.jLabelNumPedido.getText());
+        Long valorT = valorTotal;
         
         String idEmpleado = this.principal.gui_login.usuario;
         Date fechaHora = new Date();
@@ -157,9 +161,9 @@ public class Gui_venta extends javax.swing.JFrame {
         long impuestos = 0;/*******************************************/
         String cedulaCliente = jTextFieldIdCliente.getText();
         
-        Factura factura = new Factura(idFactura, valorTotal, idEmpleado, fechaHora, descuento, propina, impuestos, cedulaCliente);
+        Factura factura = new Factura(idFactura, valorT, idEmpleado, fechaHora, descuento, propina, impuestos, cedulaCliente);
 
-        Pedido numPedido = daoPedido.findPedido(idFactura);
+        Pedido numPedido = daoPedido.findPedido(numeroPedido);
         factura.setNumPedido(numPedido);
         factura.setIdPago(this.generarPago(dineroEfectivo, dineroTargetas));
         
@@ -228,6 +232,8 @@ public class Gui_venta extends javax.swing.JFrame {
         jLabelTotal = new javax.swing.JLabel();
         jTextFieldIdCliente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabelNumPedido = new javax.swing.JLabel();
 
         jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -449,7 +455,7 @@ public class Gui_venta extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPedidoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonRealizarVenta)
-                .addContainerGap())
+                .addGap(65, 65, 65))
         );
         jPanelPedidoLayout.setVerticalGroup(
             jPanelPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -694,6 +700,8 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addGap(7, 7, 7))
         );
 
+        jLabel11.setText("Numero del pedido a facturar:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -707,19 +715,24 @@ public class Gui_venta extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(155, 155, 155)
                                 .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabelSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanelPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -733,23 +746,24 @@ public class Gui_venta extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabelNumVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabelNumPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jPanelPedido2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabelSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabelSubTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabelNumVenta.getAccessibleContext().setAccessibleName("jLabelNumPedido");
@@ -784,7 +798,7 @@ public class Gui_venta extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         pack();
@@ -804,8 +818,9 @@ public class Gui_venta extends javax.swing.JFrame {
         //Se pide el numero del pedido del cual se quiere realizar la venta
         String numeroPedido = JOptionPane.showInputDialog(null, "Ingrese el numero del pedido del cual quiere realizar la venta", "Información", JOptionPane.QUESTION_MESSAGE);
         int numPedido = Integer.parseInt(numeroPedido);
-        
         habilitar();
+        
+        this.jLabelNumPedido.setText(numeroPedido);
         
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
@@ -819,7 +834,7 @@ public class Gui_venta extends javax.swing.JFrame {
         String numVenta = Integer.toString(daoFactura.getFacturaCount() + 1);
             
         jLabelNumVenta.setText(numVenta);
-        List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
+        productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
         
       
         modeloTablaProductos.addColumn("Producto");
@@ -1043,13 +1058,16 @@ public class Gui_venta extends javax.swing.JFrame {
                     dineroTotalUsuario = cantidadDineroEfectivo + cantidadDineroTarjetas;
 
                     totalPagar = this.subtotal + propina - descuentos;
-                    this.jLabelTotal.setText(Long.toString(totalPagar));
+                   
+                    if(!jTextFieldPRopina.getText().equalsIgnoreCase("") && !jTextFieldDescuentos.getText().equalsIgnoreCase("")){
+                        this.jLabelTotal.setText(Long.toString(totalPagar));
+                    }
 
                     if (dineroTotalUsuario < totalPagar) {
                         JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
                         limpiar();
                     }else{
-                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
+                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas, totalPagar);
                         generarProductoFactura();
                         limpiar();
                         deshabilitar();
@@ -1062,13 +1080,16 @@ public class Gui_venta extends javax.swing.JFrame {
                     cantidadDineroEfectivo = Long.parseLong(jTextFieldPagoEfectivo.getText());
                     dineroTotalUsuario = cantidadDineroEfectivo;
                     totalPagar = this.subtotal + propina - descuentos;
-                    this.jLabelTotal.setText(Long.toString(totalPagar));
+                    if(!jTextFieldPRopina.getText().equalsIgnoreCase("") && !jTextFieldDescuentos.getText().equalsIgnoreCase("")){
+                        this.jLabelTotal.setText(Long.toString(totalPagar));
+                    }
+
 
                     if (dineroTotalUsuario < totalPagar) {
                         JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
                         limpiar();
                     }else{
-                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
+                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas, totalPagar);
                         generarProductoFactura();
                         limpiar();
                         deshabilitar();
@@ -1084,13 +1105,16 @@ public class Gui_venta extends javax.swing.JFrame {
 
                     dineroTotalUsuario = cantidadDineroTarjetas;
                     totalPagar = this.subtotal + propina - descuentos;
-                    this.jLabelTotal.setText(Long.toString(totalPagar));
+                    if(!jTextFieldPRopina.getText().equalsIgnoreCase("") && !jTextFieldDescuentos.getText().equalsIgnoreCase("")){
+                        this.jLabelTotal.setText(Long.toString(totalPagar));
+                    }
+
 
                     if (dineroTotalUsuario < totalPagar) {
                         JOptionPane.showMessageDialog(null, "La cantidad de dinero ingresada es menor que el total a pagar", "Error!", JOptionPane.ERROR_MESSAGE);
                         limpiar();
                     }else{
-                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas);
+                        generarFactura(cantidadDineroEfectivo, cantidadDineroTarjetas, totalPagar);
                         generarProductoFactura();
                         limpiar();
                         deshabilitar();
@@ -1116,6 +1140,8 @@ public class Gui_venta extends javax.swing.JFrame {
         int index = this.jComboBoxTarjetas.getSelectedIndex();
 
         pagosTarjetas.set(index, pagoTarjeta);
+        
+        this.jTextFieldPagoTarjeta.setText("");
 
     }//GEN-LAST:event_jButtonAgregarTarjetasActionPerformed
 
@@ -1126,14 +1152,12 @@ public class Gui_venta extends javax.swing.JFrame {
     private void jRadioButtonEfectivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoMouseClicked
         if(this.jRadioButtonEfectivo.isSelected()){
             this.jTextFieldPagoEfectivo.setEnabled(true);
-            this.tipoPago = "Efectivo";
+           
         }else{
             this.jTextFieldPagoEfectivo.setEnabled(false);
         }
 
-        if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTarjeta.isSelected()){
-            this.tipoPago = "Mixto";
-        }
+       
     }//GEN-LAST:event_jRadioButtonEfectivoMouseClicked
 
     private void jRadioButtonEfectivoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButtonEfectivoItemStateChanged
@@ -1150,10 +1174,7 @@ public class Gui_venta extends javax.swing.JFrame {
             this.jTextFieldNumTarjetas.setEnabled(true);
             this.jCheckBoxFijarNumTarjetas.setEnabled(true);
             this.jComboBoxTarjetas.setEnabled(true);
-            this.tipoPago = "Tarjeta";
-            /* if(this.jComboBoxTarjetas.getItemCount()== 0){
-                this.jComboBoxTarjetas.addItem("Tarjeta No.1");
-            }*/
+                     
 
         }else{
             this.jTextFieldPagoTarjeta.setEnabled(false);
@@ -1162,9 +1183,7 @@ public class Gui_venta extends javax.swing.JFrame {
             this.jComboBoxTarjetas.setEnabled(false);
         }
 
-        if(this.jRadioButtonEfectivo.isSelected() && this.jRadioButtonTarjeta.isSelected()){
-            this.tipoPago = "Mixto";
-        }
+      
 
     }//GEN-LAST:event_jRadioButtonTarjetaMouseClicked
 
@@ -1303,6 +1322,7 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBoxTarjetas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1311,6 +1331,7 @@ public class Gui_venta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelNumPedido;
     private javax.swing.JLabel jLabelNumVenta;
     private javax.swing.JLabel jLabelSubTotal;
     private javax.swing.JLabel jLabelTotal;
