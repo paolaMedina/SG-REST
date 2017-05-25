@@ -163,6 +163,17 @@ public class ProductoFacturaJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<ProductoFactura> findProductoPedidoEntities(int idFactura) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNamedQuery("ProductoFactura.findByIdFactura");
+            q.setParameter("idFactura", idFactura);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public int getProductoFacturaCount() {
         EntityManager em = getEntityManager();
