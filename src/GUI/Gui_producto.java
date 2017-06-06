@@ -9,13 +9,17 @@ import Clases.*;
 import Controladores.*;
 import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.Icon;
@@ -367,6 +371,19 @@ public class Gui_producto extends javax.swing.JFrame {
                 Icon icono = new ImageIcon(icon.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT));
                 jLabelFoto.setText(null);
                 jLabelFoto.setIcon(icono);
+                
+                BufferedImage image = new BufferedImage(icono.getIconWidth(),
+        icono.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+                
+                Graphics2D bImageGraphics = image.createGraphics();
+
+                //draw the Image (image) into the BufferedImage (bImage)
+                bImageGraphics.drawImage(icon.getImage(), null, null);
+
+                // cast it to rendered image
+                RenderedImage rImage   = (RenderedImage)image;
+                
+                ImageIO.write(rImage, "png", new File("Productos/foto.png"));
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error abriendo la imagen " + ex);
@@ -689,6 +706,7 @@ public class Gui_producto extends javax.swing.JFrame {
         this.jComboBoxCategoria.setEnabled(true);
         this.jComboBoxEstado.setEnabled(true);
         this.jTextAreaDescripcion.setEnabled(true);
+        this.jButtonSeleccionarFoto.setEnabled(true);
     }
 
     public void deshabilitar() {
