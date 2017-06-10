@@ -23,6 +23,7 @@ import Controladores.ProductoJpaController;
 import Controladores.ProductoPedidoJpaController;
 import Controladores.TipoPagoJpaController;
 import Reportes.ReporteCuenta;
+import Reportes.ReporteFactura;
 import java.awt.Image;
 import java.io.File;
 import java.sql.Timestamp;
@@ -104,6 +105,7 @@ public class Gui_venta extends javax.swing.JFrame {
         ProductoFacturaJpaController daoProductoFactura = new ProductoFacturaJpaController(emf);
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
         FacturaJpaController daoFactura = new FacturaJpaController(emf);
+      
         
         for (int i = 0; i < modeloTablaProductos.getRowCount(); i++) {
             
@@ -149,6 +151,8 @@ public class Gui_venta extends javax.swing.JFrame {
         FacturaJpaController daoFactura = new FacturaJpaController(emf);
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
         
+        ReporteFactura Reportefactura = new ReporteFactura();
+        
         //datos de la factura
         String idCliente = this.jTextFieldIdCliente.getText();
         String tipoPago=this.tipoPago;
@@ -161,9 +165,9 @@ public class Gui_venta extends javax.swing.JFrame {
         long descuento =  Long.valueOf(jTextFieldDescuentos.getText());
         long propina =  Long.valueOf(jTextFieldPRopina.getText());
         long impuestos = 0;/*******************************************/
-        String cedulaCliente = jTextFieldIdCliente.getText();
         
-        Factura factura = new Factura(idFactura, valorT, idEmpleado, fechaHora, descuento, propina, impuestos, cedulaCliente);
+        
+        Factura factura = new Factura(idFactura, valorT, idEmpleado, fechaHora, descuento, propina, impuestos, idCliente);
 
         Pedido numPedido = daoPedido.findPedido(numeroPedido);
         factura.setNumPedido(numPedido);
@@ -171,6 +175,9 @@ public class Gui_venta extends javax.swing.JFrame {
         
         try {
             daoFactura.create(factura);
+            Reportefactura.imprimirFactura(productosPedido,idFactura, pedido,impuestos,
+                    descuento, propina, idEmpleado, idCliente, fechaHora, tipoPago);
+                    
             JOptionPane.showMessageDialog(null, "La factura se genero exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "No se pudo generar la factura", "Error", JOptionPane.ERROR_MESSAGE);
