@@ -14,6 +14,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -35,6 +39,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Gui_producto extends javax.swing.JFrame {
 
     Gui_VentanaPrincipalGerente gui_principal = null;
+    File foto;
 
     /**
      * Creates new form Gui_pedido
@@ -350,7 +355,6 @@ public class Gui_producto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    File fichero;
     private void jButtonSeleccionarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSeleccionarFotoActionPerformed
         // TODO add your handling code here:
         int resultado;
@@ -363,28 +367,14 @@ public class Gui_producto extends javax.swing.JFrame {
 
         if (JFileChooser.APPROVE_OPTION == resultado) {
 
-            fichero = ventana.jFileChooserCargarImagen.getSelectedFile();
+            this.foto = ventana.jFileChooserCargarImagen.getSelectedFile();
 
             try {
-
-                ImageIcon icon = new ImageIcon(fichero.toString());
+                ImageIcon icon = new ImageIcon(foto.toString());
                 Icon icono = new ImageIcon(icon.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT));
                 jLabelFoto.setText(null);
                 jLabelFoto.setIcon(icono);
-                
-                BufferedImage image = new BufferedImage(icono.getIconWidth(),
-        icono.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-                
-                Graphics2D bImageGraphics = image.createGraphics();
-
-                //draw the Image (image) into the BufferedImage (bImage)
-                bImageGraphics.drawImage(icon.getImage(), null, null);
-
-                // cast it to rendered image
-                RenderedImage rImage   = (RenderedImage)image;
-                
-                ImageIO.write(rImage, "png", new File("Productos/foto.png"));
-
+ copiarImagen();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error abriendo la imagen " + ex);
 
@@ -393,6 +383,35 @@ public class Gui_producto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonSeleccionarFotoActionPerformed
 
+    public String copiarImagen(){
+        FileInputStream in = null;
+        String ruta=null;
+        try {
+            File inFile = new File(foto.toString());
+            ruta="Productos/"+jLabelId.getText()+".png";
+            File outFile = new File(ruta);
+            in = new FileInputStream(inFile);
+            FileOutputStream out = new FileOutputStream(outFile);
+            int c;
+            while( (c = in.read() ) != -1)
+                out.write(c);
+            in.close();
+            out.close();
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return ruta;
+    }
     private void jTextFieldPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPrecioKeyTyped
         // TODO add your handling code here:
         char car = evt.getKeyChar();
@@ -444,6 +463,12 @@ public class Gui_producto extends javax.swing.JFrame {
                 this.jTextFieldPrecio.setText(precio);
                 this.jTextAreaDescripcion.setText(producto.getDescripcion());
                 this.jButtonEliminar1.setEnabled(false);
+                
+                //cargar imagen
+                ImageIcon icon = new ImageIcon("Productos/"+jLabelId.getText()+".png");
+                Icon icono = new ImageIcon(icon.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT));
+                jLabelFoto.setText(null);
+                jLabelFoto.setIcon(icono);
 
                 //campos que son comboBox
                 for (int i = 0; i < jComboBoxCategoria.getItemCount() - 1; i++) {
@@ -626,6 +651,7 @@ public class Gui_producto extends javax.swing.JFrame {
         // TODO add your handling code here:
         botones();
         deshabilitar();
+        jLabelFoto.setIcon(null);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuevoActionPerformed
@@ -751,6 +777,7 @@ public class Gui_producto extends javax.swing.JFrame {
     //  String int int String String  -> crearProducto -> String
     public String crearProducto(String id, String nombre, String precio, String idCategoria, 
             String estado, String descripcion) {
+        
         String validacion = "";
         if (verificarCamposVacios(id, nombre, precio, idCategoria, estado, descripcion) == false) {
             //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
@@ -766,6 +793,7 @@ public class Gui_producto extends javax.swing.JFrame {
                 producto.setPrecio(Integer.parseInt(precio));
                 producto.setIdCategoria(categoriaProducto);
                 producto.setDescripcion(descripcion);
+                producto.setFotografia(copiarImagen());
                 if (estado == "Activo") {
                     producto.setEstado(true);
                 } else {
