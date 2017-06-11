@@ -603,7 +603,7 @@ public class Gui_producto extends javax.swing.JFrame {
                 producto.setIdCategoria(categoriaProducto);
                 producto.setDescripcion(descripcion);
                 producto.setFotografia(copiarImagen());
-                if (estado == "Activo") {
+                if (estado.equalsIgnoreCase("Activo")){
                     producto.setEstado(true);
                 } else {
                     producto.setEstado(false);
@@ -650,6 +650,7 @@ public class Gui_producto extends javax.swing.JFrame {
         // TODO add your handling code here:
         botones();
         deshabilitar();
+        limpiar();
         jLabelFoto.setIcon(null);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
@@ -789,11 +790,11 @@ public class Gui_producto extends javax.swing.JFrame {
             //se crea el controlador del producto 
             ProductoJpaController daoProducto = new ProductoJpaController(emf);
                 Producto producto = new Producto(Integer.parseInt(id), nombre);
-                producto.setPrecio(Integer.parseInt(precio));
+                producto.setPrecio(Long.parseLong(precio));
                 producto.setIdCategoria(categoriaProducto);
                 producto.setDescripcion(descripcion);
                 producto.setFotografia(copiarImagen());
-                if (estado == "Activo") {
+                if (estado.equalsIgnoreCase("Activo")) {
                     producto.setEstado(true);
                 } else {
                     producto.setEstado(false);
