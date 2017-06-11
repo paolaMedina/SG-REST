@@ -97,6 +97,7 @@ public class ReporteFactura {
             doc.add(new Paragraph ("Propina: "+  propina));
             doc.add(new Paragraph ("Descuentos: "+  descuento));
             doc.add(new Paragraph ("Descuentos: "+ impuestos)); 
+            
             doc.add(new Paragraph ("Total Pagado: "+  propina+ "\n" + "\n" + "\n"));
             
             doc.add(new Paragraph ("Forma de pago: "+  formaPago));
