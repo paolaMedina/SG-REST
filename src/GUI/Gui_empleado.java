@@ -532,7 +532,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             jTextFieldContraseña.setText(contraseñaDesencriptada);
 
 
-            //campos que son combo box
+            //campos que son combobox
             if (empleado.getCargo().getCargo().equalsIgnoreCase("Gerente")) {
                 jComboBoxCargo.setSelectedIndex(1);
             }else if (empleado.getCargo().getCargo().equalsIgnoreCase("Cajero")) {
