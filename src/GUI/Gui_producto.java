@@ -374,7 +374,7 @@ public class Gui_producto extends javax.swing.JFrame {
                 Icon icono = new ImageIcon(icon.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT));
                 jLabelFoto.setText(null);
                 jLabelFoto.setIcon(icono);
- copiarImagen();
+                
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error abriendo la imagen " + ex);
 
@@ -558,7 +558,7 @@ public class Gui_producto extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "El producto ya existe", "Error", JOptionPane.ERROR_MESSAGE);
             }
             
-
+            copiarImagen();
        
 
 

@@ -13,6 +13,10 @@ import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,6 +36,7 @@ public class Gui_empleado extends javax.swing.JFrame {
 
     //GUI de la ventana principal del gerente
     Gui_VentanaPrincipalGerente gui_gerente = null;
+    File foto;
     
     Date fechaInicio;
     Date fechaFinal;
@@ -49,7 +54,35 @@ public class Gui_empleado extends javax.swing.JFrame {
     }
     
 
-   
+   public String copiarImagen(){
+        FileInputStream in = null;
+        String ruta=null;
+        try {
+            File inFile = new File(foto.toString());
+            ruta="Empleados/"+jTextFieldIdentificacion.getText()+".png";
+            File outFile = new File(ruta);
+            in = new FileInputStream(inFile);
+            FileOutputStream out = new FileOutputStream(outFile);
+            int c;
+            while( (c = in.read() ) != -1)
+                out.write(c);
+            in.close();
+            out.close();
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return ruta;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -442,7 +475,6 @@ public class Gui_empleado extends javax.swing.JFrame {
         if((car<'0' || car>'9') ) evt.consume();
     }//GEN-LAST:event_jTextFieldCelularKeyTyped
 
-    File fichero;
     private void jButtonSeleccionarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSeleccionarFotoActionPerformed
         // TODO add your handling code here:
         int resultado;
@@ -457,11 +489,11 @@ public class Gui_empleado extends javax.swing.JFrame {
         if (JFileChooser.APPROVE_OPTION == resultado){
 
 
-                fichero = ventana.jFileChooserCargarImagen.getSelectedFile();
+                foto = ventana.jFileChooserCargarImagen.getSelectedFile();
 
                 try{
 
-                       ImageIcon icon = new ImageIcon(fichero.toString());
+                       ImageIcon icon = new ImageIcon(foto.toString());
                        Icon icono = new ImageIcon(icon.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT));
                        jLabelFoto.setText(null);
                        jLabelFoto.setIcon( icono );
@@ -513,6 +545,12 @@ public class Gui_empleado extends javax.swing.JFrame {
                 jComboBoxEstado.setSelectedIndex(2);
             }
             
+            //cargar imagen
+            ImageIcon icon = new ImageIcon("Empleados/"+jTextFieldIdentificacion.getText()+".png");
+            Icon icono = new ImageIcon(icon.getImage().getScaledInstance(jLabelFoto.getWidth(), jLabelFoto.getHeight(), Image.SCALE_DEFAULT));
+            jLabelFoto.setText(null);
+            jLabelFoto.setIcon(icono);
+                
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
             this.jButtonModificar.setEnabled(true);
@@ -586,6 +624,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setTelefonoFijo(tel);
         empleado.setTelefonoCelular(cel);
         empleado.setEmail(emil);
+        empleado.setFoto(copiarImagen());
         
         //se crea un HorarioEmpleado
         HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
@@ -757,6 +796,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonNuevo.setEnabled(false);
         this.jButtonSeleccionarFoto.setEnabled(true);
         this.jButtonHorario.setEnabled(true);
+        jButtonSeleccionarFoto.setEnabled(false);
 
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
@@ -791,6 +831,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonEliminar.setEnabled(true);
         this.jButtonNuevo.setEnabled(true);
         this.jButtonagregar.setEnabled(false);
+        
      }
      public void limpiar(){
          this.jTextFieldIdentificacion.setText("");
@@ -818,6 +859,8 @@ public class Gui_empleado extends javax.swing.JFrame {
          this.jTextFieldEmail.setEnabled(true);
          this.jTextFieldContraseña.setEnabled(true);
          jTextFieldDireccion.setEnabled(true);
+         jButtonSeleccionarFoto.setEnabled(true);
+         jButtonSeleccionarFoto.setEnabled(false);
   }
      public void deshabilitar(){
          this.jTextFieldIdentificacion.setEnabled(false);
