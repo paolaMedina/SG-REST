@@ -527,7 +527,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             jTextFieldCelular.setText(empleado.getTelefonoCelular());
             jTextFieldDireccion.setText(empleado.getDireccion());
             jTextFieldEmail.setText(empleado.getEmail());
-            String contraseñaDesencriptada = daoEmpleado.desencriptar(empleado.getPassword());
+            String contraseñaDesencriptada = daoEmpleado.desencriptar(empleado.getPassword()); 
             
             jTextFieldContraseña.setText(contraseñaDesencriptada);
 
