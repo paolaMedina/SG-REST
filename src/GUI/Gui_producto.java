@@ -409,8 +409,9 @@ public class Gui_producto extends javax.swing.JFrame {
                 Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+        System.err.println(ruta);
         return ruta;
+        
     }
     private void jTextFieldPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldPrecioKeyTyped
         // TODO add your handling code here:
@@ -557,8 +558,6 @@ public class Gui_producto extends javax.swing.JFrame {
             }else if(res=="El producto ya existe"){
                 JOptionPane.showMessageDialog(null, "El producto ya existe", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
-            copiarImagen();
        
 
 
@@ -632,7 +631,6 @@ public class Gui_producto extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Llene los campos", "Error", JOptionPane.ERROR_MESSAGE);
 
         }
-        copiarImagen();
         botones();
         deshabilitar();
 
