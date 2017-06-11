@@ -603,6 +603,7 @@ public class Gui_producto extends javax.swing.JFrame {
                 producto.setPrecio(Integer.parseInt(precio));
                 producto.setIdCategoria(categoriaProducto);
                 producto.setDescripcion(descripcion);
+                producto.setFotografia(copiarImagen());
                 if (estado == "Activo") {
                     producto.setEstado(true);
                 } else {
@@ -631,7 +632,7 @@ public class Gui_producto extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Llene los campos", "Error", JOptionPane.ERROR_MESSAGE);
 
         }
-
+        copiarImagen();
         botones();
         deshabilitar();
 

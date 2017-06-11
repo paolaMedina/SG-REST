@@ -558,7 +558,9 @@ public class Gui_empleado extends javax.swing.JFrame {
             this.jButtonNuevo.setEnabled(false);
             this.jButtonHorario.setEnabled(true);
             
+            
             habilitar();
+            this.jButtonSeleccionarFoto.setEnabled(true);
             jTextFieldIdentificacion.setEnabled(false);
             
             //datos del horario
@@ -702,6 +704,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         empleado.setTelefonoFijo(tel);
         empleado.setTelefonoCelular(cel);
         empleado.setEmail(emil);
+        empleado.setFoto(copiarImagen());
         
         //se crea un HorarioEmpleado
         HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
