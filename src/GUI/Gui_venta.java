@@ -173,13 +173,10 @@ public class Gui_venta extends javax.swing.JFrame {
         factura.setNumPedido(numPedido);
         factura.setIdPago(this.generarPago(dineroEfectivo, dineroTargetas));
         
-        Reportefactura.imprimirFactura(productosPedido,idFactura, pedido,impuestos,
-                    descuento, propina, idEmpleado, idCliente, fechaHora, tipoPago);
-        System.out.print("factura");
         try {
             daoFactura.create(factura);
-           /* Reportefactura.imprimirFactura(productosPedido,idFactura, pedido,impuestos,
-                    descuento, propina, idEmpleado, idCliente, fechaHora, tipoPago);*/
+            Reportefactura.imprimirFactura(productosPedido,idFactura, pedido,impuestos,
+                    descuento, propina, idEmpleado, idCliente, fechaHora, tipoPago);
                     
             JOptionPane.showMessageDialog(null, "La factura se genero exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
         }catch(Exception e){
