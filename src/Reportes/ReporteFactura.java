@@ -76,7 +76,7 @@ public class ReporteFactura {
             doc.add(new Paragraph("Fecha y hora de pago: " + fechaHora ));
             doc.add(new Paragraph("Cedula cliente: " + ccCliente + "\n" + "\n" + "\n"));
 
-            PdfPTable table = new PdfPTable(2);
+            PdfPTable table = new PdfPTable(3);
             table.addCell("Producto");
             table.addCell("Cantidad");
             table.addCell("Precio");

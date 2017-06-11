@@ -68,7 +68,7 @@ public class ReporteCuenta {
             doc.add(new Paragraph("Hora de inicio del pedido: " + horaInicioPedido));
             doc.add(new Paragraph("Hora de fin del pedido: " + horaFinalPedido + "\n" + "\n" + "\n"));
 
-            PdfPTable table = new PdfPTable(2);
+            PdfPTable table = new PdfPTable(3);
             table.addCell("Producto");
             table.addCell("Cantidad");
             table.addCell("Precio");
