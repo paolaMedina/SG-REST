@@ -5,8 +5,14 @@
  */
 package GUI;
 
+import Clases.ProductoFactura;
+import Controladores.ProductoFacturaJpaController;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -38,10 +44,12 @@ public class Gui_reportes extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxMes = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        VisualizarMejorTop10 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jTextAño = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
 
@@ -49,27 +57,27 @@ public class Gui_reportes extends javax.swing.JFrame {
 
         jPanel1.setLayout(null);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto ", "Septiembre", "Octubre", "Noviembre", "Diciembre" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "01-Enero", "02-Febrero", "03-Marzo", "04-Abril", "05-Mayo", "06-Junio", "07-Julio", "08-Agosto ", "09-Septiembre", "10-Octubre", "11-Noviembre", "12-Diciembre" }));
+        jComboBoxMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                jComboBoxMesActionPerformed(evt);
             }
         });
-        jPanel1.add(jComboBox1);
-        jComboBox1.setBounds(150, 11, 79, 20);
+        jPanel1.add(jComboBoxMes);
+        jComboBoxMes.setBounds(150, 11, 95, 20);
 
         jLabel1.setText("Seleccione el mes: ");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(18, 14, 90, 14);
 
-        jButton1.setText("Visualizar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        VisualizarMejorTop10.setText("Visualizar");
+        VisualizarMejorTop10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                VisualizarMejorTop10ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
-        jButton1.setBounds(290, 10, 100, 23);
+        jPanel1.add(VisualizarMejorTop10);
+        VisualizarMejorTop10.setBounds(270, 30, 100, 23);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -86,6 +94,18 @@ public class Gui_reportes extends javax.swing.JFrame {
 
         jPanel1.add(jPanel4);
         jPanel4.setBounds(20, 80, 680, 350);
+
+        jLabel2.setText("Ingrese el año:");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(30, 50, 80, 14);
+
+        jTextAño.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextAñoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jTextAño);
+        jTextAño.setBounds(150, 40, 100, 20);
 
         jTabbedPane1.addTab("10 Items mas vendidos", jPanel1);
 
@@ -129,7 +149,23 @@ public class Gui_reportes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-        private void init() {
+    
+    public void Mejortop10(String mes, String año){
+        
+        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
+        ProductoFacturaJpaController daoProductoFactura = new ProductoFacturaJpaController(emf);
+        List <Object> productos=daoProductoFactura.findProductoFacturaEntitiesPorMesYSemana(mes, año);
+        //DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (int i=0; i< productos.size();i++){
+            System.out.println(productos.get(i));
+        }
+        
+        
+        
+    }
+            
+        private void init(String mes, String año) {
             
         // Fuente de Datos
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -158,7 +194,7 @@ public class Gui_reportes extends javax.swing.JFrame {
         this.jPanel4.add(chartPanel,BorderLayout.CENTER);
         this.jPanel4.validate();
         
-       
+       Mejortop10("06","2017");
         System.out.print("pinta");
 
     }
@@ -166,14 +202,29 @@ public class Gui_reportes extends javax.swing.JFrame {
     
     
     
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void jComboBoxMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_jComboBoxMesActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void VisualizarMejorTop10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VisualizarMejorTop10ActionPerformed
         // TODO add your handling code here:
-        init();
-    }//GEN-LAST:event_jButton1ActionPerformed
+        String mes=this.jComboBoxMes.getSelectedItem().toString();
+        
+        String año= this.jTextAño.getText().trim();
+        if (mes.equalsIgnoreCase("Seleccione") || año.equals("")){
+        JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);}
+        else {
+            mes=mes.substring(0, 2);
+            System.out.print(mes);
+             //init(mes,año);
+        }
+        
+       
+    }//GEN-LAST:event_VisualizarMejorTop10ActionPerformed
+
+    private void jTextAñoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextAñoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextAñoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -211,13 +262,15 @@ public class Gui_reportes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton VisualizarMejorTop10;
+    private javax.swing.JComboBox<String> jComboBoxMes;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextAño;
     // End of variables declaration//GEN-END:variables
 }
