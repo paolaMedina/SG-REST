@@ -11,6 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Clases.Factura;
+import Clases.Producto;
 import Clases.ProductoFactura;
 import Clases.ProductoFacturaPK;
 import Controladores.exceptions.NonexistentEntityException;
@@ -176,7 +177,7 @@ public class ProductoFacturaJpaController implements Serializable {
     }
     
     //CONSULTA PRIMER REPORTE TOP 10 DE LOS PRODUCTOS MAS VENDIDOS EN EL MES
-    public List<String> findProductoFacturaEntitiesPorMesYSemana(String mes, String año) {
+    public List<Object> findProductoFacturaEntitiesPorMesYSemana(String mes, String año) {
         
         EntityManager em = getEntityManager();
         try {

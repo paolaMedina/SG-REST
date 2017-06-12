@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Clases.Producto;
 import Clases.ProductoFactura;
 import Controladores.ProductoFacturaJpaController;
 import java.awt.BorderLayout;
@@ -51,6 +52,8 @@ public class Gui_reportes extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextAño = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanelPestaña2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -64,11 +67,11 @@ public class Gui_reportes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jComboBoxMes);
-        jComboBoxMes.setBounds(150, 11, 95, 20);
+        jComboBoxMes.setBounds(150, 11, 120, 20);
 
         jLabel1.setText("Seleccione el mes: ");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(18, 14, 90, 14);
+        jLabel1.setBounds(18, 14, 120, 14);
 
         VisualizarMejorTop10.setText("Visualizar");
         VisualizarMejorTop10.addActionListener(new java.awt.event.ActionListener() {
@@ -77,7 +80,7 @@ public class Gui_reportes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(VisualizarMejorTop10);
-        VisualizarMejorTop10.setBounds(270, 30, 100, 23);
+        VisualizarMejorTop10.setBounds(350, 30, 100, 23);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -93,11 +96,11 @@ public class Gui_reportes extends javax.swing.JFrame {
         );
 
         jPanel1.add(jPanel4);
-        jPanel4.setBounds(20, 80, 680, 350);
+        jPanel4.setBounds(10, 80, 680, 350);
 
         jLabel2.setText("Ingrese el año:");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(30, 50, 80, 14);
+        jLabel2.setBounds(20, 40, 110, 14);
 
         jTextAño.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,22 +108,33 @@ public class Gui_reportes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jTextAño);
-        jTextAño.setBounds(150, 40, 100, 20);
+        jTextAño.setBounds(150, 40, 120, 30);
 
         jTabbedPane1.addTab("10 Items mas vendidos", jPanel1);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 710, Short.MAX_VALUE)
+        jPanel2.setLayout(null);
+
+        jLabel3.setText("Seleccione el semestre");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(39, 28, 108, 14);
+
+        jPanelPestaña2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        javax.swing.GroupLayout jPanelPestaña2Layout = new javax.swing.GroupLayout(jPanelPestaña2);
+        jPanelPestaña2.setLayout(jPanelPestaña2Layout);
+        jPanelPestaña2Layout.setHorizontalGroup(
+            jPanelPestaña2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 444, Short.MAX_VALUE)
+        jPanelPestaña2Layout.setVerticalGroup(
+            jPanelPestaña2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 360, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab2", jPanel2);
+        jPanel2.add(jPanelPestaña2);
+        jPanelPestaña2.setBounds(10, 69, 690, 364);
+
+        jTabbedPane1.addTab("10 Items menos vendidos", jPanel2);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -155,11 +169,12 @@ public class Gui_reportes extends javax.swing.JFrame {
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         ProductoFacturaJpaController daoProductoFactura = new ProductoFacturaJpaController(emf);
-        List <String> productos = daoProductoFactura.findProductoFacturaEntitiesPorMesYSemana(mes, año);
+        List <Object> productos =  daoProductoFactura.findProductoFacturaEntitiesPorMesYSemana(mes, año);
         //DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         for (int i=0; i< productos.size();i++){
-            JOptionPane.showMessageDialog(null, productos.get(i));
+             JOptionPane.showMessageDialog(null,productos.get(i) .toString());
+            //JOptionPane.showMessageDialog(null,);//.get(i));
         }
         
         
@@ -266,10 +281,12 @@ public class Gui_reportes extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBoxMes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanelPestaña2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextAño;
     // End of variables declaration//GEN-END:variables
