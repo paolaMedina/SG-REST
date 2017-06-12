@@ -155,10 +155,11 @@ public class Gui_reportes extends javax.swing.JFrame {
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
         ProductoFacturaJpaController daoProductoFactura = new ProductoFacturaJpaController(emf);
-        List <Object> productos=daoProductoFactura.findProductoFacturaEntitiesPorMesYSemana(mes, año);
+        List <String> productos = daoProductoFactura.findProductoFacturaEntitiesPorMesYSemana(mes, año);
         //DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        
         for (int i=0; i< productos.size();i++){
-            System.out.println(productos.get(i));
+            JOptionPane.showMessageDialog(null, productos.get(i));
         }
         
         
@@ -214,9 +215,8 @@ public class Gui_reportes extends javax.swing.JFrame {
         if (mes.equalsIgnoreCase("Seleccione") || año.equals("")){
         JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);}
         else {
-            mes=mes.substring(0, 2);
-            System.out.print(mes);
-             //init(mes,año);
+            mes = mes.substring(0, 2);
+            Mejortop10(mes, año);
         }
         
        

@@ -176,7 +176,7 @@ public class ProductoFacturaJpaController implements Serializable {
     }
     
     //CONSULTA PRIMER REPORTE TOP 10 DE LOS PRODUCTOS MAS VENDIDOS EN EL MES
-    public List<Object> findProductoFacturaEntitiesPorMesYSemana(String mes, String año) {
+    public List<String> findProductoFacturaEntitiesPorMesYSemana(String mes, String año) {
         
         EntityManager em = getEntityManager();
         try {
@@ -195,7 +195,7 @@ public class ProductoFacturaJpaController implements Serializable {
     
     }
     //CONSULTA SEGUNDO REPORTE TOP 10 DE LOS PRODUCTOS MENOS VENDIDOS EN EL SEMESTRE
-    public List<Object> findProductoFacturaEntitiesPorSemestre(int semestre) {
+    public List<String> findProductoFacturaEntitiesPorSemestre(int semestre) {
         EntityManager em = getEntityManager();
         try {
             Query q ;
