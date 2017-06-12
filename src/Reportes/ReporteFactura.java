@@ -40,8 +40,8 @@ import javax.swing.JOptionPane;
 public class ReporteFactura {
     
     public void imprimirFactura(List<ProductoPedido> productos, int idFactura, Pedido pedido,long descuento, long propina, long impuestos, 
-            String idEmpleado, String ccCliente, Date fechaHora, String formaPago) {
         
+        String idEmpleado, String ccCliente, Date fechaHora, String formaPago) {
         String numeroDelPedido = pedido.getNumPedido().toString();
         String numMesa = pedido.getNumMesa().getMesa().toString();
         String empleadoQueAtendio = pedido.getIdEmpleado().getNombre().toString();
