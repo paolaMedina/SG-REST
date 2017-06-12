@@ -236,6 +236,22 @@ public class FacturaJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Factura> findFacturaEntitiesPorMesyAño(String mes, String año) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM Factura "
+                    + "WHERE (EXTRACT (YEAR FROM (fecha_hora)) = '"
+                    + año
+                    + "') AND (EXTRACT (MONTH FROM (fecha_hora)) = '"
+                    + mes
+                    + "');");
+            
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public Factura findFactura(Integer id) {
         EntityManager em = getEntityManager();

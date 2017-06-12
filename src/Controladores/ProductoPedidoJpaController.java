@@ -208,6 +208,9 @@ public class ProductoPedidoJpaController implements Serializable {
             em.close();
         }
     }
+   
+    
+    
     public int getProductoPedidoCount() {
         EntityManager em = getEntityManager();
         try {

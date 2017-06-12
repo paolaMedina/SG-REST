@@ -174,6 +174,32 @@ public class ProductoFacturaJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Factura> findFacturaEntitiesPorMesyAño(int semestre) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q ;
+            if(semestre == 1){
+                q = em.createNativeQuery("SELECT nombre_producto, Sum(Producto_factura.cantidad)"
+                        + "FROM Factura NATURAL JOIN Producto_factura \n" +
+                        "WHERE EXTRACT (MONTH FROM (fecha_hora)) BETWEEN '01' AND '06'  \n" +
+                        "GROUP BY nombre_producto\n" +
+                        "ORDER BY sum ASC\n" +
+                        "LIMIT 10");
+            }else{
+                q = em.createNativeQuery("SELECT nombre_producto, Sum(Producto_factura.cantidad)"
+                        + "FROM Factura NATURAL JOIN Producto_factura \n" +
+                        "WHERE EXTRACT (MONTH FROM (fecha_hora)) BETWEEN '07' AND '12'  \n" +
+                        "GROUP BY nombre_producto\n" +
+                        "ORDER BY sum ASC\n" +
+                        "LIMIT 10");
+            }
+                        
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public int getProductoFacturaCount() {
         EntityManager em = getEntityManager();
