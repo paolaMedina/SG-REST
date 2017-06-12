@@ -15,6 +15,7 @@ import Clases.Empleado;
 import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -25,6 +26,8 @@ import javax.persistence.EntityManagerFactory;
  * @author Daniel
  */
 public class CargoEmpleadoJpaController implements Serializable {
+    
+   
 
     public CargoEmpleadoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
@@ -201,4 +204,6 @@ public class CargoEmpleadoJpaController implements Serializable {
         }
     }
     
+   
 }
+

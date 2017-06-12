@@ -527,10 +527,12 @@ public class Gui_empleado extends javax.swing.JFrame {
             jTextFieldCelular.setText(empleado.getTelefonoCelular());
             jTextFieldDireccion.setText(empleado.getDireccion());
             jTextFieldEmail.setText(empleado.getEmail());
-            jTextFieldContraseña.setText(empleado.getPassword());
+            String contraseñaDesencriptada = daoEmpleado.desencriptar(empleado.getPassword());   
+            
+            jTextFieldContraseña.setText(contraseñaDesencriptada);
 
 
-            //campos que son combo box
+            //campos que son combobox 
             if (empleado.getCargo().getCargo().equalsIgnoreCase("Gerente")) {
                 jComboBoxCargo.setSelectedIndex(1);
             }else if (empleado.getCargo().getCargo().equalsIgnoreCase("Cajero")) {
@@ -578,6 +580,9 @@ public class Gui_empleado extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "El empleado no existe", "Error", JOptionPane.ERROR_MESSAGE);
 
         }
+        catch (Exception ex) {
+                Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_jButtonBuscarActionPerformed
 
     private void jButtonagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonagregarActionPerformed
@@ -614,10 +619,11 @@ public class Gui_empleado extends javax.swing.JFrame {
         //se crea el controlador del empleado y del ususario asociaro
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
         
+        String contraseñaEncriptada=daoEmpleado.encriptar(contraseña);
         //se crea un objeto empleado y se le asignan sus atributos
         Empleado empleado = new Empleado();
         empleado.setIdentificacion(id);
-        empleado.setPassword(contraseña);
+        empleado.setPassword(contraseñaEncriptada);
         empleado.setNombre(nom);
         empleado.setApelllido(ape);
         empleado.setCargo(cargoEmpleado);
@@ -691,11 +697,12 @@ public class Gui_empleado extends javax.swing.JFrame {
         
         //se crea el controlador del empleado y del ususario asociaro
         EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
+        String contraseñaEncriptada=daoEmpleado.encriptar(contraseña);
         
         //se crea un objeto empleado y se le asignan sus atributos
         Empleado empleado = new Empleado();
         empleado.setIdentificacion(id);
-        empleado.setPassword(contraseña);
+        empleado.setPassword(contraseñaEncriptada);
         empleado.setNombre(nom);
         empleado.setApelllido(ape);
         empleado.setCargo(cargoEmpleado);
