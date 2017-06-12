@@ -18,16 +18,16 @@ import javax.persistence.Persistence;
  */
 public class Menu {
     
-    private Menu instancia = null;
+    private static Menu instancia = null;
     private ArrayList<Producto> productosMenu = new ArrayList();
 
     private Menu() {
         this.llenarProductos();
     }
 
-    public Menu getInstancia() {
-        if (this.instancia == null) {
-            this.instancia = new Menu();
+    public static Menu getInstancia() {
+        if (Menu.instancia == null) {
+            Menu.instancia = new Menu();
         }
         
         return instancia;
@@ -51,6 +51,11 @@ public class Menu {
         }
     }
     
+    
+    public Iterator getIterator() {
+       return new MenuIterator();
+   }
+    
     //clase interna que implementa la interfaz iterator que permitira recorrer la coleccion
     //de prodouctos del menu.
     private class MenuIterator implements Iterator{
@@ -68,7 +73,7 @@ public class Menu {
         @Override
         public Object next() {
             if(this.hasNext()){
-            return productosMenu.get(index);
+            return productosMenu.get(index++);
          }
          return null;
         }

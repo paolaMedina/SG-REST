@@ -57,6 +57,8 @@ public class Gui_pedido extends javax.swing.JFrame {
     Gui_VentanaPrincipalMesero gui_mesero = null;
     Gui_VentanaPrincipalCajero gui_cajero = null;
     
+    Gui_Menu gui_menu = null;
+    
     DefaultTableModel modeloProductosPedido = new DefaultTableModel();
     DefaultTableModel modeloProductosSeleccion = new DefaultTableModel();
    
@@ -103,7 +105,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanelProductos = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jComboBoxCategoria = new javax.swing.JComboBox<>();
+        jComboBoxCategoria = new javax.swing.JComboBox<String>();
         jButtonAgregarProducto = new javax.swing.JButton();
         jButtonEliminarProducto = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -112,14 +114,15 @@ public class Gui_pedido extends javax.swing.JFrame {
         jTextFieldCantidad = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableProductosCategoria = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         jLabelHoraInicio = new javax.swing.JLabel();
         jLabelNumPedido = new javax.swing.JLabel();
         jTextFieldMesero = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabelHoraFin = new javax.swing.JLabel();
-        jComboBoxMesas = new javax.swing.JComboBox<>();
+        jComboBoxMesas = new javax.swing.JComboBox<String>();
         jLabel3 = new javax.swing.JLabel();
-        jComboBoxEstado = new javax.swing.JComboBox<>();
+        jComboBoxEstado = new javax.swing.JComboBox<String>();
         jPanel3 = new javax.swing.JPanel();
         jButtonBuscar = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
@@ -137,7 +140,7 @@ public class Gui_pedido extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(51, 0, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(51, 0, 255)));
 
         jLabel1.setText("Numero de Pedido:");
 
@@ -147,11 +150,11 @@ public class Gui_pedido extends javax.swing.JFrame {
 
         jLabel4.setText("Hora Inicio del Pedido:");
 
-        jPanelProductos.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Productos del pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(0, 0, 255))); // NOI18N
+        jPanelProductos.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Productos del pedido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 0, 255)));
 
         jLabel7.setText("Categoria Producto: ");
 
-        jComboBoxCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Almuerzo-Cena", "Brunch-Desayunos", "Bebidas", "Helados" }));
+        jComboBoxCategoria.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Almuerzo-Cena", "Brunch-Desayunos", "Bebidas", "Helados" }));
         jComboBoxCategoria.setToolTipText("");
         jComboBoxCategoria.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -217,6 +220,13 @@ public class Gui_pedido extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTableProductosCategoria);
 
+        jButton1.setText("Mostrar Menu");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelProductosLayout = new javax.swing.GroupLayout(jPanelProductos);
         jPanelProductos.setLayout(jPanelProductosLayout);
         jPanelProductosLayout.setHorizontalGroup(
@@ -239,9 +249,12 @@ public class Gui_pedido extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelProductosLayout.createSequentialGroup()
                                 .addGap(20, 20, 20)
-                                .addComponent(jButtonAgregarProducto)
-                                .addGap(33, 33, 33)
-                                .addComponent(jButtonEliminarProducto))))))
+                                .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton1)
+                                    .addGroup(jPanelProductosLayout.createSequentialGroup()
+                                        .addComponent(jButtonAgregarProducto)
+                                        .addGap(33, 33, 33)
+                                        .addComponent(jButtonEliminarProducto))))))))
         );
         jPanelProductosLayout.setVerticalGroup(
             jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,7 +273,9 @@ public class Gui_pedido extends javax.swing.JFrame {
                         .addGap(14, 14, 14)
                         .addGroup(jPanelProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButtonAgregarProducto)
-                            .addComponent(jButtonEliminarProducto)))))
+                            .addComponent(jButtonEliminarProducto))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1))))
         );
 
         jTextFieldMesero.addActionListener(new java.awt.event.ActionListener() {
@@ -273,7 +288,7 @@ public class Gui_pedido extends javax.swing.JFrame {
 
         jLabel3.setText("Estado: ");
 
-        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "Pendiente", "Entregado", "Finalizado" }));
+        jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Seleccione...", "Pendiente", "Entregado", "Finalizado" }));
         jComboBoxEstado.setToolTipText("");
         jComboBoxEstado.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1036,6 +1051,11 @@ public class Gui_pedido extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextFieldCantidadKeyTyped
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        gui_menu = Gui_Menu.getInstancia();
+        gui_menu.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
      public void botones(){
         
@@ -1110,6 +1130,7 @@ public class Gui_pedido extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAgregarProducto;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
