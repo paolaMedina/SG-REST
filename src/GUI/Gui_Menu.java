@@ -44,6 +44,7 @@ public class Gui_Menu extends javax.swing.JFrame {
     private Gui_Menu() {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(javax.swing.JFrame.HIDE_ON_CLOSE);
         
         GridLayout layout = new GridLayout(0,2);
         JPanel jPanel11 = new JPanel();
