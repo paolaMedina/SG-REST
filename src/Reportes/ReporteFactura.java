@@ -40,8 +40,8 @@ import javax.swing.JOptionPane;
 public class ReporteFactura {
     
     public void imprimirFactura(List<ProductoPedido> productos, int idFactura, Pedido pedido,long descuento, long propina, long impuestos, 
+            String idEmpleado, String ccCliente, Date fechaHora, String formaPago) {
         
-        String idEmpleado, String ccCliente, Date fechaHora, String formaPago) {
         String numeroDelPedido = pedido.getNumPedido().toString();
         String numMesa = pedido.getNumMesa().getMesa().toString();
         String empleadoQueAtendio = pedido.getIdEmpleado().getNombre().toString();
@@ -96,7 +96,7 @@ public class ReporteFactura {
             doc.add(new Paragraph("SUBTOTAL: " + totalPagarProductos ));
             doc.add(new Paragraph ("Propina: "+  propina));
             doc.add(new Paragraph ("Descuentos: "+  descuento));
-            doc.add(new Paragraph ("Descuentos: "+ impuestos)); 
+            doc.add(new Paragraph ("Impuestos: "+ impuestos)); 
             
             doc.add(new Paragraph ("Total Pagado: "+  propina+ "\n" + "\n" + "\n"));
             
