@@ -599,6 +599,7 @@ public class Gui_pedido extends javax.swing.JFrame {
             
             daoPedido.destroy(numPedido);
             JOptionPane.showMessageDialog(null, "El pedido se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+            limpiar();
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NonexistentEntityException ex) {
@@ -677,10 +678,7 @@ public class Gui_pedido extends javax.swing.JFrame {
                 PedidoJpaController daoPedido = new PedidoJpaController(emf);
                 daoPedido.edit(pedido);
                 deshabilitar();
-                
-                
-                
-     
+
                 ProductoJpaController daoProducto = new ProductoJpaController(emf);
                 ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
                 List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
@@ -709,9 +707,7 @@ public class Gui_pedido extends javax.swing.JFrame {
 
                     try {
 
-                        daoProductoPedido.create(productoPedido);
-
-                        JOptionPane.showMessageDialog(null, "El pedido se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+                        daoProductoPedido.create(productoPedido);                      
 
                     } catch (NullPointerException ex) {
                        limpiar();
@@ -720,6 +716,7 @@ public class Gui_pedido extends javax.swing.JFrame {
                     }     
 
                 }
+                JOptionPane.showMessageDialog(null, "El pedido se edito exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
                 limpiar();
                 botones();
 
