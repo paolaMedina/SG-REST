@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="10MasVendidos" language="groovy" pageWidth="600" pageHeight="650" columnWidth="560" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4a0b3f0-1a80-44e1-ac43-171353e4abba">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="año" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mes" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT nombre_producto, Sum(Producto_factura.cantidad)
+FROM Factura NATURAL JOIN Producto_factura
+WHERE (EXTRACT (YEAR FROM (fecha_hora)) = $P{año})
+AND (EXTRACT (MONTH FROM (fecha_hora)) =$P{mes})
+GROUP BY nombre_producto
+ORDER BY sum DESC
+LIMIT 10]]>
+	</queryString>
+	<field name="nombre_producto" class="java.lang.String"/>
+	<field name="sum" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="32" width="560" height="25" uuid="0056d94b-7be2-4bce-9d28-8166646a3d59"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[10 ITEMS MAS VENDIDOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="54" y="14" width="306" height="20" uuid="76fdf6eb-09f2-4cce-9d55-9c8a6d455cee"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Grafico de los 10 items mas vendidos en el mes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="360" y="14" width="24" height="20" uuid="07ee1a93-c9ff-4a1a-b8ef-ea8fa5f2219f"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{mes}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="384" y="14" width="50" height="20" uuid="e0326bf0-53c4-477d-aa3b-9523c7ce2525"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[del año]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="434" y="14" width="67" height="20" uuid="f02003a7-75cc-4ac0-b292-8d87608bc608"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{año}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="260" splitType="Stretch">
+			<barChart>
+				<chart>
+					<reportElement x="11" y="28" width="539" height="221" uuid="00ad8b3b-a35d-46a9-af6d-dfd4f18027f1"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{nombre_producto}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{nombre_producto}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{sum}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot orientation="Horizontal"/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</summary>
+</jasperReport>

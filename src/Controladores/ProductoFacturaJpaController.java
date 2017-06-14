@@ -176,25 +176,7 @@ public class ProductoFacturaJpaController implements Serializable {
         }
     }
     
-    //CONSULTA PRIMER REPORTE TOP 10 DE LOS PRODUCTOS MAS VENDIDOS EN EL MES
-    public List<Object> findProductoFacturaEntitiesPorMesYSemana(String mes, String año) {
-        
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createNativeQuery("SELECT nombre_producto, Sum(Producto_factura.cantidad) \n" +
-                                            "FROM Factura NATURAL JOIN Producto_factura\n" +
-                                            "WHERE (EXTRACT (YEAR FROM (fecha_hora)) = '"+ año + "')\n" +
-                                            "	AND (EXTRACT (MONTH FROM (fecha_hora)) = '" + mes + "')\n" +
-                                            "GROUP BY nombre_producto\n" +
-                                            "ORDER BY sum DESC\n" +
-                                            "LIMIT 10");
-            
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    
-    }
+
     //CONSULTA SEGUNDO REPORTE TOP 10 DE LOS PRODUCTOS MENOS VENDIDOS EN EL SEMESTRE
     public List<String> findProductoFacturaEntitiesPorSemestre(int semestre) {
         EntityManager em = getEntityManager();

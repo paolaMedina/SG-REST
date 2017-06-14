@@ -8,12 +8,26 @@ package GUI;
 import Clases.Producto;
 import Clases.ProductoFactura;
 import Controladores.ProductoFacturaJpaController;
+import Reportes.Conexion;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.io.File;
+import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -27,11 +41,19 @@ import org.jfree.data.category.DefaultCategoryDataset;
  */
 public class Gui_reportes extends javax.swing.JFrame {
 
+    private Connection con = null;
+    Conexion conexion =null;
+            
     /**
      * Creates new form Gui_reportes
      */
     public Gui_reportes() {
         initComponents();
+        conexion = new Conexion();
+        
+        con=conexion.getConexion();
+        
+        
     }
 
     /**
@@ -163,57 +185,7 @@ public class Gui_reportes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    public void Mejortop10(String mes, String año){
-        
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        ProductoFacturaJpaController daoProductoFactura = new ProductoFacturaJpaController(emf);
-        List <Object> productos =  daoProductoFactura.findProductoFacturaEntitiesPorMesYSemana(mes, año);
-        //DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        
-        for (int i=0; i< productos.size();i++){
-             JOptionPane.showMessageDialog(null,productos.get(i) .toString());
-            //JOptionPane.showMessageDialog(null,);//.get(i));
-        }
-        
-        
-        
-    }
-            
-        private void init(String mes, String año) {
-            
-        // Fuente de Datos
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(8, "Mujeres", "Lunes");
-        dataset.setValue(7, "Hombres", "Lunes");
-        dataset.setValue(9, "Mujeres", "Martes");
-        dataset.setValue(4, "Hombres", "Martes");
-        dataset.setValue(4, "Mujeres", "Miercoles");
-        dataset.setValue(5, "Hombres", "Miercoles");
-        dataset.setValue(8, "Mujeres", "Jueves");
-        dataset.setValue(9, "Hombres", "Jueves");
-        dataset.setValue(7, "Mujeres", "Viernes");
-        dataset.setValue(8, "Hombres", "Viernes");
-        // Creando el Grafico
-        JFreeChart chart = ChartFactory.createBarChart3D
-        ("Participacion por Genero","Genero", "Dias", 
-        dataset, PlotOrientation.VERTICAL, true,true, false);
-        chart.setBackgroundPaint(Color.cyan);
-        chart.getTitle().setPaint(Color.black); 
-        CategoryPlot p = chart.getCategoryPlot(); 
-        p.setRangeGridlinePaint(Color.red); 
-        // Mostrar Grafico
-        ChartPanel chartPanel = new ChartPanel(chart);
-        
-        jPanel4.setLayout(new java.awt.BorderLayout());
-        this.jPanel4.add(chartPanel,BorderLayout.CENTER);
-        this.jPanel4.validate();
-        
-       Mejortop10("06","2017");
-        System.out.print("pinta");
 
-    }
     
     
     
@@ -224,6 +196,7 @@ public class Gui_reportes extends javax.swing.JFrame {
 
     private void VisualizarMejorTop10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VisualizarMejorTop10ActionPerformed
         // TODO add your handling code here:
+        int castMes,castAño;
         String mes=this.jComboBoxMes.getSelectedItem().toString();
         
         String año= this.jTextAño.getText().trim();
@@ -231,12 +204,37 @@ public class Gui_reportes extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Llene los datos obligatorios", "Error", JOptionPane.ERROR_MESSAGE);}
         else {
             mes = mes.substring(0, 2);
-            Mejortop10(mes, año);
+            castAño=Integer.parseInt(año);
+            castMes=Integer.parseInt(mes);
+            reporte10Mejores(castMes, castAño);
         }
-        
-       
     }//GEN-LAST:event_VisualizarMejorTop10ActionPerformed
 
+    public void reporte10Mejores(int mes, int año) {
+        try {
+        JasperReport masterReport = null;
+        File f= new File(getClass().getResource("/Reportes/MasVendidos.jasper").getPath());
+        try {
+            masterReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/Reportes/MasVendidos.jasper"));
+         
+        } catch (JRException ex) {
+            System.out.println("error cargando reporte " + ex);
+        }
+         Map parametros = new HashMap();
+            parametros.put("año", año);
+            parametros.put("mes", mes);
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(masterReport, parametros,con);
+            JasperViewer jViewer = new JasperViewer (jasperPrint, false);
+            jViewer.setTitle("10 items mas vendidos");
+            jViewer.setVisible(true);
+        }catch(JRException ex){
+            System.out.println("error generando reporte " + ex);
+        }
+            
+       
+        
+    }
     private void jTextAñoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextAñoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextAñoActionPerformed

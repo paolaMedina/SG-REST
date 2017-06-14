@@ -1,0 +1,39 @@
+consulta 1
+SELECT nombre_producto, Sum(Producto_factura.cantidad) 
+FROM Factura NATURAL JOIN Producto_factura
+WHERE (EXTRACT (YEAR FROM (fecha_hora)) = '2017')
+	AND (EXTRACT (MONTH FROM (fecha_hora)) = '6')
+GROUP BY nombre_producto
+ORDER BY sum DESC
+LIMIT 10;
+
+consulta 1
+primer semestre
+SELECT nombre_producto, Sum(Producto_factura.cantidad) 
+FROM Factura NATURAL JOIN Producto_factura 
+WHERE EXTRACT (MONTH FROM (fecha_hora)) BETWEEN '01' AND '06'  
+GROUP BY nombre_producto
+ORDER BY sum ASC
+LIMIT 10;
+
+segundo semestre
+SELECT nombre_producto, Sum(Producto_factura.cantidad) 
+FROM Factura NATURAL JOIN Producto_factura 
+WHERE EXTRACT (MONTH FROM (fecha_hora)) BETWEEN '07' AND '12'  
+GROUP BY nombre_producto
+ORDER BY sum ASC
+LIMIT 10;
+
+consulta 4
+SELECT (EXTRACT (DAY FROM (fecha_hora))), Sum(valor_total) AS ingresos
+FROM Factura  
+WHERE EXTRACT (WEEK FROM (fecha_hora)) = '24'  
+GROUP BY (EXTRACT (DAY FROM (fecha_hora)))
+ORDER BY ingresos ASC;
+
+consulta 6
+SELECT (EXTRACT (DAY FROM (fecha_hora))), Sum(valor_total) AS ingresos
+FROM Factura  
+WHERE EXTRACT (MONTH FROM (fecha_hora)) = '6'  
+GROUP BY (EXTRACT (DAY FROM (fecha_hora)))
+ORDER BY ingresos ASC;
