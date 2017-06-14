@@ -213,18 +213,19 @@ public class Gui_reportes extends javax.swing.JFrame {
     public void reporte10Mejores(int mes, int año) {
         try {
         JasperReport masterReport = null;
-        File f= new File(getClass().getResource("/Reportes/MasVendidos.jasper").getPath());
+        File f= new File("Reportes/MasVendidos.jasper");
         try {
-            masterReport = (JasperReport) JRLoader.loadObject(getClass().getResource("/Reportes/MasVendidos.jasper"));
-         
+            masterReport = (JasperReport) JRLoader.loadObject(f);
+          
         } catch (JRException ex) {
             System.out.println("error cargando reporte " + ex);
         }
-         Map parametros = new HashMap();
-            parametros.put("año", año);
-            parametros.put("mes", mes);
+         Map<String, Object> parametros = new HashMap();
+            parametros.put("año", new Integer(año));
+            parametros.put("mes", new Integer(mes));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(masterReport, parametros,con);
+            System.out.println("pas");
             JasperViewer jViewer = new JasperViewer (jasperPrint, false);
             jViewer.setTitle("10 items mas vendidos");
             jViewer.setVisible(true);
