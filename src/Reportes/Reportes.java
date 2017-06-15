@@ -130,9 +130,35 @@ public class Reportes {
                 limitMes=12;
             }
             
-            
-            
         }
             
     }
+    
+    public void reporteCajaMensual(int mes, int año) {
+
+        conexion = new Conexion();
+        con = conexion.getConexion();
+        try {
+            JasperReport masterReport = null;
+            File f = new File("Reportes/reporteCaja.jasper");
+            try {
+                masterReport = (JasperReport) JRLoader.loadObject(f);
+
+            } catch (JRException ex) {
+                System.out.println("error cargando reporte " + ex);
+            }
+            Map<String, Object> parametros = new HashMap();
+            parametros.put("año", new Integer(año));
+            parametros.put("mes", new Integer(mes));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(masterReport, parametros, con);
+
+            JasperViewer jViewer = new JasperViewer(jasperPrint, false);
+            jViewer.setTitle("Ingresos del mes");
+            jViewer.setVisible(true);
+        } catch (JRException ex) {
+            System.out.println("error generando reporte " + ex);
+        }
+    }
+
 }

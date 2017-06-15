@@ -114,11 +114,11 @@ public class Gui_reportes extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 346, Short.MAX_VALUE)
+            .addGap(0, 126, Short.MAX_VALUE)
         );
 
         jPanel1.add(jPanel4);
-        jPanel4.setBounds(10, 80, 680, 350);
+        jPanel4.setBounds(10, 80, 680, 130);
 
         jLabel2.setText("Ingrese el año:");
         jPanel1.add(jLabel2);
