@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="menosDeseados2" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2301c017-7c21-47d6-9a52-c0933631893d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="año" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT nombre_producto, Sum(Producto_factura.cantidad)
+FROM Factura NATURAL JOIN Producto_factura
+WHERE EXTRACT (MONTH FROM (fecha_hora)) BETWEEN '07' AND '12'
+AND(EXTRACT (YEAR FROM (fecha_hora)) = $P{año})
+GROUP BY nombre_producto
+ORDER BY sum ASC
+LIMIT 10;]]>
+	</queryString>
+	<field name="nombre_producto" class="java.lang.String"/>
+	<field name="sum" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="28" width="572" height="51" uuid="4ca89599-dbc9-4fe5-a2e3-eaaace812998"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" isItalic="true" isUnderline="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Los 10 items menos deseados]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="28" width="530" height="51" uuid="f7e04acd-8190-422b-8bbf-75ad76bebb90"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Acontinuación se visualiza los items de la carta menos vendidos en el segundo semestre Julio-Agosto  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="46" width="55" height="20" uuid="8d0ac9de-f705-4eff-a930-908e557de817"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[del año]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="197" y="46" width="100" height="20" uuid="e5025a45-a633-4424-8769-9913461d2b96"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{año}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="295" splitType="Stretch">
+			<pie3DChart>
+				<chart>
+					<reportElement x="55" y="24" width="422" height="251" uuid="71c99c89-089c-4506-a063-42785349369a"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{nombre_producto}]]></keyExpression>
+					<valueExpression><![CDATA[$F{sum}]]></valueExpression>
+					<labelExpression><![CDATA[$F{nombre_producto} +"\n"+ $F{sum}]]></labelExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+		</band>
+	</summary>
+</jasperReport>
