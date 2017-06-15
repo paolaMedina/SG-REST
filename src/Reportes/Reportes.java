@@ -103,4 +103,36 @@ public class Reportes {
         }
 
     }
+    
+    public void promAtención(int mes, int año){
+        
+        int limitMes=0,limitAño=0;
+        
+        for (int i=0; i<6; i++){
+            
+            limitMes=mes-1;
+        }
+        if (limitMes<1){
+            limitAño=año-1;
+            if (limitMes==0){
+                limitMes=12;
+            }
+            if (limitMes==-1){
+                limitMes=11;
+            }if (limitMes==-2){
+                limitMes=10;
+            }if (limitMes==-3){
+                limitMes=9;
+            }if (limitMes==-4){
+                limitMes=8;
+            }
+            if (limitMes==-7){
+                limitMes=12;
+            }
+            
+            
+            
+        }
+            
+    }
 }
