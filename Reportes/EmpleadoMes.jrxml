@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EmpleadoMes" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="989606a9-0e86-46d1-89b6-ad4bb675e99f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FF4400">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFECE6">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FF4400">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFECE6">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#FF7F50">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#FFD0BF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset" uuid="db57d834-33b1-4966-98b1-1a3d63b81daf">
+		<parameter name="añoDataSet" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT empleado.nombre, mes, venta
+FROM
+(SELECT empleado,mes,año, max (total_ventas)as venta
+ FROM(SELECT  empleado,EXTRACT (YEAR FROM fecha_hora)AS año,EXTRACT (MONTH from fecha_hora)As mes,SUM (valor_total) as total_ventas
+      FROM (SELECT pedido.id_empleado as empleado,fecha_hora, valor_total FROM factura
+            JOIN pedido  ON factura.num_pedido = pedido.num_pedido) AS a
+      WHERE (EXTRACT (YEAR FROM (fecha_hora))=$P{añoDataSet})
+      GROUP BY empleado,EXTRACT (YEAR FROM fecha_hora), EXTRACT (MONTH from fecha_hora))AS ventas_mes
+ GROUP BY empleado,  mes,año)as empleados_mejores
+ JOIN empleado ON empleado.identificacion= empleados_mejores.empleado]]>
+		</queryString>
+		<field name="nombre" class="java.lang.String"/>
+		<field name="mes" class="java.lang.Double"/>
+		<field name="venta" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="año" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT empleado.nombre, mes, venta
+FROM
+(SELECT empleado,mes,año, max (total_ventas)as venta
+ FROM(SELECT  empleado,EXTRACT (YEAR FROM fecha_hora)AS año,EXTRACT (MONTH from fecha_hora)As mes,SUM (valor_total) as total_ventas
+      FROM (SELECT pedido.id_empleado as empleado,fecha_hora, valor_total FROM factura
+            JOIN pedido  ON factura.num_pedido = pedido.num_pedido) AS a
+      WHERE (EXTRACT (YEAR FROM (fecha_hora))=$P{año})
+      GROUP BY empleado,EXTRACT (YEAR FROM fecha_hora), EXTRACT (MONTH from fecha_hora))AS ventas_mes
+ GROUP BY empleado,  mes,año)as empleados_mejores
+ JOIN empleado ON empleado.identificacion= empleados_mejores.empleado]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="mes" class="java.lang.Double"/>
+	<field name="venta" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="129" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="24" width="572" height="79" uuid="739a0dc6-4a12-4e88-a5d1-db901553cf9e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="28" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[EMPLEADO DEL MES]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="125" height="103" uuid="1289c0a3-c2b6-4470-b1e0-c5f6f4cd98cf"/>
+				<imageExpression><![CDATA["C:\\Users\\Paola\\Documents\\NetBeansProjects\\SG-REST\\src\\imagenes\\logo_crepes.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="557" y="4" width="15" height="20" uuid="d0275bb0-9bec-4684-ad17-9486a3e5548b"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="112" splitType="Stretch">
+			<staticText>
+				<reportElement x="30" y="13" width="513" height="47" uuid="86166fba-4b22-4fbe-b67a-f37964a0ec12"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[A continuación se muestra los empleados que han realizado las mayores ventas en cada mes  del año]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="315" y="36" width="100" height="24" uuid="6858f203-00a7-41d1-bcfd-b2e966429109"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{año}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="295" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 2" style="table 2" x="30" y="33" width="513" height="237" uuid="62f745e7-1d11-4c43-8e07-6e22010e71f8"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset" uuid="2091747e-1e95-4c48-96b0-d688b8d9edd8">
+						<datasetParameter name="añoDataSet">
+							<datasetParameterExpression><![CDATA[$P{año}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="181" uuid="dc18bcff-83df-4580-8e71-f627ee3a446b">
+						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="181" height="30" uuid="d51a1b18-97b7-4c49-96a2-6bcc761d451d"/>
+								<textElement textAlignment="Center">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[NOMBRE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 2_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="181" height="20" uuid="e82cbce4-dd9b-4cf3-9190-6488557d11a8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="122" uuid="5a844d64-aedd-45ae-a240-d6f959b821c9">
+						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="122" height="30" uuid="4ef44ec5-8d9e-4805-a86b-61e6216f8e8d"/>
+								<textElement textAlignment="Center">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[MES]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 2_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="122" height="20" uuid="ed619f88-a503-4de4-92b3-25b41dd48573"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{mes}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="177" uuid="d60eedd2-f63f-4099-a342-e37593789ab0">
+						<jr:columnHeader style="table 2_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="177" height="30" uuid="edcd0bb5-42a8-4fc6-9308-f1c5600bbcf2"/>
+								<textElement textAlignment="Center">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[TOTAL VENTAS]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 2_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="table 2_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="177" height="20" uuid="b58f50fb-688f-487c-a5e7-40483fb79a3e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{venta}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

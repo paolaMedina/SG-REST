@@ -160,5 +160,32 @@ public class Reportes {
             System.out.println("error generando reporte " + ex);
         }
     }
+    
+    
+    public void reporteEmpleadoMes( int año) {
+
+        conexion = new Conexion();
+        con = conexion.getConexion();
+        try {
+            JasperReport masterReport = null;
+            File f = new File("Reportes/EmpleadoMes.jasper");
+            try {
+                masterReport = (JasperReport) JRLoader.loadObject(f);
+
+            } catch (JRException ex) {
+                System.out.println("error cargando reporte " + ex);
+            }
+            Map<String, Object> parametros = new HashMap();
+            parametros.put("año", new Integer(año));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(masterReport, parametros, con);
+
+            JasperViewer jViewer = new JasperViewer(jasperPrint, false);
+            jViewer.setTitle("Empleado de mes");
+            jViewer.setVisible(true);
+        } catch (JRException ex) {
+            System.out.println("error generando reporte " + ex);
+        }
+    }
 
 }

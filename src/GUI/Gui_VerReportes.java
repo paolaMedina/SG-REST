@@ -57,6 +57,10 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jTextFieldAño1 = new javax.swing.JTextField();
         jButtonVisualizarMenosDeseados = new javax.swing.JButton();
+        jPanelEmpleadoMes = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jTextFieldAño2 = new javax.swing.JTextField();
+        jButtonVisualizarEmpleadoMes = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
 
@@ -99,6 +103,11 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         jPanel3Contenedor.setLayout(new java.awt.CardLayout());
 
         jComboBoxMes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "01-Enero", "02-Febrero", "03-Marzo", "04-Abril", "05-Mayo", "06-Junio", "07-Julio", "08-Agosto", "09-Septiembre", "10-Octubre", "11-Noviembre", "12-Diciembre" }));
+        jComboBoxMes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxMesActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Seleccione el mes:");
 
@@ -204,6 +213,41 @@ public class Gui_VerReportes extends javax.swing.JFrame {
 
         jPanel3Contenedor.add(jPanelMenosDeseados, "card2");
 
+        jLabel6.setText("Ingreser el año:");
+
+        jButtonVisualizarEmpleadoMes.setText("Visualizar");
+        jButtonVisualizarEmpleadoMes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVisualizarEmpleadoMesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelEmpleadoMesLayout = new javax.swing.GroupLayout(jPanelEmpleadoMes);
+        jPanelEmpleadoMes.setLayout(jPanelEmpleadoMesLayout);
+        jPanelEmpleadoMesLayout.setHorizontalGroup(
+            jPanelEmpleadoMesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEmpleadoMesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldAño2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(jButtonVisualizarEmpleadoMes)
+                .addGap(24, 24, 24))
+        );
+        jPanelEmpleadoMesLayout.setVerticalGroup(
+            jPanelEmpleadoMesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEmpleadoMesLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(jPanelEmpleadoMesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonVisualizarEmpleadoMes)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldAño2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(55, Short.MAX_VALUE))
+        );
+
+        jPanel3Contenedor.add(jPanelEmpleadoMes, "card2");
+
         jMenu1.setText("Menu");
         jMenuBar1.add(jMenu1);
 
@@ -261,6 +305,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             
         }
         else if (seleccion.equalsIgnoreCase("Reporte anual del mesero del mes")){
+            mostrarPanel(this.jPanelEmpleadoMes);
             
         }
         else if (seleccion.equalsIgnoreCase("Ingresos en caja de cada día del mes")){
@@ -291,7 +336,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
                     System.out.print("entro");
                     reportes.reporteCajaMensual(castMes, castAño);
                 }
-                
+                this.jTextFieldAño.setText("");
             } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Ingrese correctamente el año", "Error", JOptionPane.ERROR_MESSAGE);
             
@@ -311,12 +356,34 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             try{
                 castAño=Integer.parseInt(año);
                 reportes.menosDeseados(semestre, castAño);
+                this.jTextFieldAño1.setText("");
             } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Ingrese correctamente el año", "Error", JOptionPane.ERROR_MESSAGE);
             
         }
         }
     }//GEN-LAST:event_jButtonVisualizarMenosDeseadosActionPerformed
+
+    private void jButtonVisualizarEmpleadoMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarEmpleadoMesActionPerformed
+        int castAño=0;
+        String año=this.jTextFieldAño2.getText();
+        if (año==""){
+            JOptionPane.showMessageDialog(null, "Ingrese el año que desea consultar", "Alerta!", JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            try{
+                castAño=Integer.parseInt(año);
+                reportes.reporteEmpleadoMes(castAño);
+            } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Ingrese correctamente el año", "Error", JOptionPane.ERROR_MESSAGE);
+            this.jTextFieldAño2.setText("");
+            }
+        }
+    }//GEN-LAST:event_jButtonVisualizarEmpleadoMesActionPerformed
+
+    private void jComboBoxMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxMesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -357,6 +424,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonVisualizar;
+    private javax.swing.JButton jButtonVisualizarEmpleadoMes;
     private javax.swing.JButton jButtonVisualizarMenosDeseados;
     private javax.swing.JComboBox<String> jComboBoxBusqueda;
     private javax.swing.JComboBox<String> jComboBoxMes;
@@ -365,14 +433,17 @@ public class Gui_VerReportes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3Contenedor;
+    private javax.swing.JPanel jPanelEmpleadoMes;
     private javax.swing.JPanel jPanelMenosDeseados;
     private javax.swing.JPanel jPanelTop10;
     private javax.swing.JTextField jTextFieldAño;
     private javax.swing.JTextField jTextFieldAño1;
+    private javax.swing.JTextField jTextFieldAño2;
     // End of variables declaration//GEN-END:variables
  //
 
