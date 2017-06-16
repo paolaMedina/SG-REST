@@ -139,6 +139,14 @@ public class Gui_VentanaPrincipalGerente extends javax.swing.JFrame {
 
     private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed
         // TODO add your handling code here:
+          // TODO add your handling code here:
+        try{
+         Gui_VerReportes reportes = new Gui_VerReportes(this);
+    
+         reportes.setVisible(true);
+         this.dispose();
+         
+       }catch(Exception e){}
     }//GEN-LAST:event_jButtonReportesActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed

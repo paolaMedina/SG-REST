@@ -16,12 +16,18 @@ import javax.swing.JPanel;
 public class Gui_VerReportes extends javax.swing.JFrame {
 
     Reportes reportes;
+    Gui_VentanaPrincipalGerente gui_gerente = null;
+    
+    //ejemplo para traer los datos del usuario
+    String usuario = this.gui_gerente.gui_login.usuario;
     /**
      * Creates new form Gui_VerReportes
      */
-    public Gui_VerReportes() {
+    public Gui_VerReportes(Gui_VentanaPrincipalGerente gui_gerente) {
         initComponents();
         reporteGerente();
+        this.gui_gerente = gui_gerente;
+        this.setLocationRelativeTo(null);
         this.jPanel3Contenedor.setVisible(false);
     }
 
@@ -341,7 +347,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_VerReportes().setVisible(true);
+                new Gui_VerReportes(new Gui_VentanaPrincipalGerente(new Gui_login())).setVisible(true);
             }
         });
     }
