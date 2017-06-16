@@ -19,14 +19,15 @@ public class Gui_VerReportes extends javax.swing.JFrame {
     Gui_VentanaPrincipalGerente gui_gerente = null;
     
     //ejemplo para traer los datos del usuario
-    String usuario = this.gui_gerente.gui_login.usuario;
+//    String usuario = this.gui_gerente.gui_login.usuario;
     /**
      * Creates new form Gui_VerReportes
      */
-    public Gui_VerReportes(Gui_VentanaPrincipalGerente gui_gerente) {
+    public Gui_VerReportes(){
+        //(Gui_VentanaPrincipalGerente gui_gerente) {
         initComponents();
         reporteGerente();
-        this.gui_gerente = gui_gerente;
+      //  this.gui_gerente = gui_gerente;
         this.setLocationRelativeTo(null);
         this.jPanel3Contenedor.setVisible(false);
     }
@@ -245,14 +246,14 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         if (seleccion.equalsIgnoreCase("Seleccione")){
             JOptionPane.showMessageDialog(null, "Ingrese el reporte que desea generar", "Alerta!", JOptionPane.ERROR_MESSAGE);
         }
-        else if (seleccion.equalsIgnoreCase("tems de	la carta más vendidos en el mes")) {
+        else if (seleccion.equalsIgnoreCase("Items de la carta más vendidos en el mes")) {
             
             mostrarPanel(this.jPanelTop10);
         }
-        else if (seleccion.equalsIgnoreCase("items de la carta menos vendidos en el semestre")){
+        else if (seleccion.equalsIgnoreCase("Items de la carta menos vendidos en el semestre")){
             mostrarPanel(this.jPanelMenosDeseados);
         }
-        else if (seleccion.equalsIgnoreCase("tiempo promedio de atención de pedidos")){
+        else if (seleccion.equalsIgnoreCase("Tiempo promedio de atención de pedidos")){
             
             
         }
@@ -281,7 +282,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             try{
                 castAño=Integer.parseInt(año);
                 castMes=Integer.parseInt(mes);
-                if (this.jComboBoxBusqueda.getSelectedItem().toString().equals("tems de la carta más vendidos en el mes")){
+                if (this.jComboBoxBusqueda.getSelectedItem().toString().equals("Items de la carta más vendidos en el mes")){
                     System.out.print("entro");
                     reportes.reporte10Mejores(castMes, castAño);
                     System.out.print("entro");
@@ -347,7 +348,8 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_VerReportes(new Gui_VentanaPrincipalGerente(new Gui_login())).setVisible(true);
+                new Gui_VerReportes().setVisible(true);
+               // new Gui_VerReportes(new Gui_VentanaPrincipalGerente(new Gui_login())).setVisible(true);
             }
         });
     }
@@ -375,25 +377,25 @@ public class Gui_VerReportes extends javax.swing.JFrame {
  //
 
     public void reporteGerente() {
-        this.jComboBoxBusqueda.addItem("tems de	la carta más vendidos en el mes");
-        this.jComboBoxBusqueda.addItem("items de la carta menos vendidos en el semestre");
-        this.jComboBoxBusqueda.addItem("tiempo promedio de atención de pedidos");
+        this.jComboBoxBusqueda.addItem("Items de la carta más vendidos en el mes");
+        this.jComboBoxBusqueda.addItem("Items de la carta menos vendidos en el semestre");
+        this.jComboBoxBusqueda.addItem("Tiempo promedio de atención de pedidos");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día de la semana");
         this.jComboBoxBusqueda.addItem("Reporte anual del mesero del mes");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día del mes");
     }
 
     public void reporteContador() {
-        this.jComboBoxBusqueda.addItem("tems de	la carta más vendidos en el mes");
-        this.jComboBoxBusqueda.addItem("items de la carta menos vendidos en el semestre");
+        this.jComboBoxBusqueda.addItem("Items de la carta más vendidos en el mes");
+        this.jComboBoxBusqueda.addItem("Items de la carta menos vendidos en el semestre");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día de la semana");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día del mes");
     }
 
     public void reporteMesero() {
-        this.jComboBoxBusqueda.addItem("tems de	la carta más vendidos en el mes");
-        this.jComboBoxBusqueda.addItem("items de la carta menos vendidos en el semestre");
-        this.jComboBoxBusqueda.addItem("tiempo promedio de atención de pedidos");
+        this.jComboBoxBusqueda.addItem("Items de la carta más vendidos en el mes");
+        this.jComboBoxBusqueda.addItem("Items de la carta menos vendidos en el semestre");
+        this.jComboBoxBusqueda.addItem("Tiempo promedio de atención de pedidos");
         this.jComboBoxBusqueda.addItem("Reporte anual del mesero del mes");
     }
     
