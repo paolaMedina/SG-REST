@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +37,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author Paola
  */
-public class Gui_producto extends javax.swing.JFrame {
+public class Gui_producto extends javax.swing.JFrame implements Observable {
 
     Gui_VentanaPrincipalGerente gui_principal = null;
     File foto;
@@ -48,6 +49,7 @@ public class Gui_producto extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.gui_principal = principal;
+        this.addObserver(this.gui_principal.gui_login.menu);
         deshabilitar();
         botones();
     }
@@ -550,7 +552,8 @@ public class Gui_producto extends javax.swing.JFrame {
             
             if (res=="El producto se agrego exitosamente"){
                 JOptionPane.showMessageDialog(null, "El producto se agrego exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-                 botones();
+                this.notifyAllObservers();
+                botones();
             }else if(res=="El campo precio, debe ser numérico"){
                 JOptionPane.showMessageDialog(null, "El campo precio, debe ser numérico", "Error", JOptionPane.ERROR_MESSAGE);
             }else if (res=="Llene los datos obligatorios"){
@@ -888,4 +891,16 @@ public class Gui_producto extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldNombre;
     private javax.swing.JTextField jTextFieldPrecio;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void addObserver(Observer o) {
+        Gui_producto.observadores.add(o);
+    }
+    
+    @Override
+    public void notifyAllObservers() {
+        for (int i = 0; i < Gui_producto.observadores.size(); i++) {
+            Gui_producto.observadores.get(i).update(new java.util.Observable(), null);
+        }
+    }
 }

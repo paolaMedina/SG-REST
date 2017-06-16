@@ -8,6 +8,7 @@ package GUI;
 import Clases.CategoriaProducto;
 import Clases.Empleado;
 import Clases.EstadoPedido;
+import Clases.Menu;
 import Clases.Mesa;
 import Clases.Pedido;
 import Clases.Producto;
@@ -56,8 +57,6 @@ public class Gui_pedido extends javax.swing.JFrame {
 
     Gui_VentanaPrincipalMesero gui_mesero = null;
     Gui_VentanaPrincipalCajero gui_cajero = null;
-    
-    Gui_Menu gui_menu = null;
     
     DefaultTableModel modeloProductosPedido = new DefaultTableModel();
     DefaultTableModel modeloProductosSeleccion = new DefaultTableModel();
@@ -1049,8 +1048,17 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCantidadKeyTyped
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        gui_menu = Gui_Menu.getInstancia();
-        gui_menu.setVisible(true);
+        
+        
+        try{
+            this.gui_cajero.gui_login.menu = Menu.getInstancia();
+            Gui_Menu gui_menu = Gui_Menu.getInstancia(this.gui_cajero.gui_login.menu);
+            gui_menu.setVisible(true);
+        }catch(NullPointerException e){
+            this.gui_mesero.gui_login.menu = Menu.getInstancia();
+            Gui_Menu gui_menu = Gui_Menu.getInstancia(this.gui_mesero.gui_login.menu);
+            gui_menu.setVisible(true);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

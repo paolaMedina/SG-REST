@@ -7,6 +7,7 @@ package GUI;
 
 import Clases.CargoEmpleado;
 import Clases.Empleado;
+import Clases.Menu;
 import Controladores.EmpleadoJpaController;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,6 +22,7 @@ public class Gui_login extends javax.swing.JFrame {
 
     public String usuario="";
     public String cargoUsuario="";
+    public Menu menu = null;
     /**
      * Creates new form gui_login
      */

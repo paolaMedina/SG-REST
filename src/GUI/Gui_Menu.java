@@ -28,12 +28,11 @@ import javax.swing.JScrollPane;
 public class Gui_Menu extends javax.swing.JFrame {
 
     private static Gui_Menu instancia = null;
-    private Menu menuProductos = Menu.getInstancia();
 
     
-    public static Gui_Menu getInstancia() {
+    public static Gui_Menu getInstancia(Menu menuProductos) {
         if (Gui_Menu.instancia == null) {
-            Gui_Menu.instancia = new Gui_Menu();
+            Gui_Menu.instancia = new Gui_Menu(menuProductos);
         }
         
         return instancia;
@@ -41,7 +40,7 @@ public class Gui_Menu extends javax.swing.JFrame {
     /**
      * Creates new form Gui_Menu
      */
-    private Gui_Menu() {
+    private Gui_Menu(Menu menuProductos) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(javax.swing.JFrame.HIDE_ON_CLOSE);
@@ -151,7 +150,7 @@ public class Gui_Menu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui_Menu().setVisible(true);
+                //new Gui_Menu().setVisible(true);
             }
         });
     }

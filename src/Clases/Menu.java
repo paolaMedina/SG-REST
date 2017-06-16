@@ -9,6 +9,8 @@ import Controladores.ProductoJpaController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -16,7 +18,7 @@ import javax.persistence.Persistence;
  *
  * @author Daniel
  */
-public class Menu {
+public class Menu implements Observer{
     
     private static Menu instancia = null;
     private ArrayList<Producto> productosMenu = new ArrayList();
@@ -55,6 +57,11 @@ public class Menu {
     public Iterator getIterator() {
        return new MenuIterator();
    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        this.instancia = null;
+    }
     
     //clase interna que implementa la interfaz iterator que permitira recorrer la coleccion
     //de prodouctos del menu.
