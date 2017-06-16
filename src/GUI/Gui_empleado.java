@@ -559,6 +559,7 @@ public class Gui_empleado extends javax.swing.JFrame {
             this.jButtonEliminar.setEnabled(false);
             this.jButtonNuevo.setEnabled(false);
             this.jButtonHorario.setEnabled(true);
+            this.jButtonSeleccionarFoto.setEnabled(true);
             
             
             habilitar();
@@ -792,6 +793,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         habilitar();
         deshabilitar();
         habilitarBotones();
+        this.jButtonSeleccionarFoto.setEnabled(false);
         
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
@@ -806,7 +808,7 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonNuevo.setEnabled(false);
         this.jButtonSeleccionarFoto.setEnabled(true);
         this.jButtonHorario.setEnabled(true);
-        jButtonSeleccionarFoto.setEnabled(false);
+        jButtonSeleccionarFoto.setEnabled(true);
 
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
