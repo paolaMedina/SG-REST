@@ -123,7 +123,6 @@ public class Gui_empleado extends javax.swing.JFrame {
         jButtonagregar = new javax.swing.JButton();
         jButtonModificar = new javax.swing.JButton();
         jButtonSalir = new javax.swing.JButton();
-        jButtonEliminar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonNuevo = new javax.swing.JButton();
 
@@ -344,14 +343,6 @@ public class Gui_empleado extends javax.swing.JFrame {
             }
         });
 
-        jButtonEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/16 (User delete).jpg"))); // NOI18N
-        jButtonEliminar.setText("eliminar");
-        jButtonEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEliminarActionPerformed(evt);
-            }
-        });
-
         jButtonCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Wzdelete.jpg"))); // NOI18N
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -382,15 +373,13 @@ public class Gui_empleado extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonModificar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonModificar))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(188, 188, 188)
                         .addComponent(jButtonCancelar)
                         .addGap(52, 52, 52)
                         .addComponent(jButtonSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -400,8 +389,7 @@ public class Gui_empleado extends javax.swing.JFrame {
                     .addComponent(jButtonNuevo)
                     .addComponent(jButtonagregar)
                     .addComponent(jButtonBuscar)
-                    .addComponent(jButtonModificar)
-                    .addComponent(jButtonEliminar))
+                    .addComponent(jButtonModificar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonSalir)
@@ -556,7 +544,6 @@ public class Gui_empleado extends javax.swing.JFrame {
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
             this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar.setEnabled(false);
             this.jButtonNuevo.setEnabled(false);
             this.jButtonHorario.setEnabled(true);
             this.jButtonSeleccionarFoto.setEnabled(true);
@@ -762,32 +749,6 @@ public class Gui_empleado extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButtonSalirActionPerformed
 
-    private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
-        String id = JOptionPane.showInputDialog(null, "Ingrese la identificacion del empleado que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
-
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //se crea el controlador del empleado y del ususario asociaro
-        EmpleadoJpaController daoEmpleado = new EmpleadoJpaController(emf);
-        
-        //se crea el controlador para el horario asociado a un empleado
-        HorarioEmpleadoJpaController daoHorarioEmpleado = new HorarioEmpleadoJpaController(emf);
-            
-        try {
-            List<HorarioEmpleado> he = daoHorarioEmpleado.findHorarioEmpleado(id);
-            HorarioEmpleado he1 = he.get(0);
-            
-            daoHorarioEmpleado.destroy(he1.getHorarioEmpleadoPK());
-            daoEmpleado.destroy(id);
-            JOptionPane.showMessageDialog(null, "El empleado se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NonexistentEntityException ex) {
-            JOptionPane.showMessageDialog(null, "El empleado que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jButtonEliminarActionPerformed
-
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         limpiar();
         habilitar();
@@ -804,7 +765,6 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonagregar.setEnabled(true);
         this.jButtonBuscar.setEnabled(false);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(false);
         this.jButtonNuevo.setEnabled(false);
         this.jButtonSeleccionarFoto.setEnabled(true);
         this.jButtonHorario.setEnabled(true);
@@ -831,7 +791,6 @@ public class Gui_empleado extends javax.swing.JFrame {
         this.jButtonNuevo.setEnabled(true);
         this.jButtonBuscar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(true);
         this.jButtonSeleccionarFoto.setEnabled(false);
         this.jButtonHorario.setEnabled(false);
         
@@ -840,7 +799,6 @@ public class Gui_empleado extends javax.swing.JFrame {
      public void habilitarBotones(){
         this.jButtonBuscar.setEnabled(true);
         this.jButtonModificar.setEnabled(false);
-        this.jButtonEliminar.setEnabled(true);
         this.jButtonNuevo.setEnabled(true);
         this.jButtonagregar.setEnabled(false);
         
@@ -940,7 +898,6 @@ public class Gui_empleado extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonEliminar;
     private javax.swing.JButton jButtonHorario;
     private javax.swing.JButton jButtonModificar;
     private javax.swing.JButton jButtonNuevo;

@@ -35,9 +35,10 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         logueado="gerente";
         System.err.println(this.gui_gerente.gui_login.usuario);
     }
-      public Gui_VerReportes(Gui_VentanaPrincipalCajero gui_cajero) {
-         initComponents();
-         reporteCajero();
+    
+    public Gui_VerReportes(Gui_VentanaPrincipalCajero gui_cajero) {
+        initComponents();
+        reporteCajero();
         this.setLocationRelativeTo(null);
         this.gui_cajero = gui_cajero;
         this.setLocationRelativeTo(null);
@@ -57,7 +58,6 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         System.err.println(this.gui_mesero.gui_login.usuario);
   
     }
-   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -398,8 +398,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             mostrarPanel(this.jPanelMenosDeseados);
         }
         else if (seleccion.equalsIgnoreCase("Tiempo promedio de atención de pedidos")){
-            
-           
+
         }
         else if (seleccion.equalsIgnoreCase("Ingresos en caja de cada día de la semana")) {
 
@@ -445,7 +444,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Ingrese correctamente el año", "Error", JOptionPane.ERROR_MESSAGE);
             
-        }
+            }
         }
         this.jPanel3Contenedor.setVisible(false);
     }//GEN-LAST:event_jButtonVisualizarActionPerformed
@@ -598,7 +597,6 @@ public class Gui_VerReportes extends javax.swing.JFrame {
     public void reporteGerente() {
         this.jComboBoxBusqueda.addItem("Items de la carta más vendidos en el mes");
         this.jComboBoxBusqueda.addItem("Items de la carta menos vendidos en el semestre");
-        this.jComboBoxBusqueda.addItem("Tiempo promedio de atención de pedidos");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día de la semana");
         this.jComboBoxBusqueda.addItem("Reporte anual del mesero del mes");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día del mes");
@@ -614,7 +612,6 @@ public class Gui_VerReportes extends javax.swing.JFrame {
     public void reporteMesero() {
         this.jComboBoxBusqueda.addItem("Items de la carta más vendidos en el mes");
         this.jComboBoxBusqueda.addItem("Items de la carta menos vendidos en el semestre");
-        this.jComboBoxBusqueda.addItem("Tiempo promedio de atención de pedidos");
         this.jComboBoxBusqueda.addItem("Reporte anual del mesero del mes");
     }
     

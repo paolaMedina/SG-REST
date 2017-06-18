@@ -342,4 +342,14 @@ public class PedidoJpaController implements Serializable {
         }
     }
     
+    public Long getCurrentPedido(){
+        EntityManager em = getEntityManager();
+        try {
+             Query q = em.createNativeQuery("SELECT last_value FROM pedido_num_pedido_seq;");
+            return (Long)q.getResultList().get(0);
+        } finally {
+            em.close();
+        }
+    }
+    
 }

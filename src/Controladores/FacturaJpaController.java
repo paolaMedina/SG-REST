@@ -275,4 +275,25 @@ public class FacturaJpaController implements Serializable {
         }
     }
     
+    public List<Factura> findFacturaPorPedido(int numPedido) {
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM Factura "
+                    + "WHERE num_pedido =" + numPedido + ";");
+            
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Long getCurrentFactura(){
+        EntityManager em = getEntityManager();
+        try {
+             Query q = em.createNativeQuery("SELECT last_value FROM factura_id_factura_seq;");
+            return (Long)q.getResultList().get(0);
+        } finally {
+            em.close();
+        }
+    }
 }

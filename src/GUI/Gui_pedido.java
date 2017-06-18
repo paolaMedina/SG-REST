@@ -536,7 +536,7 @@ public class Gui_pedido extends javax.swing.JFrame {
         
         
         PedidoJpaController daoPedido = new PedidoJpaController(emf1);
-        String numPedido = Integer.toString(daoPedido.getPedidoCount() + 1);
+        String numPedido = Integer.toString((int) (daoPedido.getCurrentPedido() + 1));
         this.jLabelNumPedido.setText(numPedido);
         
         //Traer el id del empleado
@@ -577,33 +577,40 @@ public class Gui_pedido extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminarActionPerformed
-        String id = JOptionPane.showInputDialog(null, "Ingrese el numero del pedido que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE);
+        int autorizacion = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar el producto", "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
+        if (autorizacion == JOptionPane.YES_OPTION) {
+            int numPedido = Integer.parseInt(jLabelNumPedido.getText());
+            //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
 
-        int numPedido = Integer.parseInt(id);
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-        
-        //se crea el controlador del pedido
-        PedidoJpaController daoPedido = new PedidoJpaController(emf);
-        
-        //se crea el controlador para el productoPedido asociado a un pedido
-        ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
-            
-        try {
-            
-            List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
-            for (int i = 0; i < productosPedido.size(); i++) {
-                daoProductoPedido.destroy(productosPedido.get(i).getProductoPedidoPK());
+            //se crea el controlador del pedido
+            PedidoJpaController daoPedido = new PedidoJpaController(emf);
+
+            //se crea el controlador para el productoPedido asociado a un pedido
+            ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
+
+            try {
+
+                List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(numPedido);
+                for (int i = 0; i < productosPedido.size(); i++) {
+                    daoProductoPedido.destroy(productosPedido.get(i).getProductoPedidoPK());
+                }
+
+                daoPedido.destroy(numPedido);
+                JOptionPane.showMessageDialog(null, "El pedido se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+                limpiar();
+                
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NonexistentEntityException ex) {
+                JOptionPane.showMessageDialog(null, "El pedido que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            
-            daoPedido.destroy(numPedido);
-            JOptionPane.showMessageDialog(null, "El pedido se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-            limpiar();
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(Gui_empleado.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NonexistentEntityException ex) {
-            JOptionPane.showMessageDialog(null, "El pedido que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        limpiar();
+        botones();
+        jButtonEliminar.setEnabled(false);
 
     }//GEN-LAST:event_jButtonEliminarActionPerformed
 
@@ -754,7 +761,6 @@ public class Gui_pedido extends javax.swing.JFrame {
         PedidoJpaController daoPedido = new PedidoJpaController(emf);
         ProductoPedidoJpaController daoProductoPedido = new ProductoPedidoJpaController(emf);
         ProductoJpaController daoProducto = new ProductoJpaController(emf);
-        
         try{
             List<ProductoPedido> productosPedido = daoProductoPedido.findProductoPedidoEntities(idParse);
 
@@ -809,7 +815,7 @@ public class Gui_pedido extends javax.swing.JFrame {
             this.jButtonagregar.setEnabled(false);
             this.jButtonBuscar.setEnabled(false);
             this.jButtonModificar.setEnabled(true);
-            this.jButtonEliminar.setEnabled(false);
+            this.jButtonEliminar.setEnabled(true);
             this.jButtonNuevo.setEnabled(false);
             
             habilitar();

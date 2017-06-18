@@ -675,33 +675,31 @@ public class Gui_producto extends javax.swing.JFrame implements Observable {
     }//GEN-LAST:event_jButtonNuevoActionPerformed
 
     private void jButtonEliminar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEliminar1ActionPerformed
-        StringTokenizer llave = new StringTokenizer(JOptionPane.showInputDialog(null, "Ingrese el codigo del producto que desea eliminar", "Eliminar", JOptionPane.QUESTION_MESSAGE), "-");
+        int autorizacion = JOptionPane.showConfirmDialog(null, "Esta seguro que desea eliminar el producto", "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
+        if (autorizacion == JOptionPane.YES_OPTION) {
+            
+            Integer id = Integer.parseInt(jLabelId.getText());
+            String nombre = jTextFieldNombre.getText();
 
-        ArrayList<String> llaveString = new ArrayList<String>();
+            ProductoPK productopk = new ProductoPK(id, nombre);
 
-        while (llave.hasMoreTokens()) {
-            llaveString.add(llave.nextToken());
-        }
+            //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
 
-        Integer id = Integer.parseInt(llaveString.get(0));
-        String nombre = llaveString.get(1);
+            //se crea el controlador del empleado y del ususario asociaro
+            ProductoJpaController daoProducto = new ProductoJpaController(emf);
 
-        ProductoPK productopk = new ProductoPK(id, nombre);
-
-        //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("SG-RESTPU");
-
-        //se crea el controlador del empleado y del ususario asociaro
-        ProductoJpaController daoProducto = new ProductoJpaController(emf);
-
-        try {
-            daoProducto.destroy(productopk);
-            JOptionPane.showMessageDialog(null, "El producto se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-        } catch (NonexistentEntityException ex) {
-            JOptionPane.showMessageDialog(null, "El producto que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            try {
+                daoProducto.destroy(productopk);
+                JOptionPane.showMessageDialog(null, "El producto se elimino exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+            } catch (NonexistentEntityException ex) {
+                JOptionPane.showMessageDialog(null, "El producto que desea eliminar no existe", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalOrphanException ex) {
+                Logger.getLogger(Gui_producto.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }       
 
         limpiar();
         botones();
@@ -900,7 +898,7 @@ public class Gui_producto extends javax.swing.JFrame implements Observable {
     @Override
     public void notifyAllObservers() {
         for (int i = 0; i < Gui_producto.observadores.size(); i++) {
-            Gui_producto.observadores.get(i).update(new java.util.Observable(), null);
+            //Gui_producto.observadores.get(i).update(new java.util.Observable(), null);
         }
     }
 }
