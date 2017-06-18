@@ -17,6 +17,9 @@ public class Gui_VerReportes extends javax.swing.JFrame {
 
     Reportes reportes;
     Gui_VentanaPrincipalGerente gui_gerente = null;
+    Gui_VentanaPrincipalCajero gui_cajero = null;
+    Gui_VentanaPrincipalMesero gui_mesero = null;
+    String logueado="";
     
     //ejemplo para traer los datos del usuario
 //    String usuario = this.gui_gerente.gui_login.usuario;
@@ -24,14 +27,37 @@ public class Gui_VerReportes extends javax.swing.JFrame {
      * Creates new form Gui_VerReportes
      */
     public Gui_VerReportes(Gui_VentanaPrincipalGerente gui_gerente){
-        //(Gui_VentanaPrincipalGerente gui_gerente) {
         initComponents();
         reporteGerente();
         this.gui_gerente = gui_gerente;
         this.setLocationRelativeTo(null);
         this.jPanel3Contenedor.setVisible(false);
+        logueado="gerente";
         System.err.println(this.gui_gerente.gui_login.usuario);
     }
+      public Gui_VerReportes(Gui_VentanaPrincipalCajero gui_cajero) {
+         initComponents();
+         reporteCajero();
+        this.setLocationRelativeTo(null);
+        this.gui_cajero = gui_cajero;
+        this.setLocationRelativeTo(null);
+        this.jPanel3Contenedor.setVisible(false);
+        logueado="cajero";
+        System.err.println(this.gui_cajero.gui_login.usuario);
+  
+    }
+      public Gui_VerReportes(Gui_VentanaPrincipalMesero gui_mesero) {
+         initComponents();
+         reporteMesero();
+        this.setLocationRelativeTo(null);
+        this.gui_mesero = gui_mesero;
+        this.setLocationRelativeTo(null);
+        this.jPanel3Contenedor.setVisible(false);
+        logueado="mesero";
+        System.err.println(this.gui_mesero.gui_login.usuario);
+  
+    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,8 +88,15 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jTextFieldAño2 = new javax.swing.JTextField();
         jButtonVisualizarEmpleadoMes = new javax.swing.JButton();
+        jPanelCajaSemanal = new javax.swing.JPanel();
+        jComboBoxSemana = new javax.swing.JComboBox<>();
+        jTextFieldAño3 = new javax.swing.JTextField();
+        jButtonCajeSemanal = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -112,7 +145,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
 
         jLabel1.setText("Seleccione el mes:");
 
-        jLabel2.setText("Ingreser el año:");
+        jLabel2.setText("Ingrese el año:");
 
         jButtonVisualizar.setText("Visualizar");
         jButtonVisualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -127,29 +160,32 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTop10Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBoxMes, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextFieldAño))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                .addComponent(jButtonVisualizar)
-                .addGap(37, 37, 37))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelTop10Layout.createSequentialGroup()
+                        .addComponent(jTextFieldAño, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addComponent(jButtonVisualizar)
+                        .addGap(37, 37, 37))
+                    .addGroup(jPanelTop10Layout.createSequentialGroup()
+                        .addComponent(jComboBoxMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanelTop10Layout.setVerticalGroup(
             jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTop10Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addGroup(jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jComboBoxMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelTop10Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanelTop10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldAño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelTop10Layout.createSequentialGroup()
                         .addGap(4, 4, 4)
@@ -179,42 +215,40 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             .addGroup(jPanelMenosDeseadosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelMenosDeseadosLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jComboBoxSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                        .addComponent(jButtonVisualizarMenosDeseados)
-                        .addContainerGap())
-                    .addGroup(jPanelMenosDeseadosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldAño1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 10, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBoxSemestre, 0, 113, Short.MAX_VALUE)
+                    .addComponent(jTextFieldAño1))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonVisualizarMenosDeseados)
+                .addContainerGap())
         );
         jPanelMenosDeseadosLayout.setVerticalGroup(
             jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMenosDeseadosLayout.createSequentialGroup()
                 .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMenosDeseadosLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
+                        .addGap(22, 22, 22)
                         .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jComboBoxSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jComboBoxSemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanelMenosDeseadosLayout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addComponent(jButtonVisualizarMenosDeseados)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldAño1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelMenosDeseadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldAño1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel3Contenedor.add(jPanelMenosDeseados, "card2");
 
-        jLabel6.setText("Ingreser el año:");
+        jLabel6.setText("Ingrese el año:");
 
         jButtonVisualizarEmpleadoMes.setText("Visualizar");
         jButtonVisualizarEmpleadoMes.addActionListener(new java.awt.event.ActionListener() {
@@ -229,10 +263,10 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             jPanelEmpleadoMesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelEmpleadoMesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldAño2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jButtonVisualizarEmpleadoMes)
                 .addGap(24, 24, 24))
         );
@@ -249,7 +283,72 @@ public class Gui_VerReportes extends javax.swing.JFrame {
 
         jPanel3Contenedor.add(jPanelEmpleadoMes, "card2");
 
+        jComboBoxSemana.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione" }));
+
+        jButtonCajeSemanal.setText("Visualizar");
+        jButtonCajeSemanal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCajeSemanalActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Seleccione la semana");
+
+        jLabel7.setText("Ingrese el año");
+
+        javax.swing.GroupLayout jPanelCajaSemanalLayout = new javax.swing.GroupLayout(jPanelCajaSemanal);
+        jPanelCajaSemanal.setLayout(jPanelCajaSemanalLayout);
+        jPanelCajaSemanalLayout.setHorizontalGroup(
+            jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCajaSemanalLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCajaSemanalLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                        .addComponent(jTextFieldAño3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonCajeSemanal)
+                        .addGap(21, 21, 21))
+                    .addGroup(jPanelCajaSemanalLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jComboBoxSemana, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        jPanelCajaSemanalLayout.setVerticalGroup(
+            jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelCajaSemanalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxSemana))
+                .addGroup(jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelCajaSemanalLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jButtonCajeSemanal))
+                    .addGroup(jPanelCajaSemanalLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelCajaSemanalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldAño3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(44, Short.MAX_VALUE))
+        );
+
+        jPanel3Contenedor.add(jPanelCajaSemanal, "card5");
+
         jMenu1.setText("Menu");
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("Salir");
+        jCheckBoxMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jCheckBoxMenuItem1);
+
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -300,10 +399,15 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         }
         else if (seleccion.equalsIgnoreCase("Tiempo promedio de atención de pedidos")){
             
-            
+           
         }
-        else if (seleccion.equalsIgnoreCase("Ingresos en caja de cada día de la semana")){
-            
+        else if (seleccion.equalsIgnoreCase("Ingresos en caja de cada día de la semana")) {
+
+            for (int i = 0; i < 59; i++) {
+                this.jComboBoxSemana.addItem(Integer.toString(i));
+            }
+
+            mostrarPanel(this.jPanelCajaSemanal);
         }
         else if (seleccion.equalsIgnoreCase("Reporte anual del mesero del mes")){
             mostrarPanel(this.jPanelEmpleadoMes);
@@ -343,6 +447,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             
         }
         }
+        this.jPanel3Contenedor.setVisible(false);
     }//GEN-LAST:event_jButtonVisualizarActionPerformed
 
     private void jButtonVisualizarMenosDeseadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarMenosDeseadosActionPerformed
@@ -363,6 +468,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             
         }
         }
+        this.jPanel3Contenedor.setVisible(false);
     }//GEN-LAST:event_jButtonVisualizarMenosDeseadosActionPerformed
 
     private void jButtonVisualizarEmpleadoMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarEmpleadoMesActionPerformed
@@ -380,11 +486,45 @@ public class Gui_VerReportes extends javax.swing.JFrame {
             this.jTextFieldAño2.setText("");
             }
         }
+        this.jPanel3Contenedor.setVisible(false);
     }//GEN-LAST:event_jButtonVisualizarEmpleadoMesActionPerformed
 
     private void jComboBoxMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxMesActionPerformed
+
+    private void jButtonCajeSemanalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCajeSemanalActionPerformed
+        int castAño = 0, castSemana = 0;
+        String semana=this.jComboBoxSemana.getSelectedItem().toString();
+        String año = this.jTextFieldAño3.getText();
+        if (semana.equalsIgnoreCase("Seleccione")||año == "") {
+            JOptionPane.showMessageDialog(null, "Ingrese la información que desea consultar", "Alerta!", JOptionPane.ERROR_MESSAGE);
+        } else {
+            try {
+                castAño = Integer.parseInt(año);
+                castSemana=Integer.parseInt(semana);
+                reportes.reporteCajaSemana(castSemana, castAño);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Ingrese correctamente el año", "Error", JOptionPane.ERROR_MESSAGE);
+                this.jTextFieldAño3.setText("");
+            }
+        }
+        this.jPanel3Contenedor.setVisible(false);
+    }//GEN-LAST:event_jButtonCajeSemanalActionPerformed
+
+    private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        if (logueado == "gerente") {
+            this.gui_gerente.setVisible(true);
+            this.dispose();
+        } else if (logueado == "cajero") {
+            this.gui_cajero.setVisible(true);
+            this.dispose();
+        } else if (logueado == "mesero") {
+            this.gui_mesero.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -424,27 +564,34 @@ public class Gui_VerReportes extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JButton jButtonCajeSemanal;
     private javax.swing.JButton jButtonVisualizar;
     private javax.swing.JButton jButtonVisualizarEmpleadoMes;
     private javax.swing.JButton jButtonVisualizarMenosDeseados;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JComboBox<String> jComboBoxBusqueda;
     private javax.swing.JComboBox<String> jComboBoxMes;
+    private javax.swing.JComboBox<String> jComboBoxSemana;
     private javax.swing.JComboBox<String> jComboBoxSemestre;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3Contenedor;
+    private javax.swing.JPanel jPanelCajaSemanal;
     private javax.swing.JPanel jPanelEmpleadoMes;
     private javax.swing.JPanel jPanelMenosDeseados;
     private javax.swing.JPanel jPanelTop10;
     private javax.swing.JTextField jTextFieldAño;
     private javax.swing.JTextField jTextFieldAño1;
     private javax.swing.JTextField jTextFieldAño2;
+    private javax.swing.JTextField jTextFieldAño3;
     // End of variables declaration//GEN-END:variables
  //
 
@@ -457,7 +604,7 @@ public class Gui_VerReportes extends javax.swing.JFrame {
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día del mes");
     }
 
-    public void reporteContador() {
+    public void reporteCajero() {
         this.jComboBoxBusqueda.addItem("Items de la carta más vendidos en el mes");
         this.jComboBoxBusqueda.addItem("Items de la carta menos vendidos en el semestre");
         this.jComboBoxBusqueda.addItem("Ingresos en caja de cada día de la semana");
