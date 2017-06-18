@@ -90,11 +90,11 @@ public class Gui_VentanaPrincipalCajero extends javax.swing.JFrame {
 
         jLabel2.setText("Pedido");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(90, 310, 41, 14);
+        jLabel2.setBounds(90, 310, 60, 14);
 
         jLabel4.setText("Caja");
         jPanel1.add(jLabel4);
-        jLabel4.setBounds(280, 150, 22, 14);
+        jLabel4.setBounds(280, 150, 40, 14);
 
         jLabel5.setText("Usuario");
         jPanel1.add(jLabel5);
@@ -161,6 +161,15 @@ public class Gui_VentanaPrincipalCajero extends javax.swing.JFrame {
 
     private void jButtonReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportesActionPerformed
         // TODO add your handling code here:
+        
+        try{
+         Gui_VerReportes reportes = new Gui_VerReportes(this);
+    
+         reportes.setVisible(true);
+         this.dispose();
+         
+       }catch(Exception e){
+       System.out.println(e);}
     }//GEN-LAST:event_jButtonReportesActionPerformed
 
     private void jButtonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalirActionPerformed

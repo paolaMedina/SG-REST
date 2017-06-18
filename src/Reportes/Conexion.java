@@ -56,40 +56,5 @@ public class Conexion {
         }
     }
 
-    public static void liberarConexionS(Connection conex) {
-        try {
-            conex.close();
-        } catch (SQLException ex) {
-            System.out.println( ex.getMessage());
-        }
-    }
-
-
-    /**
-     * Cierra la conexion.
-     *
-     */
-    //esto es un pool de conexiones, pero no se esta usando
-    public static void liberaConexion(Connection conexion) {
-        try {
-            if (null != conexion) {
-                // En realidad no cierra, solo libera la conexion.
-                conexion.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    
-    public static void liberarStatement(PreparedStatement p){
-        try{
-            if(null != p){
-                p.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

@@ -187,5 +187,32 @@ public class Reportes {
             System.out.println("error generando reporte " + ex);
         }
     }
+    
+        public void reporteCajaSemana( int semana,int año) {
+
+        conexion = new Conexion();
+        con = conexion.getConexion();
+        try {
+            JasperReport masterReport = null;
+            File f = new File("Reportes/cajaSemana.jasper");
+            try {
+                masterReport = (JasperReport) JRLoader.loadObject(f);
+
+            } catch (JRException ex) {
+                System.out.println("error cargando reporte " + ex);
+            }
+            Map<String, Object> parametros = new HashMap();
+            parametros.put("semana", semana);
+            parametros.put("año", new Integer(año));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(masterReport, parametros, con);
+
+            JasperViewer jViewer = new JasperViewer(jasperPrint, false);
+            jViewer.setTitle("Reporte de caja diario");
+            jViewer.setVisible(true);
+        } catch (JRException ex) {
+            System.out.println("error generando reporte " + ex);
+        }
+    }
 
 }

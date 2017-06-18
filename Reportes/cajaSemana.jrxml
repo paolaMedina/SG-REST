@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cajaSemana" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7086c690-f6f8-4b96-8b6a-cbc18f63ce87">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="42"/>
+	<parameter name="semana" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="año" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT (EXTRACT (DAY FROM (fecha_hora))), Sum(valor_total) AS ingresos
+FROM Factura
+WHERE (EXTRACT (WEEK FROM (fecha_hora)) = $P{semana})
+AND (EXTRACT (YEAR FROM (fecha_hora)) = $P{año})
+GROUP BY (EXTRACT (DAY FROM (fecha_hora)))
+ORDER BY ingresos ASC;]]>
+	</queryString>
+	<field name="date_part" class="java.lang.Double"/>
+	<field name="ingresos" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<staticText>
+				<reportElement x="185" y="31" width="258" height="73" forecolor="#0099CC" uuid="995f403b-f7a0-47ad-b7c0-783a055f46d8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE CAJA SEMANAL]]></text>
+			</staticText>
+			<image>
+				<reportElement x="24" y="0" width="137" height="132" uuid="99b0275e-5383-4007-a5e9-b218ce5ee1dc"/>
+				<imageExpression><![CDATA["C:\\Users\\Paola\\Documents\\NetBeansProjects\\SG-REST\\src\\imagenes\\logo_crepes.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement x="12" y="12" width="560" height="24" uuid="93a51a66-10b7-4ffe-99b1-de1aaeba39c9"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[A continuación se muestra el balance de los ingresos en la caja de la semana ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="12" y="37" width="27" height="35" uuid="17d3d052-6a5e-419d-8a30-6f8ee047fae7"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{semana}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="39" y="37" width="57" height="35" uuid="319b29fc-f43d-4ce9-b437-2701411e111d"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[del año]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="96" y="37" width="100" height="35" uuid="694f25b1-278c-4873-acd0-10febcbe3a2a"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{año}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="321" splitType="Stretch">
+			<lineChart>
+				<chart>
+					<reportElement x="39" y="31" width="494" height="254" uuid="abb0d27d-d9d5-44d8-8eb4-f65c91e30fb8"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["Ingresos Diario"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{date_part}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{ingresos}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{date_part}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{date_part}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{ingresos}]]></valueExpression>
+						<labelExpression><![CDATA[$F{date_part}+"-"+$F{ingresos}]]></labelExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</summary>
+</jasperReport>

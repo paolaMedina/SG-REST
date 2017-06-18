@@ -80,11 +80,11 @@ public class Gui_VentanaPrincipalGerente extends javax.swing.JFrame {
 
         jLabel1.setText("Items del Menú");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(240, 230, 90, 14);
+        jLabel1.setBounds(240, 230, 110, 14);
 
         jLabel5.setText("Empleados");
         jPanel1.add(jLabel5);
-        jLabel5.setBounds(70, 230, 70, 14);
+        jLabel5.setBounds(70, 230, 90, 14);
 
         jButtonSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Botón_apagar.png"))); // NOI18N
         jButtonSalir.addActionListener(new java.awt.event.ActionListener() {

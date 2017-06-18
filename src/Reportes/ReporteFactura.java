@@ -24,14 +24,24 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -39,8 +49,10 @@ import javax.swing.JOptionPane;
  */
 public class ReporteFactura {
     
-    public void imprimirFactura(List<ProductoPedido> productos, int idFactura, Pedido pedido,long descuento, long propina, long impuestos, 
-            String idEmpleado, String ccCliente, Date fechaHora, String formaPago) {
+    
+     public void imprimirFactura(List<ProductoPedido> productos, int idFactura, Pedido pedido,
+             long descuento,long propina, long impuestos,String idEmpleado, String ccCliente, 
+             Date fechaHora,String formaPago, Long cambio,Long pagado) {
         
         String numeroDelPedido = pedido.getNumPedido().toString();
         String numMesa = pedido.getNumMesa().getMesa().toString();
@@ -53,7 +65,7 @@ public class ReporteFactura {
 
         DecimalFormat formatea = new DecimalFormat("###,###.##");
         try {
-            String url="Reportes/factura"+idFactura+".pdf";
+            String url="Facturas/factura"+idFactura+".pdf";
           
             OutputStream archivo = new FileOutputStream(new File(url));
             Document doc = new Document();
@@ -91,16 +103,20 @@ public class ReporteFactura {
                 table.addCell(formatea.format(precio));
                 totalPagarProductos += precio;
             }
+            long totalPagar=totalPagarProductos+impuestos+propina-descuento;
             
             doc.add(table);
+            doc.add(new Paragraph ("FORMA DE PAGO: "+  formaPago));
             doc.add(new Paragraph("SUBTOTAL: " + totalPagarProductos ));
-            doc.add(new Paragraph ("Propina: "+  propina));
-            doc.add(new Paragraph ("Descuentos: "+  descuento));
-            doc.add(new Paragraph ("Impuestos: "+ impuestos)); 
+            doc.add(new Paragraph ("PROPINA: "+  propina));
+            doc.add(new Paragraph ("DESCUENTO: "+  descuento));
+            doc.add(new Paragraph ("IMPUESTOS: "+ impuestos));
+            doc.add(new Paragraph ("_______________________________________"));
+            doc.add(new Paragraph ("TOTAL A PAGAR: "+ totalPagar+ "\n" + "\n" + "\n"));
+            doc.add(new Paragraph ("TOTAL PAGADO: "+  pagado));
+            doc.add(new Paragraph ("CAMBIO: "+  cambio));
             
-            doc.add(new Paragraph ("Total Pagado: "+  propina+ "\n" + "\n" + "\n"));
             
-            doc.add(new Paragraph ("Forma de pago: "+  formaPago));
             
             
             
@@ -114,10 +130,6 @@ public class ReporteFactura {
             Logger.getLogger(ReporteCuenta.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("2");
         }
-
-    
-
-
     }
         public Long valorProducto(String nombreProducto, int cantidadProducto) {
         //Se crea en EntityManagerFactory con el nombre de nuestra unidad de persistencia

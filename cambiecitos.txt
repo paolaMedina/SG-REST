@@ -1,0 +1,10 @@
+1. ya acomode que si el pago no era completo no creara factura ni porductos qeu igual lo hacia y generaba excepcion 
+2. acomode la tabala para que no se añadieran las columnas
+3. ya aparece e monto correcto y no se se suma con lo anteriro como pasaba antes y cositas que faltaba ne interfaz
+4.se muestra el el valor quehay que devovler
+5. ya esta lo de la propina 
+
+PDT 
+1. se paga varias evces el mismo pedido
+2. acomodar lo del identificacion del cliente si no la ingresa que igual acepte, persoanemnet no me complicaria
+   con eso y solamente colocaria un mensaje que vea el cliente que ingrese los datso completos y yaa

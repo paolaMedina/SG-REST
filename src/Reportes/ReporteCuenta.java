@@ -35,7 +35,8 @@ import javax.persistence.Persistence;
  */
 public class ReporteCuenta {
 
-    public void generarCuenta(List<ProductoPedido> productos, String numCuenta, Pedido pedido) {
+    public void generarCuenta(List<ProductoPedido> productos, String numCuenta, Pedido pedido, Long impuestos) {
+        
         String numeroDelPedido = pedido.getNumPedido().toString();
         String numMesa = pedido.getNumMesa().getMesa().toString();
         String empleadoQueAtendio = pedido.getIdEmpleado().getNombre().toString();
@@ -46,7 +47,7 @@ public class ReporteCuenta {
 
         DecimalFormat formatea = new DecimalFormat("###,###.##");
         try {
-            String url="Reportes/cuenta"+numCuenta+".pdf";
+            String url="Facturas/cuenta"+numCuenta+".pdf";
             System.out.println("URL"+url);
          
 
@@ -87,7 +88,9 @@ public class ReporteCuenta {
             }
             
             doc.add(table);
-            doc.add(new Paragraph("Total a pagar: " + totalPagar + "\n" + "\n" + "\n"));
+            doc.add(new Paragraph("SUBTOTAL: " + totalPagar));
+            doc.add(new Paragraph("IMPUESTOS: " + impuestos ));
+            doc.add(new Paragraph("Total a pagar: " + (totalPagar+impuestos) + "\n" + "\n" + "\n"));
             
             doc.close(); 
 

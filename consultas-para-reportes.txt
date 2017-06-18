@@ -7,7 +7,7 @@ GROUP BY nombre_producto
 ORDER BY sum DESC
 LIMIT 10;
 
-consulta 1
+consulta 2
 primer semestre
 SELECT nombre_producto, Sum(Producto_factura.cantidad) 
 FROM Factura NATURAL JOIN Producto_factura 
@@ -37,3 +37,20 @@ FROM Factura
 WHERE EXTRACT (MONTH FROM (fecha_hora)) = '6'  
 GROUP BY (EXTRACT (DAY FROM (fecha_hora)))
 ORDER BY ingresos ASC;
+
+
+
+
+
+
+SELECT mes, avg (tiempo)
+FROM(SELECT num_pedido,(EXTRACT (MONTH FROM (hora_inicio_pedido)))as mes,(hora_final_pedido - hora_inicio_pedido)as tiempo
+     FROM pedido
+     WHERE (EXTRACT (YEAR FROM (hora_inicio_pedido )) = '2017')
+     AND (EXTRACT (MONTH FROM (hora_inicio_pedido )) = '05')
+     BETWEEN 
+     (EXTRACT (YEAR FROM (hora_inicio_pedido )) = '2017')
+     AND (EXTRACT (MONTH FROM (hora_inicio_pedido )) = '06')
+     GROUP BY num_pedido)as a
+GROUP BY mes
+
