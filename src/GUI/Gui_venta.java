@@ -1447,7 +1447,7 @@ public class Gui_venta extends javax.swing.JFrame {
         if (jRadioButtonEfectivo.isSelected() || jRadioButtonTarjeta.isSelected()) {
             var = true;             
         } 
-        return var;
+        return  var;
     }
     
     /**
